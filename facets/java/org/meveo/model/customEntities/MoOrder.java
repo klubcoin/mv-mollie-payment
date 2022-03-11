@@ -21,6 +21,8 @@ public class MoOrder implements CustomEntity {
 
     private Double amount;
 
+    private Double amountCaptured;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -44,6 +46,14 @@ public class MoOrder implements CustomEntity {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public Double getAmountCaptured() {
+        return amountCaptured;
+    }
+
+    public void setAmountCaptured(Double amountCaptured) {
+        this.amountCaptured = amountCaptured;
     }
 
     @Override()
