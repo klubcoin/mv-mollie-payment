@@ -100,6 +100,17 @@
             "title": "MoOrder.email",
             "type": "string",
             "maxLength": 500
+        },
+        "expiresAt": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Expires at",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_expiresAt",
+            "title": "MoOrder.expiresAt",
+            "type": "string"
         }
     }
 }
