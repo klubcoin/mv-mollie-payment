@@ -38,6 +38,17 @@
             "title": "MoAddress.postalCode",
             "type": "string",
             "maxLength": 10
+        },
+        "region": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Region",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoAddress_region",
+            "title": "MoAddress.region",
+            "type": "string",
+            "maxLength": 50
         }
     }
 }
