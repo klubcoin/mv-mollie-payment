@@ -1,0 +1,12 @@
+{
+  "code" : "MoOrder",
+  "name" : "Order",
+  "description" : "Order",
+  "customEntityCategoryCode" : "MO_ORDER",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}
