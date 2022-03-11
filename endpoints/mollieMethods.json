@@ -1,0 +1,22 @@
+{
+  "code" : "mollieMethods",
+  "description" : "Mollie payment copatible GW",
+  "secured" : false,
+  "checkPathParams" : false,
+  "serviceCode" : "io.liquichain.api.payment.MolliePaymentScript",
+  "synchronous" : true,
+  "method" : "GET",
+  "parameterMappings" : [ {
+    "serviceParameter" : "method",
+    "multivalued" : false,
+    "defaultValue" : "none",
+    "valueRequired" : false
+  } ],
+  "pathParameters" : [ ],
+  "roles" : [ ],
+  "returnedVariableName" : "result",
+  "serializeResult" : false,
+  "contentType" : "application/hal+json",
+  "basePath" : "pg",
+  "path" : "/v1/methods/"
+}
