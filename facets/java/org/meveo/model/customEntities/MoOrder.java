@@ -39,6 +39,8 @@ public class MoOrder implements CustomEntity {
 
     private String email;
 
+    private Instant expiresAt;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -126,6 +128,14 @@ public class MoOrder implements CustomEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Instant getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(Instant expiresAt) {
+        this.expiresAt = expiresAt;
     }
 
     @Override()
