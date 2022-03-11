@@ -57,6 +57,17 @@
             "title": "MoOrder.billingAddress",
             "$ref": "#/definitions/MoAddress"
         },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "creation date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_creationDate",
+            "title": "MoOrder.creationDate",
+            "type": "string"
+        },
         "assignedTo": {
             "storages": ["SQL"],
             "nullable": true,
