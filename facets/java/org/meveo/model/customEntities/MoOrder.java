@@ -29,6 +29,8 @@ public class MoOrder implements CustomEntity {
 
     private Double amountRefunded;
 
+    private String currency;
+
     private MoAddress billingAddress;
 
     private Instant creationDate;
@@ -82,6 +84,14 @@ public class MoOrder implements CustomEntity {
 
     public void setAmountRefunded(Double amountRefunded) {
         this.amountRefunded = amountRefunded;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     public MoAddress getBillingAddress() {
