@@ -1,0 +1,20 @@
+{
+  "code" : "io.liquichain.api.payment.ChekoutPage",
+  "description" : "Payment checkout page",
+  "inputs" : [ {
+    "name" : "orderId",
+    "type" : "String"
+  } ],
+  "outputs" : [ {
+    "name" : "result",
+    "type" : "String"
+  } ],
+  "generateOutputs" : false,
+  "type" : "JAVA",
+  "transactionType" : "SAME",
+  "script" : "package io.liquichain.api.payment;\r\n\r\nimport org.meveo.service.script.Script;\r\nimport java.util.Map;\r\n\r\nimport org.meveo.admin.exception.BusinessException;\r\nimport org.meveo.model.customEntities.MoOrder;\r\nimport org.meveo.model.storage.Repository;\r\nimport org.meveo.service.storage.RepositoryService;\r\nimport org.meveo.api.persistence.CrossStorageApi;\r\n\r\nimport org.slf4j.Logger;\r\nimport org.slf4j.LoggerFactory;\r\n\r\npublic class ChekoutPage extends Script {\r\n    \r\n    private static final Logger log = LoggerFactory.getLogger(ChekoutPage.class);\r\n    \r\n    private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);\r\n    private RepositoryService repositoryService = getCDIBean(RepositoryService.class);\r\n    private Repository defaultRepo = repositoryService.findDefaultRepository();\r\n\r\n    private String result;\r\n    private String orderId;\r\n\r\n    public void setOrderId(String orderId){\r\n        this.orderId=orderId;\r\n    }\r\n\r\n    public String getResult() {\r\n        return result;\r\n    }\r\n\r\n\t@Override\r\n\tpublic void execute(Map<String, Object> parameters) throws BusinessException {\r\n        result = \"<!DOCTYPE html>\\r\\n\"\r\n        +\"<html lang=\\\"en\\\">\\r\\n\"\r\n        +\"\\t<head>\\r\\n\"\r\n        +\"\\t\\t<style>body {background: white }\\r\\n\"\r\n        +\"\\t\\t\\tsection {background: #ac17e3;color: white;border-radius: 1em;padding: 1em;position: absolute;top: 50%;\"\r\n        +\"left: 50%;margin-right: -50%;transform: translate(-50%, -50%); text-align: center  }</style>\\r\\n\"\r\n        +\"\\t\\t<meta charset=\\\"utf-8\\\">\\r\\n\"\r\n        +\"\\t\\t<title>Liquichain Checkout</title>\\r\\n\"\r\n        +\"\\t</head>\\r\\n\"\r\n        +\"\\t<body><section>\\r\\n\"\r\n        +\"\\t<h1>Checkout</h1>\\r\\n\";\r\n        String message = \"<p>Cannot find the order<p/>\";\r\n        MoOrder order =null;\r\n        try{\r\n            order = crossStorageApi.find(defaultRepo,orderId, MoOrder.class);\r\n            if(\"created\".equals(order.getStatus())){\r\n                message = \r\n                \"\\t<h3>To pay your order, please scan this QR-code<br/> using your liquichain mobile app</h3><br/>\\r\\n\"\r\n                +\"\\t<canvas id=\\\"qr-code\\\"></canvas>\\r\\n\"\r\n                +\"\\t<div><button class='qr-btn' onclick='location.replace(\\\"\"+order.getRedirectUrl()+\"\\\");'>Continue</button></div>\\r\\n\"\r\n                +\"\\t<script src=\\\"https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js\\\"></script>\\r\\n\"\r\n                +\"\\t<script>\\r\\n\"\r\n                +\"\\tvar qr;\\r\\n\"\r\n                +\"\\t(function() {\\r\\n\"\r\n                +\"\\tqr = new QRious({\\r\\n\"\r\n                +\"\\telement: document.getElementById('qr-code'),\\r\\n\"\r\n                +\"\\tsize: 200,\\r\\n\"\r\n                +\"\\tvalue: 'lcn_ord:\"+orderId+\"'});\\r\\n\"\r\n                +\"\\tvar qrtext = document.getElementById(\\\"qr-text\\\").value;\\r\\n\"\r\n                +\"\\tqr.set({foreground: 'black',size: 200,value: qrtext});\\r\\n\"\r\n                +\"\\t})();\\r\\n\"\r\n                +\"\\t</script>\\r\\n\";\r\n            } else {\r\n                message = \"<p>Invalid order<p/>\";\r\n            }\r\n        } catch(Exception e){\r\n            e.printStackTrace();\r\n        }\r\n        result+=message\r\n        +\"\\t</section></body>\\r\\n\"\r\n        +\"\\t</html>\\r\\n\";\r\n    }\r\n}\r\n",
+  "executionRoles" : [ ],
+  "sourcingRoles" : [ ],
+  "mavenDependencies" : [ ],
+  "importScriptInstances" : [ ]
+}
