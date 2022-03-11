@@ -37,6 +37,16 @@
             "title": "MoOrder.metadata",
             "type": "string"
         },
+        "quantity_shipped": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Quantity Shipped",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_quantity_shipped",
+            "title": "MoOrder.quantity_shipped",
+            "type": "number"
+        },
         "orderNumber": {
             "storages": ["SQL"],
             "nullable": true,
