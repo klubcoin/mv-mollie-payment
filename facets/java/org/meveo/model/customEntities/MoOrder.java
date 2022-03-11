@@ -31,6 +31,8 @@ public class MoOrder implements CustomEntity {
 
     private MoAddress billingAddress;
 
+    private Instant creationDate;
+
     private String assignedTo;
 
     @Override()
@@ -88,6 +90,14 @@ public class MoOrder implements CustomEntity {
 
     public void setBillingAddress(MoAddress billingAddress) {
         this.billingAddress = billingAddress;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
     }
 
     public String getAssignedTo() {
