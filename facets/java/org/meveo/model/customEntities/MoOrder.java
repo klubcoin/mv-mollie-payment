@@ -47,6 +47,8 @@ public class MoOrder implements CustomEntity {
 
     private Instant expiresAt;
 
+    private Boolean shopperCountryMustMatchBillingCountry;
+
     private Double amountRefunded;
 
     private MoAddress shippingAddress;
@@ -174,6 +176,14 @@ public class MoOrder implements CustomEntity {
 
     public void setExpiresAt(Instant expiresAt) {
         this.expiresAt = expiresAt;
+    }
+
+    public Boolean getShopperCountryMustMatchBillingCountry() {
+        return shopperCountryMustMatchBillingCountry;
+    }
+
+    public void setShopperCountryMustMatchBillingCountry(Boolean shopperCountryMustMatchBillingCountry) {
+        this.shopperCountryMustMatchBillingCountry = shopperCountryMustMatchBillingCountry;
     }
 
     public Double getAmountRefunded() {
