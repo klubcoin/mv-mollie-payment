@@ -29,6 +29,8 @@ public class MoOrder implements CustomEntity {
 
     private String metadata;
 
+    private String method;
+
     private Double amountCaptured;
 
     private Instant creationDate;
@@ -90,6 +92,14 @@ public class MoOrder implements CustomEntity {
 
     public void setMetadata(String metadata) {
         this.metadata = metadata;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
     }
 
     public Double getAmountCaptured() {
