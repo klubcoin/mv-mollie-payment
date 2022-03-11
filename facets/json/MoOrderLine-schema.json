@@ -5,15 +5,28 @@
     "id": "MoOrderLine",
     "title": "Order Line",
     "type": "object",
-    "properties": {"category": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Category",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_MoOrderLine_category",
-        "title": "MoOrderLine.category",
-        "type": "string",
-        "maxLength": 20
-    }}
+    "properties": {
+        "currency": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "currency",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_currency",
+            "title": "MoOrderLine.currency",
+            "type": "string",
+            "maxLength": 3
+        },
+        "category": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Category",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_category",
+            "title": "MoOrderLine.category",
+            "type": "string",
+            "maxLength": 20
+        }
+    }
 }
