@@ -4,5 +4,16 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "MoOrderLine",
     "title": "Order Line",
-    "type": "object"
+    "type": "object",
+    "properties": {"category": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "Category",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_MoOrderLine_category",
+        "title": "MoOrderLine.category",
+        "type": "string",
+        "maxLength": 20
+    }}
 }
