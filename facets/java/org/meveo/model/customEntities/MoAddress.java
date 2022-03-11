@@ -25,6 +25,8 @@ public class MoAddress implements CustomEntity {
 
     private String postalCode;
 
+    private String streetAdditional;
+
     private String region;
 
     @Override()
@@ -66,6 +68,14 @@ public class MoAddress implements CustomEntity {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    public String getStreetAdditional() {
+        return streetAdditional;
+    }
+
+    public void setStreetAdditional(String streetAdditional) {
+        this.streetAdditional = streetAdditional;
     }
 
     public String getRegion() {
