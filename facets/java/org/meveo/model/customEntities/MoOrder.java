@@ -27,6 +27,8 @@ public class MoOrder implements CustomEntity {
 
     private Instant consumerDateOfBirth;
 
+    private String metadata;
+
     private Double amountCaptured;
 
     private Instant creationDate;
@@ -80,6 +82,14 @@ public class MoOrder implements CustomEntity {
 
     public void setConsumerDateOfBirth(Instant consumerDateOfBirth) {
         this.consumerDateOfBirth = consumerDateOfBirth;
+    }
+
+    public String getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(String metadata) {
+        this.metadata = metadata;
     }
 
     public Double getAmountCaptured() {
