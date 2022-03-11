@@ -21,6 +21,8 @@ public class MoOrderLine implements CustomEntity {
 
     private String imageUrl;
 
+    private String name;
+
     private Double discountAmount;
 
     private String currency;
@@ -50,6 +52,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Double getDiscountAmount() {
