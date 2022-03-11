@@ -37,6 +37,17 @@
             "title": "MoOrder.metadata",
             "type": "string"
         },
+        "orderNumber": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Order number",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_orderNumber",
+            "title": "MoOrder.orderNumber",
+            "type": "string",
+            "maxLength": 50
+        },
         "method": {
             "storages": ["SQL"],
             "nullable": true,
