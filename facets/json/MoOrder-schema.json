@@ -25,6 +25,16 @@
             "id": "CE_MoOrder_amountCaptured",
             "title": "MoOrder.amountCaptured",
             "type": "number"
+        },
+        "amountRefunded": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Amount refunded",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_amountRefunded",
+            "title": "MoOrder.amountRefunded",
+            "type": "number"
         }
     }
 }
