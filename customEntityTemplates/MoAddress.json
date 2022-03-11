@@ -1,0 +1,12 @@
+{
+  "code" : "MoAddress",
+  "name" : "Address",
+  "description" : "Address",
+  "customEntityCategoryCode" : "MO_ORDER",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}
