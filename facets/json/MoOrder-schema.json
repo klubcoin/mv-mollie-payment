@@ -111,6 +111,20 @@
             "id": "CE_MoOrder_expiresAt",
             "title": "MoOrder.expiresAt",
             "type": "string"
+        },
+        "group": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Assigned user group",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_group",
+            "title": "MoOrder.group",
+            "enum": [
+                "TECH_TEAM",
+                "SUP_TEAM",
+                "SALES_TEAM"
+            ]
         }
     }
 }
