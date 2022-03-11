@@ -49,6 +49,8 @@ public class MoOrder implements CustomEntity {
 
     private Double amountRefunded;
 
+    private MoAddress shippingAddress;
+
     private String currency;
 
     private String payment;
@@ -180,6 +182,14 @@ public class MoOrder implements CustomEntity {
 
     public void setAmountRefunded(Double amountRefunded) {
         this.amountRefunded = amountRefunded;
+    }
+
+    public MoAddress getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(MoAddress shippingAddress) {
+        this.shippingAddress = shippingAddress;
     }
 
     public String getCurrency() {
