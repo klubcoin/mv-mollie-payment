@@ -16,6 +16,17 @@
             "title": "MoOrder.amount",
             "type": "number"
         },
+        "consumerDateOfBirth": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "date of birth",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_consumerDateOfBirth",
+            "title": "MoOrder.consumerDateOfBirth",
+            "type": "string"
+        },
         "amountCaptured": {
             "storages": ["SQL"],
             "nullable": true,
