@@ -37,6 +37,8 @@ public class MoOrder implements CustomEntity {
 
     private String assignedTo;
 
+    private String email;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -116,6 +118,14 @@ public class MoOrder implements CustomEntity {
 
     public void setAssignedTo(String assignedTo) {
         this.assignedTo = assignedTo;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override()
