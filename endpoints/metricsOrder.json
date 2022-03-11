@@ -1,0 +1,17 @@
+{
+  "code" : "metricsOrder",
+  "description" : "prometheus metric for order workflow",
+  "secured" : false,
+  "checkPathParams" : false,
+  "serviceCode" : "io.liquichain.api.payment.WorkflowMetric",
+  "synchronous" : true,
+  "method" : "GET",
+  "parameterMappings" : [ ],
+  "pathParameters" : [ ],
+  "roles" : [ ],
+  "returnedVariableName" : "result",
+  "serializeResult" : false,
+  "contentType" : "text/plain",
+  "basePath" : "metrics",
+  "path" : "/orders"
+}
