@@ -1,0 +1,31 @@
+{
+  "code" : "group",
+  "description" : "Assigned user group",
+  "fieldType" : "LIST",
+  "accountLevel" : "CE_MoOrder",
+  "appliesTo" : "CE_MoOrder",
+  "useInheritedAsDefaultValue" : false,
+  "storageType" : "SINGLE",
+  "valueRequired" : false,
+  "versionable" : false,
+  "triggerEndPeriodEvent" : false,
+  "listValues" : {
+    "SALES_TEAM" : "Sales team",
+    "SUP_TEAM" : "Support team",
+    "TECH_TEAM" : "Tech team"
+  },
+  "allowEdit" : true,
+  "hideOnNew" : false,
+  "contentTypes" : [ ],
+  "fileExtensions" : [ ],
+  "saveOnExplorer" : false,
+  "guiPosition" : "tab:Order:0;field:21",
+  "identifier" : false,
+  "storages" : [ "SQL" ],
+  "samples" : [ ],
+  "summary" : true,
+  "audited" : false,
+  "persisted" : true,
+  "filter" : true,
+  "unique" : false
+}
