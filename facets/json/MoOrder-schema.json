@@ -35,6 +35,17 @@
             "id": "CE_MoOrder_amountRefunded",
             "title": "MoOrder.amountRefunded",
             "type": "number"
+        },
+        "assignedTo": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Assigned to",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_assignedTo",
+            "title": "MoOrder.assignedTo",
+            "type": "string",
+            "maxLength": 50
         }
     }
 }
