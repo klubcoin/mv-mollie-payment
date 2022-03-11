@@ -27,6 +27,16 @@
             "title": "MoOrder.consumerDateOfBirth",
             "type": "string"
         },
+        "metadata": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "metadata",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_metadata",
+            "title": "MoOrder.metadata",
+            "type": "string"
+        },
         "amountCaptured": {
             "storages": ["SQL"],
             "nullable": true,
