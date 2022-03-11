@@ -41,6 +41,8 @@ public class MoOrder implements CustomEntity {
 
     private Instant expiresAt;
 
+    private String group;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -136,6 +138,14 @@ public class MoOrder implements CustomEntity {
 
     public void setExpiresAt(Instant expiresAt) {
         this.expiresAt = expiresAt;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public void setGroup(String group) {
+        this.group = group;
     }
 
     @Override()
