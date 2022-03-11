@@ -37,6 +37,50 @@
             "title": "MoOrder.amountCaptured",
             "type": "number"
         },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "creation date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_creationDate",
+            "title": "MoOrder.creationDate",
+            "type": "string"
+        },
+        "locale": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "locale",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_locale",
+            "title": "MoOrder.locale",
+            "type": "string",
+            "maxLength": 5
+        },
+        "assignedTo": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Assigned to",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_assignedTo",
+            "title": "MoOrder.assignedTo",
+            "type": "string",
+            "maxLength": 50
+        },
+        "expiresAt": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Expires at",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_expiresAt",
+            "title": "MoOrder.expiresAt",
+            "type": "string"
+        },
         "amountRefunded": {
             "storages": ["SQL"],
             "nullable": true,
@@ -68,17 +112,6 @@
             "title": "MoOrder.billingAddress",
             "$ref": "#/definitions/MoAddress"
         },
-        "creationDate": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "format": "date-time",
-            "description": "creation date",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_MoOrder_creationDate",
-            "title": "MoOrder.creationDate",
-            "type": "string"
-        },
         "lines": {
             "storages": ["SQL"],
             "nullable": true,
@@ -95,17 +128,6 @@
                 "$ref": "#/definitions/MoOrderLine"
             }
         },
-        "assignedTo": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Assigned to",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_MoOrder_assignedTo",
-            "title": "MoOrder.assignedTo",
-            "type": "string",
-            "maxLength": 50
-        },
         "email": {
             "storages": ["SQL"],
             "nullable": true,
@@ -116,17 +138,6 @@
             "title": "MoOrder.email",
             "type": "string",
             "maxLength": 500
-        },
-        "expiresAt": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "format": "date-time",
-            "description": "Expires at",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_MoOrder_expiresAt",
-            "title": "MoOrder.expiresAt",
-            "type": "string"
         },
         "group": {
             "storages": ["SQL"],
