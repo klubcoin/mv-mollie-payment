@@ -5,14 +5,26 @@
     "id": "MoOrder",
     "title": "Order",
     "type": "object",
-    "properties": {"amount": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Amount",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_MoOrder_amount",
-        "title": "MoOrder.amount",
-        "type": "number"
-    }}
+    "properties": {
+        "amount": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Amount",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_amount",
+            "title": "MoOrder.amount",
+            "type": "number"
+        },
+        "amountCaptured": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Amount captured",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_amountCaptured",
+            "title": "MoOrder.amountCaptured",
+            "type": "number"
+        }
+    }
 }
