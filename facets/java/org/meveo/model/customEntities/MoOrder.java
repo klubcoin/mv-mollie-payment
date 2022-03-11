@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import org.meveo.model.customEntities.MoAddress;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class MoOrder implements CustomEntity {
@@ -24,6 +25,8 @@ public class MoOrder implements CustomEntity {
     private Double amountCaptured;
 
     private Double amountRefunded;
+
+    private MoAddress billingAddress;
 
     private String assignedTo;
 
@@ -66,6 +69,14 @@ public class MoOrder implements CustomEntity {
 
     public void setAmountRefunded(Double amountRefunded) {
         this.amountRefunded = amountRefunded;
+    }
+
+    public MoAddress getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(MoAddress billingAddress) {
+        this.billingAddress = billingAddress;
     }
 
     public String getAssignedTo() {
