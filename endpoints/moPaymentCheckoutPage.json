@@ -1,0 +1,17 @@
+{
+  "code" : "moPaymentCheckoutPage",
+  "description" : "payment checkout page",
+  "secured" : false,
+  "checkPathParams" : false,
+  "serviceCode" : "io.liquichain.api.payment.ChekoutPage",
+  "synchronous" : true,
+  "method" : "GET",
+  "parameterMappings" : [ ],
+  "pathParameters" : [ "orderId" ],
+  "roles" : [ ],
+  "returnedVariableName" : "result",
+  "serializeResult" : false,
+  "contentType" : "text/html",
+  "basePath" : "paymentpages",
+  "path" : "/checkout/{orderId}"
+}
