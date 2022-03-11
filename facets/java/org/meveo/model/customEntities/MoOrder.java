@@ -29,21 +29,23 @@ public class MoOrder implements CustomEntity {
 
     private Double amountCaptured;
 
+    private Instant creationDate;
+
+    private String locale;
+
+    private String assignedTo;
+
+    private Instant expiresAt;
+
     private Double amountRefunded;
 
     private String currency;
 
     private MoAddress billingAddress;
 
-    private Instant creationDate;
-
     private List<MoOrderLine> lines = new ArrayList<>();
 
-    private String assignedTo;
-
     private String email;
-
-    private Instant expiresAt;
 
     private String group;
 
@@ -88,6 +90,38 @@ public class MoOrder implements CustomEntity {
         this.amountCaptured = amountCaptured;
     }
 
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+    public String getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(String assignedTo) {
+        this.assignedTo = assignedTo;
+    }
+
+    public Instant getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(Instant expiresAt) {
+        this.expiresAt = expiresAt;
+    }
+
     public Double getAmountRefunded() {
         return amountRefunded;
     }
@@ -112,14 +146,6 @@ public class MoOrder implements CustomEntity {
         this.billingAddress = billingAddress;
     }
 
-    public Instant getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
-    }
-
     public List<MoOrderLine> getLines() {
         return lines;
     }
@@ -128,28 +154,12 @@ public class MoOrder implements CustomEntity {
         this.lines = lines;
     }
 
-    public String getAssignedTo() {
-        return assignedTo;
-    }
-
-    public void setAssignedTo(String assignedTo) {
-        this.assignedTo = assignedTo;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Instant getExpiresAt() {
-        return expiresAt;
-    }
-
-    public void setExpiresAt(Instant expiresAt) {
-        this.expiresAt = expiresAt;
     }
 
     public String getGroup() {
