@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import java.time.Instant;
 import org.meveo.model.customEntities.MoAddress;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -21,6 +22,8 @@ public class MoOrder implements CustomEntity {
     private DBStorageType storages;
 
     private Double amount;
+
+    private Instant consumerDateOfBirth;
 
     private Double amountCaptured;
 
@@ -53,6 +56,14 @@ public class MoOrder implements CustomEntity {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public Instant getConsumerDateOfBirth() {
+        return consumerDateOfBirth;
+    }
+
+    public void setConsumerDateOfBirth(Instant consumerDateOfBirth) {
+        this.consumerDateOfBirth = consumerDateOfBirth;
     }
 
     public Double getAmountCaptured() {
