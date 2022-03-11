@@ -25,6 +25,8 @@ public class MoOrder implements CustomEntity {
 
     private Double amountRefunded;
 
+    private String assignedTo;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -64,6 +66,14 @@ public class MoOrder implements CustomEntity {
 
     public void setAmountRefunded(Double amountRefunded) {
         this.amountRefunded = amountRefunded;
+    }
+
+    public String getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(String assignedTo) {
+        this.assignedTo = assignedTo;
     }
 
     @Override()
