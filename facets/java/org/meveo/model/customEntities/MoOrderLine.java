@@ -21,15 +21,21 @@ public class MoOrderLine implements CustomEntity {
 
     private Double unitPrice;
 
-    private Double totalAmount;
-
     private Long quantity;
+
+    private Double vatRate;
+
+    private Double discountAmount;
+
+    private String type;
+
+    private Double vatAmount;
+
+    private Double totalAmount;
 
     private String imageUrl;
 
     private String name;
-
-    private Double discountAmount;
 
     private String currency;
 
@@ -38,10 +44,6 @@ public class MoOrderLine implements CustomEntity {
     private String productUrl;
 
     private String sku;
-
-    private String type;
-
-    private Double vatAmount;
 
     @Override()
     public String getUuid() {
@@ -68,20 +70,52 @@ public class MoOrderLine implements CustomEntity {
         this.unitPrice = unitPrice;
     }
 
-    public Double getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(Double totalAmount) {
-        this.totalAmount = totalAmount;
-    }
-
     public Long getQuantity() {
         return quantity;
     }
 
     public void setQuantity(Long quantity) {
         this.quantity = quantity;
+    }
+
+    public Double getVatRate() {
+        return vatRate;
+    }
+
+    public void setVatRate(Double vatRate) {
+        this.vatRate = vatRate;
+    }
+
+    public Double getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(Double discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Double getVatAmount() {
+        return vatAmount;
+    }
+
+    public void setVatAmount(Double vatAmount) {
+        this.vatAmount = vatAmount;
+    }
+
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     public String getImageUrl() {
@@ -98,14 +132,6 @@ public class MoOrderLine implements CustomEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Double getDiscountAmount() {
-        return discountAmount;
-    }
-
-    public void setDiscountAmount(Double discountAmount) {
-        this.discountAmount = discountAmount;
     }
 
     public String getCurrency() {
@@ -138,22 +164,6 @@ public class MoOrderLine implements CustomEntity {
 
     public void setSku(String sku) {
         this.sku = sku;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Double getVatAmount() {
-        return vatAmount;
-    }
-
-    public void setVatAmount(Double vatAmount) {
-        this.vatAmount = vatAmount;
     }
 
     @Override()
