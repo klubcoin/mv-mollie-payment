@@ -1,0 +1,9 @@
+{
+  "code" : "mollie_payment",
+  "description" : "Mollie compatible payment GW",
+  "license" : "GPL",
+  "currentVersion" : "0.8",
+  "isInDraft" : true,
+  "moduleDependencies" : [ ],
+  "moduleFiles" : [ ]
+}
