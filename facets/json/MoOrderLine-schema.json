@@ -6,6 +6,16 @@
     "title": "Order Line",
     "type": "object",
     "properties": {
+        "totalAmount": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Total amount",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_totalAmount",
+            "title": "MoOrderLine.totalAmount",
+            "type": "number"
+        },
         "quantity": {
             "storages": ["SQL"],
             "nullable": true,
