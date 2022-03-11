@@ -19,6 +19,8 @@ public class MoOrder implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private Double amount;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -34,6 +36,14 @@ public class MoOrder implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     @Override()
