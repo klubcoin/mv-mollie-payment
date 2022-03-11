@@ -36,6 +36,16 @@
             "title": "MoOrder.amountRefunded",
             "type": "number"
         },
+        "billingAddress": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Billing Address",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_billingAddress",
+            "title": "MoOrder.billingAddress",
+            "$ref": "#/definitions/MoAddress"
+        },
         "assignedTo": {
             "storages": ["SQL"],
             "nullable": true,
