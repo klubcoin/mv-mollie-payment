@@ -79,6 +79,22 @@
             "title": "MoOrder.creationDate",
             "type": "string"
         },
+        "lines": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "lines",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_lines",
+            "title": "MoOrder.lines",
+            "type": "array",
+            "items": {
+                "id": "CE_MoOrder_lines_item",
+                "title": "MoOrder.lines item",
+                "$ref": "#/definitions/MoOrderLine"
+            }
+        },
         "assignedTo": {
             "storages": ["SQL"],
             "nullable": true,
