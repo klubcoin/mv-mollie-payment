@@ -39,6 +39,17 @@
             "type": "string",
             "maxLength": 10
         },
+        "streetAdditional": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Additional detail",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoAddress_streetAdditional",
+            "title": "MoAddress.streetAdditional",
+            "type": "string",
+            "maxLength": 500
+        },
         "region": {
             "storages": ["SQL"],
             "nullable": true,
