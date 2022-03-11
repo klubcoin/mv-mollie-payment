@@ -33,6 +33,8 @@ public class MoOrderLine implements CustomEntity {
 
     private String productUrl;
 
+    private String sku;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -104,6 +106,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setProductUrl(String productUrl) {
         this.productUrl = productUrl;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 
     @Override()
