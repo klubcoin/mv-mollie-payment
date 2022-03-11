@@ -23,6 +23,8 @@ public class MoAddress implements CustomEntity {
 
     private String city;
 
+    private String postalCode;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -54,6 +56,14 @@ public class MoAddress implements CustomEntity {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 
     @Override()
