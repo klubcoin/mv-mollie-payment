@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class MoOrder implements CustomEntity {
@@ -18,6 +19,8 @@ public class MoOrder implements CustomEntity {
 
     @JsonIgnore()
     private DBStorageType storages;
+
+    private Instant consumerDateOfBirth;
 
     private String metadata;
 
@@ -44,6 +47,14 @@ public class MoOrder implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public Instant getConsumerDateOfBirth() {
+        return consumerDateOfBirth;
+    }
+
+    public void setConsumerDateOfBirth(Instant consumerDateOfBirth) {
+        this.consumerDateOfBirth = consumerDateOfBirth;
     }
 
     public String getMetadata() {
