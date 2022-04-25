@@ -25,6 +25,8 @@ public class MoOrderLine implements CustomEntity {
 
     private String category;
 
+    private String type;
+
     private Double vatAmount;
 
     @Override()
@@ -66,6 +68,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Double getVatAmount() {
