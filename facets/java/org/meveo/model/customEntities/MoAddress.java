@@ -21,6 +21,8 @@ public class MoAddress implements CustomEntity {
 
     private String country;
 
+    private String city;
+
     private String streetAdditional;
 
     @Override()
@@ -46,6 +48,14 @@ public class MoAddress implements CustomEntity {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getStreetAdditional() {
