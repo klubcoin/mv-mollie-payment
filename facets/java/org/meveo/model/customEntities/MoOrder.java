@@ -31,6 +31,8 @@ public class MoOrder implements CustomEntity {
 
     private Double quantity_shipped;
 
+    private String orderNumber;
+
     private String method;
 
     private Double amountCaptured;
@@ -112,6 +114,14 @@ public class MoOrder implements CustomEntity {
 
     public void setQuantity_shipped(Double quantity_shipped) {
         this.quantity_shipped = quantity_shipped;
+    }
+
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
     }
 
     public String getMethod() {
