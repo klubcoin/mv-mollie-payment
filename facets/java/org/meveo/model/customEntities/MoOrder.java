@@ -43,6 +43,8 @@ public class MoOrder implements CustomEntity {
 
     private Instant expiresAt;
 
+    private String webhookUrl;
+
     private Double amountRefunded;
 
     private MoAddress shippingAddress;
@@ -156,6 +158,14 @@ public class MoOrder implements CustomEntity {
 
     public void setExpiresAt(Instant expiresAt) {
         this.expiresAt = expiresAt;
+    }
+
+    public String getWebhookUrl() {
+        return webhookUrl;
+    }
+
+    public void setWebhookUrl(String webhookUrl) {
+        this.webhookUrl = webhookUrl;
     }
 
     public Double getAmountRefunded() {
