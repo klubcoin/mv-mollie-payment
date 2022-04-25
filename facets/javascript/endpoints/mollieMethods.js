@@ -1,37 +1,53 @@
-const mollieMethods = async (parameters) =>  {
-	const baseUrl = window.location.origin;
-	const url = new URL(`${window.location.pathname.split('/')[1]}/rest/mollieMethods/`, baseUrl);
-	if (parameters.method !== undefined) {
-		url.searchParams.append('method', parameters.method);
+import EndpointInterface from "#{API_BASE_URL}/api/rest/endpoint/EndpointInterface.js";
+
+// the request schema, this should be updated
+// whenever changes to the endpoint parameters are made
+// this is important because this is used to validate and parse the request parameters
+const requestSchema = {
+  "title" : "mollieMethodsRequest",
+  "id" : "mollieMethodsRequest",
+  "default" : "Schema definition for mollieMethods",
+  "$schema" : "http://json-schema.org/draft-07/schema",
+  "type" : "object"
+}
+
+// the response schema, this should be updated
+// whenever changes to the endpoint parameters are made
+// this is important because this could be used to parse the result
+const responseSchema = {
+  "title" : "mollieMethodsResponse",
+  "id" : "mollieMethodsResponse",
+  "default" : "Schema definition for mollieMethods",
+  "$schema" : "http://json-schema.org/draft-07/schema",
+  "type" : "object",
+  "properties" : {
+    "result" : {
+      "title" : "result",
+      "type" : "string",
+      "minLength" : 1
+    }
+  }
+}
+
+// should contain offline mock data, make sure it adheres to the response schema
+const mockResult = {};
+
+class mollieMethods extends EndpointInterface {
+	constructor() {
+		// name and http method, these are inserted when code is generated
+		super("mollieMethods", "GET");
+		this.requestSchema = requestSchema;
+		this.responseSchema = responseSchema;
+		this.mockResult = mockResult;
 	}
 
-	return fetch(url.toString(), {
-		method: 'GET'
-	});
+	getRequestSchema() {
+		return this.requestSchema;
+	}
+
+	getResponseSchema() {
+		return this.responseSchema;
+	}
 }
 
-const mollieMethodsForm = (container) => {
-	const html = `<form id='mollieMethods-form'>
-		<div id='mollieMethods-null-form-field'>
-			<label for='null'>null</label>
-			<input type='text' id='mollieMethods-null-param' name='null'/>
-		</div>
-		<button type='button'>Test</button>
-	</form>`;
-
-	container.insertAdjacentHTML('beforeend', html)
-
-	const null = container.querySelector('#mollieMethods-null-param');
-
-	container.querySelector('#mollieMethods-form button').onclick = () => {
-		const params = {
-			null : null.value !== "" ? null.value : undefined
-		};
-
-		mollieMethods(params).then(r => r.text().then(
-				t => alert(t)
-			));
-	};
-}
-
-export { mollieMethods, mollieMethodsForm };
+export default new mollieMethods();
