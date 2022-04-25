@@ -39,6 +39,24 @@
             "type": "string",
             "maxLength": 20
         },
+        "type": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "type (product/service)",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_type",
+            "title": "MoOrderLine.type",
+            "enum": [
+                "digital",
+                "shipping_fee",
+                "surcharge",
+                "gift_card",
+                "discount",
+                "store_credit",
+                "physical"
+            ]
+        },
         "vatAmount": {
             "storages": ["SQL"],
             "nullable": true,
