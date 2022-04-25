@@ -132,6 +132,16 @@
             "type": "string",
             "maxLength": 3
         },
+        "payment": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "payment properties",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_payment",
+            "title": "MoOrder.payment",
+            "type": "string"
+        },
         "billingAddress": {
             "storages": ["SQL"],
             "nullable": true,
