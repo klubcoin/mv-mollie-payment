@@ -17,5 +17,5 @@
   "executionRoles" : [ ],
   "sourcingRoles" : [ ],
   "mavenDependencies" : [ ],
-  "importScriptInstances" : ["io.liquichain.core.BlockForgerScript"]
+  "importScriptInstances" : [ "io.liquichain.core.BlockForgerScript" ]
 }
