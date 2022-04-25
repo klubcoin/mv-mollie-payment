@@ -28,6 +28,8 @@ public class MoOrder implements CustomEntity {
 
     private String currency;
 
+    private Instant creationDate;
+
     private String assignedTo;
 
     private String email;
@@ -83,6 +85,14 @@ public class MoOrder implements CustomEntity {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
     }
 
     public String getAssignedTo() {
