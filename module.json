@@ -1,5 +1,5 @@
 {
-  "code" : "mollie_payment",
+  "code" : "mv-mollie-payment",
   "description" : "Mollie compatible payment GW",
   "license" : "GPL",
   "currentVersion" : "0.8",
