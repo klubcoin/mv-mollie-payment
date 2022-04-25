@@ -37,6 +37,17 @@
             "title": "MoOrder.amountRefunded",
             "type": "number"
         },
+        "currency": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "currency",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_currency",
+            "title": "MoOrder.currency",
+            "type": "string",
+            "maxLength": 3
+        },
         "assignedTo": {
             "storages": ["SQL"],
             "nullable": true,
