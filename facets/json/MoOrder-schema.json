@@ -123,6 +123,17 @@
             "type": "string",
             "maxLength": 1000
         },
+        "shopperCountryMustMatchBillingCountry": {
+            "storages": ["SQL"],
+            "default": "false",
+            "nullable": true,
+            "description": "Shop & bill country must match",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_shopperCountryMustMatchBillingCountry",
+            "title": "MoOrder.shopperCountryMustMatchBillingCountry",
+            "type": "string"
+        },
         "amountRefunded": {
             "storages": ["SQL"],
             "nullable": true,
