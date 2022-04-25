@@ -21,6 +21,8 @@ public class MoOrder implements CustomEntity {
 
     private String metadata;
 
+    private Double amountRefunded;
+
     private String assignedTo;
 
     private String status;
@@ -48,6 +50,14 @@ public class MoOrder implements CustomEntity {
 
     public void setMetadata(String metadata) {
         this.metadata = metadata;
+    }
+
+    public Double getAmountRefunded() {
+        return amountRefunded;
+    }
+
+    public void setAmountRefunded(Double amountRefunded) {
+        this.amountRefunded = amountRefunded;
     }
 
     public String getAssignedTo() {
