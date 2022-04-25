@@ -28,6 +28,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "currency": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "currency",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_currency",
+            "title": "MoOrderLine.currency",
+            "type": "string",
+            "maxLength": 3
+        },
         "category": {
             "storages": ["SQL"],
             "nullable": true,
