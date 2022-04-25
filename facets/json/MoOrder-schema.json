@@ -26,6 +26,25 @@
             "title": "MoOrder.assignedTo",
             "type": "string",
             "maxLength": 50
+        },
+        "status": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "status",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_status",
+            "title": "MoOrder.status",
+            "enum": [
+                "canceled",
+                "expired",
+                "shipping",
+                "created",
+                "authorized",
+                "pending",
+                "paid",
+                "completed"
+            ]
         }
     }
 }
