@@ -4,6 +4,7 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import java.time.Instant;
+import org.meveo.model.customEntities.MoAddress;
 import org.meveo.model.customEntities.MoOrderLine;
 import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -30,15 +31,17 @@ public class MoOrder implements CustomEntity {
 
     private Double amountCaptured;
 
+    private Instant creationDate;
+
+    private String assignedTo;
+
     private Double amountRefunded;
+
+    private MoAddress shippingAddress;
 
     private String currency;
 
-    private Instant creationDate;
-
     private List<MoOrderLine> lines = new ArrayList<>();
-
-    private String assignedTo;
 
     private String email;
 
@@ -95,12 +98,36 @@ public class MoOrder implements CustomEntity {
         this.amountCaptured = amountCaptured;
     }
 
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(String assignedTo) {
+        this.assignedTo = assignedTo;
+    }
+
     public Double getAmountRefunded() {
         return amountRefunded;
     }
 
     public void setAmountRefunded(Double amountRefunded) {
         this.amountRefunded = amountRefunded;
+    }
+
+    public MoAddress getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(MoAddress shippingAddress) {
+        this.shippingAddress = shippingAddress;
     }
 
     public String getCurrency() {
@@ -111,28 +138,12 @@ public class MoOrder implements CustomEntity {
         this.currency = currency;
     }
 
-    public Instant getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
-    }
-
     public List<MoOrderLine> getLines() {
         return lines;
     }
 
     public void setLines(List<MoOrderLine> lines) {
         this.lines = lines;
-    }
-
-    public String getAssignedTo() {
-        return assignedTo;
-    }
-
-    public void setAssignedTo(String assignedTo) {
-        this.assignedTo = assignedTo;
     }
 
     public String getEmail() {
