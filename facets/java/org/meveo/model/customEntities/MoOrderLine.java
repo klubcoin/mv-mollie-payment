@@ -19,6 +19,8 @@ public class MoOrderLine implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String category;
+
     private Double vatAmount;
 
     @Override()
@@ -36,6 +38,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public Double getVatAmount() {
