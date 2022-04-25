@@ -132,6 +132,16 @@
             "type": "string",
             "maxLength": 3
         },
+        "billingAddress": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Billing Address",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_billingAddress",
+            "title": "MoOrder.billingAddress",
+            "$ref": "#/definitions/MoAddress"
+        },
         "lines": {
             "storages": ["SQL"],
             "nullable": true,
