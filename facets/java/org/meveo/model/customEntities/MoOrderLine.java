@@ -23,6 +23,8 @@ public class MoOrderLine implements CustomEntity {
 
     private String name;
 
+    private String currency;
+
     private String category;
 
     private String type;
@@ -60,6 +62,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     public String getCategory() {
