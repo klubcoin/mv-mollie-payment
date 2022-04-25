@@ -37,6 +37,8 @@ public class MoOrder implements CustomEntity {
 
     private Instant creationDate;
 
+    private String locale;
+
     private String assignedTo;
 
     private Instant expiresAt;
@@ -130,6 +132,14 @@ public class MoOrder implements CustomEntity {
 
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 
     public String getAssignedTo() {
