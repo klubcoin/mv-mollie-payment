@@ -29,6 +29,8 @@ public class MoOrder implements CustomEntity {
 
     private Double quantity_shipped;
 
+    private String method;
+
     private Double amountCaptured;
 
     private Instant creationDate;
@@ -88,6 +90,14 @@ public class MoOrder implements CustomEntity {
 
     public void setQuantity_shipped(Double quantity_shipped) {
         this.quantity_shipped = quantity_shipped;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
     }
 
     public Double getAmountCaptured() {
