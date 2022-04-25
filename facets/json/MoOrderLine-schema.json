@@ -6,6 +6,17 @@
     "title": "Order Line",
     "type": "object",
     "properties": {
+        "quantity": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "quantity",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_quantity",
+            "title": "MoOrderLine.quantity",
+            "type": "integer",
+            "minimum": 0
+        },
         "imageUrl": {
             "storages": ["SQL"],
             "nullable": true,
