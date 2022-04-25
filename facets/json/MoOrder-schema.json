@@ -112,6 +112,17 @@
             "title": "MoOrder.expiresAt",
             "type": "string"
         },
+        "webhookUrl": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "webhookUrl",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_webhookUrl",
+            "title": "MoOrder.webhookUrl",
+            "type": "string",
+            "maxLength": 1000
+        },
         "amountRefunded": {
             "storages": ["SQL"],
             "nullable": true,
