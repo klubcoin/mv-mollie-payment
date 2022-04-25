@@ -37,6 +37,8 @@ public class MoOrder implements CustomEntity {
 
     private String assignedTo;
 
+    private Instant expiresAt;
+
     private Double amountRefunded;
 
     private MoAddress shippingAddress;
@@ -122,6 +124,14 @@ public class MoOrder implements CustomEntity {
 
     public void setAssignedTo(String assignedTo) {
         this.assignedTo = assignedTo;
+    }
+
+    public Instant getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(Instant expiresAt) {
+        this.expiresAt = expiresAt;
     }
 
     public Double getAmountRefunded() {
