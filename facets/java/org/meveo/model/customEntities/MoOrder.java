@@ -45,6 +45,8 @@ public class MoOrder implements CustomEntity {
 
     private String webhookUrl;
 
+    private Boolean shopperCountryMustMatchBillingCountry;
+
     private Double amountRefunded;
 
     private MoAddress shippingAddress;
@@ -166,6 +168,14 @@ public class MoOrder implements CustomEntity {
 
     public void setWebhookUrl(String webhookUrl) {
         this.webhookUrl = webhookUrl;
+    }
+
+    public Boolean getShopperCountryMustMatchBillingCountry() {
+        return shopperCountryMustMatchBillingCountry;
+    }
+
+    public void setShopperCountryMustMatchBillingCountry(Boolean shopperCountryMustMatchBillingCountry) {
+        this.shopperCountryMustMatchBillingCountry = shopperCountryMustMatchBillingCountry;
     }
 
     public Double getAmountRefunded() {
