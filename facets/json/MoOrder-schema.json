@@ -79,6 +79,17 @@
             "title": "MoOrder.creationDate",
             "type": "string"
         },
+        "locale": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "locale",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_locale",
+            "title": "MoOrder.locale",
+            "type": "string",
+            "maxLength": 5
+        },
         "assignedTo": {
             "storages": ["SQL"],
             "nullable": true,
