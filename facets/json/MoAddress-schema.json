@@ -17,6 +17,17 @@
             "type": "string",
             "maxLength": 2
         },
+        "streetAndNumber": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Street and number",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoAddress_streetAndNumber",
+            "title": "MoAddress.streetAndNumber",
+            "type": "string",
+            "maxLength": 255
+        },
         "city": {
             "storages": ["SQL"],
             "nullable": true,
