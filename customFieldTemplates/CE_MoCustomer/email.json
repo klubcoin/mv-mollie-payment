@@ -1,6 +1,6 @@
 {
   "code" : "email",
-  "description" : "The email address of the customer as provided when the customer was created.",
+  "description" : "Email Address",
   "fieldType" : "STRING",
   "accountLevel" : "CE_MoCustomer",
   "appliesTo" : "CE_MoCustomer",
