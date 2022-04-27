@@ -1,0 +1,111 @@
+{
+    "storages": ["SQL"],
+    "default": "Customer",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "id": "MoCustomer",
+    "title": "Customer",
+    "type": "object",
+    "properties": {
+        "mode": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "The mode used to create this customer.",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoCustomer_mode",
+            "title": "MoCustomer.mode",
+            "enum": [
+                "test",
+                "live"
+            ]
+        },
+        "createdAt": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "The customer\u2019s date and time of creation, in ISO 8601 format.",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoCustomer_createdAt",
+            "title": "MoCustomer.createdAt",
+            "type": "string"
+        },
+        "metadata": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Data provided during the customer creation.",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoCustomer_metadata",
+            "title": "MoCustomer.metadata",
+            "type": "string",
+            "maxLength": 255
+        },
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "The full name of the customer as provided when the customer was created.",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoCustomer_name",
+            "title": "MoCustomer.name",
+            "type": "string",
+            "maxLength": 255
+        },
+        "id": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "The customer\u2019s unique identifier",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoCustomer_id",
+            "title": "MoCustomer.id",
+            "type": "string",
+            "maxLength": 255
+        },
+        "locale": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Allows you to preset the language to be used in the hosted payment pages shown to the consumer.",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoCustomer_locale",
+            "title": "MoCustomer.locale",
+            "enum": [
+                "de_AT",
+                "is_IS",
+                "it_IT",
+                "pl_PL",
+                "fr_BE",
+                "nl_BE",
+                "sv_SE",
+                "da_DK",
+                "fr_FR",
+                "ca_ES",
+                "de_DE",
+                "hu_HU",
+                "nb_NO",
+                "fi_FI",
+                "de_CH",
+                "en_GB",
+                "en_US",
+                "lt_LT",
+                "lv_LV",
+                "es_ES",
+                "nl_NL",
+                "pt_PT"
+            ]
+        },
+        "email": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "The email address of the customer as provided when the customer was created.",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoCustomer_email",
+            "title": "MoCustomer.email",
+            "type": "string",
+            "maxLength": 255
+        }
+    }
+}
