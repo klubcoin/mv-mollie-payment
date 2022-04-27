@@ -1,0 +1,17 @@
+{
+  "code" : "moGetCustomer",
+  "description" : "Retrieve Customer Details",
+  "secured" : false,
+  "checkPathParams" : true,
+  "serviceCode" : "io.liquichain.api.payment.MollieCustomerScript",
+  "synchronous" : true,
+  "method" : "GET",
+  "parameterMappings" : [ ],
+  "pathParameters" : [ "customerId" ],
+  "roles" : [ ],
+  "returnedVariableName" : "result",
+  "serializeResult" : false,
+  "contentType" : "application/json",
+  "basePath" : "pg",
+  "path" : "/v1/customers/{customerId}"
+}
