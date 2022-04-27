@@ -1,6 +1,6 @@
 {
   "code" : "mode",
-  "description" : "The mode used to create this customer.",
+  "description" : "Mode",
   "fieldType" : "LIST",
   "accountLevel" : "CE_MoCustomer",
   "appliesTo" : "CE_MoCustomer",
