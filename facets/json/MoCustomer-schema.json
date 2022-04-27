@@ -44,7 +44,7 @@
         "name": {
             "storages": ["SQL"],
             "nullable": true,
-            "description": "The full name of the customer as provided when the customer was created.",
+            "description": "Customer Name",
             "readOnly": false,
             "versionable": false,
             "id": "CE_MoCustomer_name",
