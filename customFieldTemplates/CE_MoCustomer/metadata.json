@@ -1,6 +1,6 @@
 {
   "code" : "metadata",
-  "description" : "Data provided during the customer creation.",
+  "description" : "Metadata",
   "fieldType" : "STRING",
   "accountLevel" : "CE_MoCustomer",
   "appliesTo" : "CE_MoCustomer",
