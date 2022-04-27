@@ -1,6 +1,6 @@
 {
   "code" : "locale",
-  "description" : "Allows you to preset the language to be used in the hosted payment pages shown to the consumer.",
+  "description" : "Language locale",
   "fieldType" : "LIST",
   "accountLevel" : "CE_MoCustomer",
   "appliesTo" : "CE_MoCustomer",
