@@ -1,6 +1,6 @@
 {
   "code" : "name",
-  "description" : "The full name of the customer as provided when the customer was created.",
+  "description" : "Customer Name",
   "fieldType" : "STRING",
   "accountLevel" : "CE_MoCustomer",
   "appliesTo" : "CE_MoCustomer",
