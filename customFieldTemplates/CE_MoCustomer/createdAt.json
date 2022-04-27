@@ -1,6 +1,6 @@
 {
   "code" : "createdAt",
-  "description" : "The customer’s date and time of creation, in ISO 8601 format.",
+  "description" : "Date Created",
   "fieldType" : "DATE",
   "accountLevel" : "CE_MoCustomer",
   "appliesTo" : "CE_MoCustomer",
