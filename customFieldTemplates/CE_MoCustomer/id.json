@@ -1,6 +1,6 @@
 {
   "code" : "id",
-  "description" : "The customer’s unique identifier",
+  "description" : "Customer ID",
   "fieldType" : "STRING",
   "accountLevel" : "CE_MoCustomer",
   "appliesTo" : "CE_MoCustomer",
