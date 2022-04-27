@@ -33,7 +33,7 @@
         "metadata": {
             "storages": ["SQL"],
             "nullable": true,
-            "description": "Data provided during the customer creation.",
+            "description": "Metadata",
             "readOnly": false,
             "versionable": false,
             "id": "CE_MoCustomer_metadata",
