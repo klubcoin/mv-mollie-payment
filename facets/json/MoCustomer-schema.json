@@ -55,7 +55,7 @@
         "id": {
             "storages": ["SQL"],
             "nullable": true,
-            "description": "The customer\u2019s unique identifier",
+            "description": "Customer ID",
             "readOnly": false,
             "versionable": false,
             "id": "CE_MoCustomer_id",
