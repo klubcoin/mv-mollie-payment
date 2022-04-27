@@ -9,7 +9,7 @@
         "mode": {
             "storages": ["SQL"],
             "nullable": true,
-            "description": "The mode used to create this customer.",
+            "description": "Mode",
             "readOnly": false,
             "versionable": false,
             "id": "CE_MoCustomer_mode",
