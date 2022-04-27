@@ -3,6 +3,7 @@ package io.liquichain.api.payment;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gson.Gson;
@@ -74,43 +75,49 @@ public class MollieGetCustomer extends Script {
     public String createResponse(MoCustomer customer) {
         String createdAt = null;
         if (customer.getCreatedAt() != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
-                .withZone(ZoneId.from(ZoneOffset.UTC));
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.from(ZoneOffset.UTC));
             createdAt = formatter.format(customer.getCreatedAt());
         }
         String selfUrl = MOLLIE_BASE_URL + "customers/" + customer.getId();
         String dashboardUrl = "https://www.mollie.com/dashboard/org_15108779/customers/" + customer.getId();
         String paymentsUrl = MOLLIE_BASE_URL + "customers/" + customer.getId() + "/payments";
-        String response = "{\n" +
-            "  \"resource\": \"customer\",\n" +
-            "  \"id\": \"" + customer.getId() + "\",\n" +
-            "  \"mode\": \"" + customer.getMode() + "\",\n" +
-            "  \"name\": \"" + customer.getName() + "\",\n" +
-            "  \"email\": \"" + customer.getEmail() + "\",\n" +
-            "  \"locale\": " + nullOrString(customer.getLocale()) + ",\n" +
-            "  \"metadata\": " + customer.getMetadata() + ",\n" +
-            "  \"createdAt\": " + nullOrString(createdAt) + ",\n" +
-            "  \"_links\": {\n" +
-            "    \"self\": {\n" +
-            "      \"href\": \"" + selfUrl +"\",\n" +
-            "      \"type\": \"application/hal+json\"\n" +
-            "    },\n" +
-            "    \"dashboard\": {\n" +
-            "      \"href\": \"" + dashboardUrl +"\",\n" +
-            "      \"type\": \"text/html\"\n" +
-            "    },\n" +
-            "    \"payments\": {\n" +
-            "      \"href\": \"" + paymentsUrl +"\",\n" +
-            "      \"type\": \"application/hal+json\"\n" +
-            "    },\n" +
-            "    \"documentation\": {\n" +
-            "      \"href\": \"https://docs.mollie.com/reference/v2/customers-api/get-customer\",\n" +
-            "      \"type\": \"text/html\"\n" +
-            "    }\n" +
-            "  }\n" +
-            "}";
+
+        Map<String, String> self = new HashMap<>();
+        self.put("href", selfUrl);
+        self.put("type", "application/hal+json");
+
+        Map<String, String> dashboard = new HashMap<>();
+        dashboard.put("href", dashboardUrl);
+        dashboard.put("type", "text/html");
+
+        Map<String, String> payments = new HashMap<>();
+        payments.put("href", paymentsUrl);
+        payments.put("type", "application/hal+json");
+
+        Map<String, String> documentation = new HashMap<>();
+        documentation.put("href", "https://docs.mollie.com/reference/v2/customers-api/get-customer");
+        documentation.put("type", "text/html");
+
+        Map<String, Object> links = new HashMap<>();
+        links.put("self", self);
+        links.put("dashboard", dashboard);
+        links.put("payments", payments);
+        links.put("documentation", documentation);
+
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("resource", "customer");
+        responseMap.put("id", customer.getId());
+        responseMap.put("mode", customer.getMode());
+        responseMap.put("name", customer.getName());
+        responseMap.put("email", customer.getEmail());
+        responseMap.put("locale", customer.getLocale());
+        responseMap.put("metadata", customer.getMetadata());
+        responseMap.put("createdAt", createdAt);
+        responseMap.put("_links", links);
+
+        String response = new Gson().toJson(responseMap);
         LOG.debug("response: {}", response);
-        return new Gson().toJson(response);
+        return response;
     }
 
     public String createErrorResponse(String status, String title, String detail) {
