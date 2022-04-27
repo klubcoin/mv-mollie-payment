@@ -1,0 +1,32 @@
+{
+  "code" : "mode",
+  "description" : "The mode used to create this customer.",
+  "fieldType" : "LIST",
+  "accountLevel" : "CE_MoCustomer",
+  "appliesTo" : "CE_MoCustomer",
+  "useInheritedAsDefaultValue" : false,
+  "storageType" : "SINGLE",
+  "valueRequired" : false,
+  "versionable" : false,
+  "triggerEndPeriodEvent" : false,
+  "listValues" : {
+    "live" : "Live",
+    "test" : "Test"
+  },
+  "allowEdit" : true,
+  "hideOnNew" : false,
+  "maxValue" : 255,
+  "contentTypes" : [ ],
+  "fileExtensions" : [ ],
+  "saveOnExplorer" : false,
+  "guiPosition" : "tab:Customer:0;field:1",
+  "identifier" : false,
+  "mapKeyType" : "STRING",
+  "storages" : [ "SQL" ],
+  "samples" : [ ],
+  "summary" : true,
+  "audited" : false,
+  "persisted" : true,
+  "filter" : true,
+  "unique" : false
+}
