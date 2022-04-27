@@ -99,7 +99,7 @@
         "email": {
             "storages": ["SQL"],
             "nullable": true,
-            "description": "The email address of the customer as provided when the customer was created.",
+            "description": "Email Address",
             "readOnly": false,
             "versionable": false,
             "id": "CE_MoCustomer_email",
