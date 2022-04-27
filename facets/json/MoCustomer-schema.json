@@ -23,7 +23,7 @@
             "storages": ["SQL"],
             "nullable": true,
             "format": "date-time",
-            "description": "The customer\u2019s date and time of creation, in ISO 8601 format.",
+            "description": "Date Created",
             "readOnly": false,
             "versionable": false,
             "id": "CE_MoCustomer_createdAt",
