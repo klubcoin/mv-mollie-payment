@@ -73,14 +73,10 @@ public class MollieGetCustomer extends Script {
 
     public String createResponse(MoCustomer customer) {
         String createdAt = null;
-        String metadata = null;
         if (customer.getCreatedAt() != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
                 .withZone(ZoneId.from(ZoneOffset.UTC));
             createdAt = formatter.format(customer.getCreatedAt());
-        }
-        if (customer.getMetadata() != null) {
-            metadata = new Gson().toJson(customer.getMetadata());
         }
         String selfUrl = MOLLIE_BASE_URL + "customers/" + customer.getId();
         String dashboardUrl = "https://www.mollie.com/dashboard/org_15108779/customers/" + customer.getId();
@@ -92,21 +88,21 @@ public class MollieGetCustomer extends Script {
             "  \"name\": \"" + customer.getName() + "\",\n" +
             "  \"email\": \"" + customer.getEmail() + "\",\n" +
             "  \"locale\": " + nullOrString(customer.getLocale()) + ",\n" +
-            "  \"metadata\": " + metadata + ",\n" +
+            "  \"metadata\": " + customer.getMetadata() + ",\n" +
             "  \"createdAt\": " + nullOrString(createdAt) + ",\n" +
             "  \"_links\": {\n" +
             "    \"self\": {\n" +
             "      \"href\": \"" + selfUrl +"\",\n" +
             "      \"type\": \"application/hal+json\"\n" +
-            "    }\n" +
+            "    },\n" +
             "    \"dashboard\": {\n" +
             "      \"href\": \"" + dashboardUrl +"\",\n" +
             "      \"type\": \"text/html\"\n" +
-            "    }\n" +
+            "    },\n" +
             "    \"payments\": {\n" +
             "      \"href\": \"" + paymentsUrl +"\",\n" +
             "      \"type\": \"application/hal+json\"\n" +
-            "    }\n" +
+            "    },\n" +
             "    \"documentation\": {\n" +
             "      \"href\": \"https://docs.mollie.com/reference/v2/customers-api/get-customer\",\n" +
             "      \"type\": \"text/html\"\n" +
@@ -114,7 +110,7 @@ public class MollieGetCustomer extends Script {
             "  }\n" +
             "}";
         LOG.debug("response: {}", response);
-        return response;
+        return new Gson().toJson(response);
     }
 
     public String createErrorResponse(String status, String title, String detail) {
