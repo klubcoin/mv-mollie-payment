@@ -155,8 +155,7 @@ public class MollieCreateOrderScript extends Script {
         if (parameters == null || parameters.size() == 0) {
             return null;
         }
-        ;
-        List<MoOrderLine> result = new ArrayList<MoOrderLine>();
+        List<MoOrderLine> result = new ArrayList<>();
         for (Map<String, Object> lineParam : parameters) {
             MoOrderLine line = parseOrderLine(lineParam);
             if (line != null) {
@@ -212,6 +211,7 @@ public class MollieCreateOrderScript extends Script {
             String orderId = crossStorageApi.createOrUpdate(defaultRepo, order);
 
             parameters.put("id", "ord_" + orderId);
+            parameters.put("resource", "order");
             Map<String, Object> links = new HashMap<>();
             Map<String, String> self = new HashMap<>();
             self.put("href", "https://account.liquichain.io/meveo/rest/v1/orders/" + orderId);
