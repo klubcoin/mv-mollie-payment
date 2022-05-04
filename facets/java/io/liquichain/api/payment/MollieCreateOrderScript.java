@@ -9,6 +9,8 @@ import java.util.Map;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
+import org.meveo.commons.utils.ParamBean;
+import org.meveo.commons.utils.ParamBeanFactory;
 import org.meveo.model.customEntities.MoOrder;
 import org.meveo.model.customEntities.MoOrderLine;
 import org.meveo.model.customEntities.MoAddress;
@@ -26,6 +28,13 @@ public class MollieCreateOrderScript extends Script {
     private final CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
     private final RepositoryService repositoryService = getCDIBean(RepositoryService.class);
     private final Repository defaultRepo = repositoryService.findDefaultRepository();
+    private final ParamBeanFactory paramBeanFactory = getCDIBean(ParamBeanFactory.class);
+    private final ParamBean config = paramBeanFactory.getInstance();
+
+    private final String BASE_URL = config.getProperty("meveo.admin.baseUrl", "http://localhost:8080/");
+    private final String CONTEXT = config.getProperty("meveo.admin.webContext", "meveo");
+    private final String MEVEO_BASE_URL = BASE_URL + CONTEXT;
+
 
     final ObjectMapper mapper = new ObjectMapper();
 
@@ -214,15 +223,15 @@ public class MollieCreateOrderScript extends Script {
             parameters.put("resource", "order");
             Map<String, Object> links = new HashMap<>();
             Map<String, String> self = new HashMap<>();
-            self.put("href", "https://account.liquichain.io/meveo/rest/v1/orders/" + orderId);
+            self.put("href", MEVEO_BASE_URL + "/rest/v1/orders/" + orderId);
             self.put("type", "application/hal+json");
             links.put("self", self);
             Map<String, String> checkout = new HashMap<>();
-            checkout.put("href", "https://account.liquichain.io/meveo/rest/paymentpages/checkout/" + orderId);
+            checkout.put("href", MEVEO_BASE_URL + "/rest/paymentpages/checkout/" + orderId);
             checkout.put("type", "text/html");
             links.put("checkout", checkout);
             Map<String, String> dashboard = new HashMap<>();
-            dashboard.put("href", "https://account.liquichain.io/dashboard?orderid=" + orderId);
+            dashboard.put("href", BASE_URL +"dashboard?orderid=" + orderId);
             dashboard.put("type", "text/html");
             links.put("dashboard", dashboard);
             Map<String, String> documentation = new HashMap<>();
