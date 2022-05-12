@@ -1,17 +1,17 @@
 {
-  "code" : "moGetOrder",
-  "description" : "get Order",
-  "secured" : false,
+  "code" : "moGetPayment",
+  "description" : "get payment",
+  "secured" : true,
   "checkPathParams" : true,
-  "serviceCode" : "io.liquichain.api.payment.MollieGetOrderScript",
+  "serviceCode" : "io.liquichain.api.payment.MollieGetPayment",
   "synchronous" : true,
   "method" : "GET",
   "parameterMappings" : [ ],
-  "pathParameters" : [ "orderId" ],
+  "pathParameters" : [ "paymentId" ],
   "roles" : [ ],
   "returnedVariableName" : "result",
   "serializeResult" : false,
   "contentType" : "application/json",
   "basePath" : "pg",
-  "path" : "/v1/orders/{orderId}"
+  "path" : "/v1/payments/{paymentId}"
 }

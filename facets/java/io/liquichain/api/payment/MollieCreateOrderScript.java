@@ -1,11 +1,13 @@
 package io.liquichain.api.payment;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
@@ -22,37 +24,37 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.inject.Inject;
+
 public class MollieCreateOrderScript extends Script {
     private static final Logger LOG = LoggerFactory.getLogger(MollieCreateOrderScript.class);
 
-    private final CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
-    private final RepositoryService repositoryService = getCDIBean(RepositoryService.class);
-    private final Repository defaultRepo = repositoryService.findDefaultRepository();
-    private final ParamBeanFactory paramBeanFactory = getCDIBean(ParamBeanFactory.class);
-    private final ParamBean config = paramBeanFactory.getInstance();
+    @Inject
+    private CrossStorageApi crossStorageApi;
+    @Inject
+    private RepositoryService repositoryService;
+    @Inject
+    private ParamBeanFactory paramBeanFactory;
 
-    private final String BASE_URL = config.getProperty("meveo.admin.baseUrl", "http://localhost:8080/");
-    private final String CONTEXT = config.getProperty("meveo.admin.webContext", "meveo");
-    private final String MEVEO_BASE_URL = BASE_URL + CONTEXT;
+    private Repository defaultRepo = null;
 
-
-    final ObjectMapper mapper = new ObjectMapper();
+    private String BASE_URL = null;
+    private String MEVEO_BASE_URL = null;
+    private final ObjectMapper mapper = new ObjectMapper();
 
     private String result;
-
-    private String orderId;
-    private MoOrder order;
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
 
     public String getResult() {
         return result;
     }
 
-    public MoOrder getOrder() {
-        return order;
+    private void init() {
+        this.defaultRepo = repositoryService.findDefaultRepository();
+        ParamBean config = paramBeanFactory.getInstance();
+
+        BASE_URL = config.getProperty("meveo.admin.baseUrl", "http://localhost:8080/");
+        String CONTEXT = config.getProperty("meveo.admin.webContext", "meveo");
+        MEVEO_BASE_URL = BASE_URL + CONTEXT;
     }
 
     private Long getLongParam(Map<String, Object> parameters, String name) {
@@ -109,74 +111,87 @@ public class MollieCreateOrderScript extends Script {
         if (parameters == null) {
             return null;
         }
-        MoAddress result = new MoAddress();
+        MoAddress address = new MoAddress();
         String city = getStrParam(parameters, "city");
-        result.setCity(city);
+        address.setCity(city);
         String country = getStrParam(parameters, "country");
-        result.setCountry(country);
+        address.setCountry(country);
         String postalCode = getStrParam(parameters, "postalCode");
-        result.setPostalCode(postalCode);
+        address.setPostalCode(postalCode);
         String region = getStrParam(parameters, "region");
-        result.setRegion(region);
+        address.setRegion(region);
         String streetAdditional = getStrParam(parameters, "streetAdditional");
-        result.setStreetAdditional(streetAdditional);
+        address.setStreetAdditional(streetAdditional);
         String streetAndNumber = getStrParam(parameters, "streetAndNumber");
-        result.setStreetAndNumber(streetAndNumber);
+        address.setStreetAndNumber(streetAndNumber);
         String uuid = DigestUtils.sha1Hex(
             (streetAndNumber + streetAdditional + city + postalCode + region + country).replaceAll(
                 "[^\\p{IsAlphabetic}\\p{IsDigit}]", ""));
-        result.setUuid(uuid);
+        address.setUuid(uuid);
         try {
-            crossStorageApi.createOrUpdate(defaultRepo, result);
+            crossStorageApi.createOrUpdate(defaultRepo, address);
         } catch (Exception e) {
-            LOG.error("error persisting address:{} [{}]", result, e.getMessage());
-            result = null;
+            LOG.error("error persisting address:{} [{}]", address, e.getMessage());
+            address = null;
         }
-        return result;
+        return address;
     }
 
     private MoOrderLine parseOrderLine(Map<String, Object> parameters) {
         if (parameters == null) {
             return null;
         }
-        MoOrderLine result = new MoOrderLine();
-        result.setCategory(getStrParam(parameters, "category"));
-        result.setCurrency(getStrParam(parameters, "currency"));
-        result.setDiscountAmount(getDoubleParam((Map<String, Object>) parameters.get("value"), "discountAmount"));
-        result.setImageUrl(getStrParam(parameters, "imageUrl"));
-        result.setName(getStrParam(parameters, "name"));
-        result.setProductUrl(getStrParam(parameters, "productUrl"));
-        result.setQuantity(getLongParam(parameters, "quantity"));
-        result.setSku(getStrParam(parameters, "sku"));
-        result.setTotalAmount(getDoubleParam((Map<String, Object>) parameters.get("value"), "totalAmount"));
-        result.setType(getStrParam(parameters, "type"));
-        result.setUnitPrice(getDoubleParam((Map<String, Object>) parameters.get("value"), "unitPrice"));
-        /*try{
-            crossStorageApi.createOrUpdate(defaultRepo, result);    
-        } catch (Exception e){
-          LOG.error("error persisting  orderline:{} [{}]",result,e.getMessage());
-          result=null;
-        }*/
-        return result;
+        MoOrderLine orderLine = new MoOrderLine();
+        Map<String, Object> discountAmount = (Map<String, Object>) parameters.get("discountAmount");
+        Map<String, Object> totalAmount = (Map<String, Object>) parameters.get("totalAmount");
+        Map<String, Object> vatAmount = (Map<String, Object>) parameters.get("vatAmount");
+        Map<String, Object> unitPrice = (Map<String, Object>) parameters.get("unitPrice");
+        orderLine.setSku(getStrParam(parameters, "sku"));
+        orderLine.setName(getStrParam(parameters, "name"));
+        orderLine.setQuantity(getLongParam(parameters, "quantity"));
+        orderLine.setVatRate(getDoubleParam(parameters, "vatRate"));
+        orderLine.setUnitPrice(getDoubleParam(unitPrice, "value"));
+        orderLine.setTotalAmount(getDoubleParam(totalAmount, "value"));
+        orderLine.setVatAmount(getDoubleParam(vatAmount, "value"));
+        orderLine.setDiscountAmount(getDoubleParam(discountAmount, "value"));
+        orderLine.setCurrency(getStrParam(totalAmount, "currency"));
+        orderLine.setCategory(getStrParam(parameters, "category"));
+        orderLine.setImageUrl(getStrParam(parameters, "imageUrl"));
+        orderLine.setProductUrl(getStrParam(parameters, "productUrl"));
+        orderLine.setType(getStrParam(parameters, "type"));
+        orderLine.setMetadata(convertJsonToString(parameters.get("metadata")));
+        orderLine.setCreationDate(Instant.now());
+        return orderLine;
     }
 
     private List<MoOrderLine> parseOrderLines(List<Map<String, Object>> parameters) {
         if (parameters == null || parameters.size() == 0) {
             return null;
         }
-        List<MoOrderLine> result = new ArrayList<>();
+        List<MoOrderLine> orderLines = new ArrayList<>();
         for (Map<String, Object> lineParam : parameters) {
             MoOrderLine line = parseOrderLine(lineParam);
             if (line != null) {
-                result.add(line);
+                orderLines.add(line);
             }
         }
-        return result;
+        return orderLines;
     }
 
+    private String convertJsonToString(Object data) {
+        try {
+            return mapper.writeValueAsString(data);
+        } catch (JsonProcessingException e) {
+            LOG.error("Failed to map result to json string.", e);
+        }
+        return null;
+    }
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
+        this.init();
+        String orderId = getStrParam(parameters, "id");
+        MoOrder order;
         if (orderId != null) {
             LOG.info("get Order[{}] {}", orderId, parameters);
             try {
@@ -185,72 +200,131 @@ public class MollieCreateOrderScript extends Script {
                 }
                 order = crossStorageApi.find(defaultRepo, orderId, MoOrder.class);
             } catch (Exception e) {
-                LOG.error("cannot get order " + orderId, e);
+                result = "Cannot retrieve order: " + orderId;
+                LOG.error(result, e);
+                return;
             }
-            return;
+        } else {
+            order = new MoOrder();
         }
+
         LOG.info("CreateOrder {}", parameters);
         Map<String, Object> amountMap = (Map<String, Object>) parameters.get("amount");
-        MoOrder order = new MoOrder();
-        order.setAmount(Double.parseDouble(getStrParam(amountMap, "value")));
-        order.setCurrency(getStrParam(amountMap, "currency"));
-        try {
-            order.setMetadata(mapper.writeValueAsString(parameters.get("metadata")));
-        } catch (Exception e) {
-            order.setMetadata(getStrParam(parameters, "metadata"));
-        }
+        double amountValue = Double.parseDouble(getStrParam(amountMap, "value"));
+        String amountCurrency = getStrParam(amountMap, "currency");
+        order.setMethod(getStrParam(parameters, "method"));
+        order.setAmount(amountValue);
+        order.setCurrency(amountCurrency);
+        order.setMetadata(convertJsonToString(parameters.get("metadata")));
         order.setOrderNumber(getStrParam(parameters, "orderNumber"));
         order.setRedirectUrl(getStrParam(parameters, "redirectUrl"));
-        if (!"licoin".equals(getStrParam(parameters, "method"))) {
-            result = "{\"error\":\"invalid payment method\"";
-        }
         order.setLocale(getStrParam(parameters, "locale"));
         order.setRedirectUrl(getStrParam(parameters, "redirectUrl").replace("http:", "https:"));
         order.setWebhookUrl(getStrParam(parameters, "webhookUrl").replace("http:", "https:"));
         order.setBillingAddress(parseAddress((Map<String, Object>) parameters.get("billingAddress")));
         order.setShippingAddress(parseAddress((Map<String, Object>) parameters.get("shippingAddress")));
-        order.setLines(parseOrderLines((List<Map<String, Object>>) parameters.get("lines")));
+        List<MoOrderLine> orderLines = parseOrderLines((List<Map<String, Object>>) parameters.get("lines"));
+        order.setLines(orderLines);
         order.setStatus("created");
-        parameters.put("status", "created");
-        order.setCreationDate(java.time.Instant.now());
-        parameters.put("createdAt", order.getCreationDate().toString());
+        order.setCreationDate(Instant.now());
         order.setExpiresAt(order.getCreationDate().plus(Duration.ofDays(10)));
-        parameters.put("expiresAt", order.getExpiresAt().toString());
+        String uuid;
         try {
-            String orderId = crossStorageApi.createOrUpdate(defaultRepo, order);
-
-            parameters.put("id", "ord_" + orderId);
-            parameters.put("resource", "order");
-            Map<String, Object> links = new HashMap<>();
-            Map<String, String> self = new HashMap<>();
-            self.put("href", MEVEO_BASE_URL + "/rest/v1/orders/" + orderId);
-            self.put("type", "application/hal+json");
-            links.put("self", self);
-            Map<String, String> checkout = new HashMap<>();
-            checkout.put("href", MEVEO_BASE_URL + "/rest/paymentpages/checkout/" + orderId);
-            checkout.put("type", "text/html");
-            links.put("checkout", checkout);
-            Map<String, String> dashboard = new HashMap<>();
-            dashboard.put("href", BASE_URL +"dashboard?orderid=" + orderId);
-            dashboard.put("type", "text/html");
-            links.put("dashboard", dashboard);
-            Map<String, String> documentation = new HashMap<>();
-            documentation.put("href", "https://docs.liquichain.io/reference/v2/orders-api/get-order");
-            // see "https://docs.mollie.com/reference/v2/orders-api/get-order",
-            documentation.put("type", "text/html");
-            links.put("documentation", documentation);
-
-            parameters.put("_links", links);
-            parameters.put("_embed", new ArrayList<>());
-            try {
-                result = mapper.writeValueAsString(parameters);
-            } catch (Exception ex) {
-                result = "" + parameters;
-            }
+            uuid = crossStorageApi.createOrUpdate(defaultRepo, order);
         } catch (Exception e) {
             LOG.error("error persisting  order:{} [{}]", result, e.getMessage());
-            result = "{\"error\":\"error persisting order\"";
+            result = "{\"error\":\"error persisting order\"}";
+            return;
         }
+        String id = "ord_" + uuid;
+        result = "{"
+            + "\"resource\": \"order\","
+            + "\"id\": \"" + id + "\","
+            + "\"profileId\": \"pfl_" + uuid + "\","
+            + "\"method\": \"" + parameters.get("method") + "\","
+            + "\"amount\": " + convertJsonToString(parameters.get("amount")) + ","
+            + "\"status\": \"created\","
+            + "\"isCancelable\": false,"
+            + "\"metadata\": " + convertJsonToString(parameters.get("metadata")) + ","
+            + "\"createdAt\": \"" + order.getCreationDate().toString() + "\","
+            + "\"expiresAt\": \"" + order.getExpiresAt().toString() + "\","
+            + "\"mode\": \"test\","
+            + "\"locale\": \"" + parameters.get("locale") + "\","
+            + "\"billingAddress\": " + convertJsonToString(parameters.get("billingAddress")) + ","
+            + "\"shoppercountrymustmatchbillingcountry\": false,"
+            + "\"ordernumber\": \"" + parameters.get("orderNumber") + "\","
+            + "\"redirecturl\": \"" + parameters.get("redirectUrl") + "\","
+            + "\"webhookurl\": \"" + parameters.get("webhookUrl") + "\",";
+
+        String lines = orderLines
+            .stream()
+            .map(
+                line -> "{\n" +
+                    "      \"resource\": \"orderline\",\n" +
+                    "      \"id\": \"odl_" + line.getUuid() + "\",\n" +
+                    "      \"orderId\": \"" + id + "\",\n" +
+                    "      \"name\": \"" + line.getName() + "\",\n" +
+                    "      \"sku\": \"" + line.getSku() + "\",\n" +
+                    "      \"type\": \"physical\",\n" +
+                    "      \"status\": \"created\",\n" +
+                    "      \"metadata\": " + line.getMetadata() + ",\n" +
+                    "      \"isCancelable\": false,\n" +
+                    "      \"quantity\": " + line.getQuantity() + ",\n" +
+                    "      \"quantityShipped\": 0,\n" +
+                    "      \"amountShipped\": {\n" +
+                    "        \"value\": \"0.00\",\n" +
+                    "        \"currency\": \"USD\"\n" +
+                    "      },\n" +
+                    "      \"quantityRefunded\": 0,\n" +
+                    "      \"amountRefunded\": {\n" +
+                    "        \"value\": \"0.00\",\n" +
+                    "        \"currency\": \"USD\"\n" +
+                    "      },\n" +
+                    "      \"quantityCanceled\": 0,\n" +
+                    "      \"amountCanceled\": {\n" +
+                    "        \"value\": \"0.00\",\n" +
+                    "        \"currency\": \"USD\"\n" +
+                    "      },\n" +
+                    "      \"shippableQuantity\": 0,\n" +
+                    "      \"refundableQuantity\": 0,\n" +
+                    "      \"cancelableQuantity\": 0,\n" +
+                    "      \"unitPrice\": {\n" +
+                    "        \"value\": \"" + line.getUnitPrice() + "\",\n" +
+                    "        \"currency\": \"" + line.getCurrency() + "\"\n" +
+                    "      },\n" +
+                    "      \"vatRate\": \"0.00\",\n" +
+                    "      \"vatAmount\": {\n" +
+                    "        \"value\": \"" + line.getVatAmount() + "\",\n" +
+                    "        \"currency\": \"" + line.getCurrency() + "\"\n" +
+                    "      },\n" +
+                    "      \"totalAmount\": {\n" +
+                    "        \"value\": \"" + line.getTotalAmount() + "\",\n" +
+                    "        \"currency\": \"" + line.getCurrency() + "\"\n" +
+                    "      },\n" +
+                    "      \"createdAt\": \"" + line.getCreationDate().toString() + "\"\n" +
+                    "    }")
+            .collect(Collectors.joining(",\n"));
+
+        result += String.format("\"lines\": [%s],", lines);
+
+        result += "\"_links\": {\n" +
+            "    \"self\": {\n" +
+            "      \"href\": \"" + MEVEO_BASE_URL + "/rest/v1/orders/" + id + "\",\n" +
+            "      \"type\": \"application/hal+json\"\n" +
+            "    },\n" +
+            "    \"dashboard\": {\n" +
+            "      \"href\": \"" + BASE_URL + "dashboard?orderid=" + id + "\",\n" +
+            "      \"type\": \"text/html\"\n" +
+            "    },\n" +
+            "    \"checkout\": {\n" +
+            "      \"href\": \"" + MEVEO_BASE_URL + "/rest/paymentpages/checkout/" + id + "\",\n" +
+            "      \"type\": \"text/html\"\n" +
+            "    },\n" +
+            "    \"documentation\": {\n" +
+            "      \"href\": \"https://docs.liquichain.io/reference/v2/orders-api/get-order\",\n" +
+            "      \"type\": \"text/html\"\n" +
+            "    }\n" +
+            "  }";
     }
 
 }

@@ -19,7 +19,14 @@ const responseSchema = {
   "id" : "moCreateOrderResponse",
   "default" : "Schema definition for moCreateOrder",
   "$schema" : "http://json-schema.org/draft-07/schema",
-  "type" : "object"
+  "type" : "object",
+  "properties" : {
+    "result" : {
+      "title" : "result",
+      "type" : "string",
+      "minLength" : 1
+    }
+  }
 }
 
 // should contain offline mock data, make sure it adheres to the response schema

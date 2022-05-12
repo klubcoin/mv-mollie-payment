@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class MoOrderLine implements CustomEntity {
@@ -21,11 +22,15 @@ public class MoOrderLine implements CustomEntity {
 
     private Double unitPrice;
 
+    private String metadata;
+
     private Long quantity;
 
     private Double vatRate;
 
     private Double discountAmount;
+
+    private Instant creationDate;
 
     private String type;
 
@@ -70,6 +75,14 @@ public class MoOrderLine implements CustomEntity {
         this.unitPrice = unitPrice;
     }
 
+    public String getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(String metadata) {
+        this.metadata = metadata;
+    }
+
     public Long getQuantity() {
         return quantity;
     }
@@ -92,6 +105,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setDiscountAmount(Double discountAmount) {
         this.discountAmount = discountAmount;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
     }
 
     public String getType() {

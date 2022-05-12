@@ -16,6 +16,16 @@
             "title": "MoOrderLine.unitPrice",
             "type": "number"
         },
+        "metadata": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Metadata",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_metadata",
+            "title": "MoOrderLine.metadata",
+            "type": "string"
+        },
         "quantity": {
             "storages": ["SQL"],
             "nullable": true,
@@ -46,6 +56,17 @@
             "id": "CE_MoOrderLine_discountAmount",
             "title": "MoOrderLine.discountAmount",
             "type": "number"
+        },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_creationDate",
+            "title": "MoOrderLine.creationDate",
+            "type": "string"
         },
         "type": {
             "storages": ["SQL"],

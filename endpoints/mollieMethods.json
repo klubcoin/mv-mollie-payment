@@ -3,7 +3,7 @@
   "description" : "Mollie payment copatible GW",
   "secured" : false,
   "checkPathParams" : false,
-  "serviceCode" : "io.liquichain.api.payment.MolliePaymentScript",
+  "serviceCode" : "io.liquichain.api.payment.MollieGetMethods",
   "synchronous" : true,
   "method" : "GET",
   "parameterMappings" : [ {

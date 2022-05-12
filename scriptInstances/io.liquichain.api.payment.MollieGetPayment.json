@@ -1,6 +1,9 @@
 {
-  "code" : "io.liquichain.api.payment.MollieCreateOrderScript",
-  "inputs" : [ ],
+  "code" : "io.liquichain.api.payment.MollieGetPayment",
+  "inputs" : [ {
+    "name" : "paymentId",
+    "type" : "String"
+  } ],
   "outputs" : [ {
     "name" : "result",
     "type" : "String"
