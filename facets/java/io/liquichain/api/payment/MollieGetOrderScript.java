@@ -12,6 +12,7 @@ import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.ParamBeanFactory;
 import org.meveo.model.customEntities.MoOrder;
 import org.meveo.model.customEntities.MoOrderLine;
+import org.meveo.model.customEntities.Transaction;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
 import org.meveo.admin.exception.BusinessException;
@@ -165,6 +166,58 @@ public class MollieGetOrderScript extends Script {
 
             result += String.format("\"lines\": [%s],", lines);
 
+            String embedQuery = (String) parameters.get("embed");
+            if("payments--GET".equals(embedQuery)){
+                List<Transaction> transactions = crossStorageApi
+                    .find(Transaction.class)
+                    .by("orderId", id)
+                    .getResults();
+                result += "{\"_embedded\": {\"payments\": [" +
+                transactions.stream().map(
+                    transaction ->
+                    "{\n" +
+                    "    \"resource\": \"payment\",\n" +
+                    "    \"id\": \"" + id + "\",\n" +
+                    "    \"mode\": \"test\",\n" +
+                    "    \"createdAt\": \"" + transaction.getCreationDate() + "\",\n" +
+                    "    \"amount\": {\n" +
+                    "        \"value\": \"" + transaction.getValue() + "\",\n" +
+                    "        \"currency\": \"" + transaction.getCurrency() + "\"\n" +
+                    "    },\n" +
+                    "    \"description\": \"" + transaction.getDescription() + "\",\n" +
+                    "    \"method\": null,\n" +
+                    "    \"metadata\": " + transaction.getMetadata() + ",\n" +
+                    "    \"status\": \"open\",\n" +
+                    "    \"isCancelable\": false,\n" +
+                    "    \"expiresAt\": \"" + transaction.getExpirationDate() + "\",\n" +
+                    "    \"details\": null,\n" +
+                    "    \"profileId\": \"pfl_" + transaction.getUuid() + "\",\n" +
+                    "    \"orderId\": \"" + transaction.getOrderId() + "\",\n" +
+                    "    \"sequenceType\": \"oneoff\",\n" +
+                    "    \"redirectUrl\": \"" + transaction.getRedirectUrl() + "\",\n" +
+                    "    \"webhookUrl\": \"" + transaction.getWebhookUrl() + "\",\n" +
+                    "    \"_links\": {\n" +
+                    "        \"self\": {\n" +
+                    "            \"href\": \"" + MEVEO_BASE_URL + "/rest/v1/payments/" + id + "\",\n" +
+                    "            \"type\": \"application/json\"\n" +
+                    "        },\n" +
+                    "        \"checkout\": {\n" +
+                    "            \"href\": \"" + MEVEO_BASE_URL + "/rest/paymentpages/checkout/" + orderId + "\",\n" +
+                    "            \"type\": \"text/html\"\n" +
+                    "        },\n" +
+                    "        \"dashboard\": {\n" +
+                    "            \"href\": \"" + BASE_URL + "dashboard?orderid=" + orderId + "\",\n" +
+                    "            \"type\": \"application/json\"\n" +
+                    "        },\n" +
+                    "        \"documentation\": {\n" +
+                    "            \"href\": \"https://docs.liquichain.io/reference/v2/payments-api/get-payment\",\n" +
+                    "            \"type\": \"text/html\"\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "}").collect(Collectors.joining(",\n"))
+                    +"]}}";
+            }
+
             result += "\"_links\": {\n" +
                 "    \"self\": {\n" +
                 "      \"href\": \"" + MEVEO_BASE_URL + "/rest/v1/orders/" + id + "\",\n" +
@@ -189,5 +242,22 @@ public class MollieGetOrderScript extends Script {
         }
         super.execute(parameters);
     }
+
+    public String createErrorResponse(String status, String title, String detail) {
+        String response = "{\n" +
+            "  \"status\": " + status + ",\n" +
+            "  \"title\": \"" + title + "\",\n" +
+            "  \"detail\": \"" + detail + "\",\n" +
+            "  \"_links\": {\n" +
+            "    \"documentation\": {\n" +
+            "      \"href\": \"https://docs.mollie.com/errors\",\n" +
+            "      \"type\": \"text/html\"\n" +
+            "    }\n" +
+            "  }\n" +
+            "}";
+        LOG.debug("error response: {}", response);
+        return response;
+    }
+
 
 }
