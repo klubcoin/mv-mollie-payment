@@ -22,6 +22,8 @@ public class MoOrder implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private Instant consumerDateOfBirth;
+
     private String metadata;
 
     private String redirectUrl;
@@ -65,6 +67,14 @@ public class MoOrder implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public Instant getConsumerDateOfBirth() {
+        return consumerDateOfBirth;
+    }
+
+    public void setConsumerDateOfBirth(Instant consumerDateOfBirth) {
+        this.consumerDateOfBirth = consumerDateOfBirth;
     }
 
     public String getMetadata() {
