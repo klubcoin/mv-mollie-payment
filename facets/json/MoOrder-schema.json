@@ -123,6 +123,16 @@
             "title": "MoOrder.amountRefunded",
             "type": "number"
         },
+        "shippingAddress": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Shipping address",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_shippingAddress",
+            "title": "MoOrder.shippingAddress",
+            "$ref": "#/definitions/MoAddress"
+        },
         "currency": {
             "storages": ["SQL"],
             "nullable": true,
