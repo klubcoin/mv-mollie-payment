@@ -17,6 +17,17 @@
             "type": "string",
             "maxLength": 50
         },
+        "postalCode": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Postal code",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoAddress_postalCode",
+            "title": "MoAddress.postalCode",
+            "type": "string",
+            "maxLength": 10
+        },
         "streetAdditional": {
             "storages": ["SQL"],
             "nullable": true,
