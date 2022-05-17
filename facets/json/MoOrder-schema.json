@@ -6,6 +6,16 @@
     "title": "Order",
     "type": "object",
     "properties": {
+        "metadata": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "metadata",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_metadata",
+            "title": "MoOrder.metadata",
+            "type": "string"
+        },
         "payment": {
             "storages": ["SQL"],
             "nullable": true,
