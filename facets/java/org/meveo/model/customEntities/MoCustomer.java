@@ -20,6 +20,8 @@ public class MoCustomer implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String mode;
+
     private Instant createdAt;
 
     private String metadata;
@@ -45,6 +47,14 @@ public class MoCustomer implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
     }
 
     public Instant getCreatedAt() {
