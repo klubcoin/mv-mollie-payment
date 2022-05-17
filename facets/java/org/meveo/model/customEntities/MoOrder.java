@@ -26,6 +26,8 @@ public class MoOrder implements CustomEntity {
 
     private String metadata;
 
+    private Double quantity_shipped;
+
     private String redirectUrl;
 
     private String method;
@@ -83,6 +85,14 @@ public class MoOrder implements CustomEntity {
 
     public void setMetadata(String metadata) {
         this.metadata = metadata;
+    }
+
+    public Double getQuantity_shipped() {
+        return quantity_shipped;
+    }
+
+    public void setQuantity_shipped(Double quantity_shipped) {
+        this.quantity_shipped = quantity_shipped;
     }
 
     public String getRedirectUrl() {
