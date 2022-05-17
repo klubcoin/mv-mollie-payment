@@ -6,6 +6,17 @@
     "title": "Customer",
     "type": "object",
     "properties": {
+        "metadata": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Metadata",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoCustomer_metadata",
+            "title": "MoCustomer.metadata",
+            "type": "string",
+            "maxLength": 255
+        },
         "name": {
             "storages": ["SQL"],
             "nullable": true,
