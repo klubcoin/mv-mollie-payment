@@ -16,6 +16,16 @@
             "title": "MoOrder.metadata",
             "type": "string"
         },
+        "amountRefunded": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Amount refunded",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_amountRefunded",
+            "title": "MoOrder.amountRefunded",
+            "type": "number"
+        },
         "payment": {
             "storages": ["SQL"],
             "nullable": true,
