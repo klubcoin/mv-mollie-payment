@@ -37,6 +37,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "category": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Category",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_category",
+            "title": "MoOrderLine.category",
+            "type": "string",
+            "maxLength": 20
+        },
         "creationDate": {
             "storages": ["SQL"],
             "nullable": true,
