@@ -6,6 +6,16 @@
     "title": "Order",
     "type": "object",
     "properties": {
+        "amount": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Amount",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_amount",
+            "title": "MoOrder.amount",
+            "type": "number"
+        },
         "consumerDateOfBirth": {
             "storages": ["SQL"],
             "nullable": true,
