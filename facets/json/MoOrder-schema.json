@@ -26,6 +26,17 @@
             "title": "MoOrder.payment",
             "type": "string"
         },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "creation date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_creationDate",
+            "title": "MoOrder.creationDate",
+            "type": "string"
+        },
         "lines": {
             "storages": ["SQL"],
             "nullable": true,
