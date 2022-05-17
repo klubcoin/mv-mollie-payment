@@ -37,6 +37,16 @@
             "type": "integer",
             "minimum": 0
         },
+        "vatRate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "VAT rate",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_vatRate",
+            "title": "MoOrderLine.vatRate",
+            "type": "number"
+        },
         "discountAmount": {
             "storages": ["SQL"],
             "nullable": true,
