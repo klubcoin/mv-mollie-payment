@@ -24,6 +24,8 @@ public class MoOrderLine implements CustomEntity {
 
     private String metadata;
 
+    private Long quantity;
+
     private String name;
 
     private Double discountAmount;
@@ -73,6 +75,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setMetadata(String metadata) {
         this.metadata = metadata;
+    }
+
+    public Long getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
     }
 
     public String getName() {
