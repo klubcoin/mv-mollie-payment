@@ -21,6 +21,8 @@ public class MoOrderLine implements CustomEntity {
 
     private Double totalAmount;
 
+    private String metadata;
+
     private String name;
 
     @Override()
@@ -46,6 +48,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setTotalAmount(Double totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public String getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(String metadata) {
+        this.metadata = metadata;
     }
 
     public String getName() {
