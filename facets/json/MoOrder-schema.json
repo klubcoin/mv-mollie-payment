@@ -26,6 +26,22 @@
             "title": "MoOrder.payment",
             "type": "string"
         },
+        "lines": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "uniqueItems": true,
+            "description": "lines",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_lines",
+            "title": "MoOrder.lines",
+            "type": "array",
+            "items": {
+                "id": "CE_MoOrder_lines_item",
+                "title": "MoOrder.lines item",
+                "$ref": "#/definitions/MoOrderLine"
+            }
+        },
         "locale": {
             "storages": ["SQL"],
             "nullable": true,
