@@ -26,6 +26,8 @@ public class MoOrderLine implements CustomEntity {
 
     private Long quantity;
 
+    private Double vatRate;
+
     private Double discountAmount;
 
     private Instant creationDate;
@@ -87,6 +89,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setQuantity(Long quantity) {
         this.quantity = quantity;
+    }
+
+    public Double getVatRate() {
+        return vatRate;
+    }
+
+    public void setVatRate(Double vatRate) {
+        this.vatRate = vatRate;
     }
 
     public Double getDiscountAmount() {
