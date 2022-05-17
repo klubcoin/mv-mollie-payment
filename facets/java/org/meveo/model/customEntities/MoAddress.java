@@ -19,6 +19,8 @@ public class MoAddress implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String city;
+
     private String streetAdditional;
 
     private String region;
@@ -38,6 +40,14 @@ public class MoAddress implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getStreetAdditional() {
