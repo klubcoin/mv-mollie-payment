@@ -26,6 +26,8 @@ public class MoCustomer implements CustomEntity {
 
     private String name;
 
+    private String locale;
+
     private String email;
 
     @Override()
@@ -67,6 +69,14 @@ public class MoCustomer implements CustomEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 
     public String getEmail() {
