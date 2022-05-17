@@ -47,6 +47,16 @@
             "id": "CE_MoOrderLine_creationDate",
             "title": "MoOrderLine.creationDate",
             "type": "string"
+        },
+        "vatAmount": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "VAT amount",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_vatAmount",
+            "title": "MoOrderLine.vatAmount",
+            "type": "number"
         }
     }
 }
