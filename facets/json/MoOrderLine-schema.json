@@ -6,14 +6,14 @@
     "title": "Order Line",
     "type": "object",
     "properties": {
-        "totalAmount": {
+        "unitPrice": {
             "storages": ["SQL"],
             "nullable": true,
-            "description": "Total amount",
+            "description": "Unit price",
             "readOnly": false,
             "versionable": false,
-            "id": "CE_MoOrderLine_totalAmount",
-            "title": "MoOrderLine.totalAmount",
+            "id": "CE_MoOrderLine_unitPrice",
+            "title": "MoOrderLine.unitPrice",
             "type": "number"
         },
         "metadata": {
@@ -37,17 +37,6 @@
             "type": "integer",
             "minimum": 0
         },
-        "name": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Name",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_MoOrderLine_name",
-            "title": "MoOrderLine.name",
-            "type": "string",
-            "maxLength": 255
-        },
         "discountAmount": {
             "storages": ["SQL"],
             "nullable": true,
@@ -57,28 +46,6 @@
             "id": "CE_MoOrderLine_discountAmount",
             "title": "MoOrderLine.discountAmount",
             "type": "number"
-        },
-        "currency": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "currency",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_MoOrderLine_currency",
-            "title": "MoOrderLine.currency",
-            "type": "string",
-            "maxLength": 3
-        },
-        "category": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Category",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_MoOrderLine_category",
-            "title": "MoOrderLine.category",
-            "type": "string",
-            "maxLength": 20
         },
         "creationDate": {
             "storages": ["SQL"],
@@ -90,28 +57,6 @@
             "id": "CE_MoOrderLine_creationDate",
             "title": "MoOrderLine.creationDate",
             "type": "string"
-        },
-        "productUrl": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Product Url",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_MoOrderLine_productUrl",
-            "title": "MoOrderLine.productUrl",
-            "type": "string",
-            "maxLength": 500
-        },
-        "sku": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "SKU",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_MoOrderLine_sku",
-            "title": "MoOrderLine.sku",
-            "type": "string",
-            "maxLength": 64
         },
         "type": {
             "storages": ["SQL"],
@@ -140,6 +85,71 @@
             "id": "CE_MoOrderLine_vatAmount",
             "title": "MoOrderLine.vatAmount",
             "type": "number"
+        },
+        "totalAmount": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Total amount",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_totalAmount",
+            "title": "MoOrderLine.totalAmount",
+            "type": "number"
+        },
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_name",
+            "title": "MoOrderLine.name",
+            "type": "string",
+            "maxLength": 255
+        },
+        "currency": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "currency",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_currency",
+            "title": "MoOrderLine.currency",
+            "type": "string",
+            "maxLength": 3
+        },
+        "category": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Category",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_category",
+            "title": "MoOrderLine.category",
+            "type": "string",
+            "maxLength": 20
+        },
+        "productUrl": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Product Url",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_productUrl",
+            "title": "MoOrderLine.productUrl",
+            "type": "string",
+            "maxLength": 500
+        },
+        "sku": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "SKU",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_sku",
+            "title": "MoOrderLine.sku",
+            "type": "string",
+            "maxLength": 64
         }
     }
 }
