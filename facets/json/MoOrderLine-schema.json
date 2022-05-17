@@ -26,6 +26,17 @@
             "title": "MoOrderLine.metadata",
             "type": "string"
         },
+        "quantity": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "quantity",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_quantity",
+            "title": "MoOrderLine.quantity",
+            "type": "integer",
+            "minimum": 0
+        },
         "name": {
             "storages": ["SQL"],
             "nullable": true,
