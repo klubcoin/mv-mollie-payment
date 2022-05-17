@@ -5,15 +5,27 @@
     "id": "MoOrder",
     "title": "Order",
     "type": "object",
-    "properties": {"email": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Customer email",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_MoOrder_email",
-        "title": "MoOrder.email",
-        "type": "string",
-        "maxLength": 500
-    }}
+    "properties": {
+        "payment": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "payment properties",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_payment",
+            "title": "MoOrder.payment",
+            "type": "string"
+        },
+        "email": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Customer email",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_email",
+            "title": "MoOrder.email",
+            "type": "string",
+            "maxLength": 500
+        }
+    }
 }
