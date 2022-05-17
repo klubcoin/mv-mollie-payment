@@ -45,6 +45,8 @@ public class MoOrder implements CustomEntity {
 
     private String assignedTo;
 
+    private Instant expiresAt;
+
     private String webhookUrl;
 
     private Boolean shopperCountryMustMatchBillingCountry;
@@ -170,6 +172,14 @@ public class MoOrder implements CustomEntity {
 
     public void setAssignedTo(String assignedTo) {
         this.assignedTo = assignedTo;
+    }
+
+    public Instant getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(Instant expiresAt) {
+        this.expiresAt = expiresAt;
     }
 
     public String getWebhookUrl() {
