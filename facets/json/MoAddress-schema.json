@@ -6,6 +6,17 @@
     "title": "Address",
     "type": "object",
     "properties": {
+        "city": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "City",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoAddress_city",
+            "title": "MoAddress.city",
+            "type": "string",
+            "maxLength": 50
+        },
         "streetAdditional": {
             "storages": ["SQL"],
             "nullable": true,
