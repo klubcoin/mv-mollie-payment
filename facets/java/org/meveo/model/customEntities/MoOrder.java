@@ -24,6 +24,8 @@ public class MoOrder implements CustomEntity {
 
     private String metadata;
 
+    private String redirectUrl;
+
     private String method;
 
     private Double amountCaptured;
@@ -67,6 +69,14 @@ public class MoOrder implements CustomEntity {
 
     public void setMetadata(String metadata) {
         this.metadata = metadata;
+    }
+
+    public String getRedirectUrl() {
+        return redirectUrl;
+    }
+
+    public void setRedirectUrl(String redirectUrl) {
+        this.redirectUrl = redirectUrl;
     }
 
     public String getMethod() {
