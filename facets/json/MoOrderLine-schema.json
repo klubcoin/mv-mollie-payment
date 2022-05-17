@@ -96,6 +96,17 @@
             "title": "MoOrderLine.totalAmount",
             "type": "number"
         },
+        "imageUrl": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Image Url",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_imageUrl",
+            "title": "MoOrderLine.imageUrl",
+            "type": "string",
+            "maxLength": 500
+        },
         "name": {
             "storages": ["SQL"],
             "nullable": true,
