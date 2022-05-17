@@ -36,6 +36,17 @@
             "title": "MoOrderLine.name",
             "type": "string",
             "maxLength": 255
+        },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_creationDate",
+            "title": "MoOrderLine.creationDate",
+            "type": "string"
         }
     }
 }
