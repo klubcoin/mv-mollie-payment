@@ -3,6 +3,7 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import java.time.Instant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class MoOrderLine implements CustomEntity {
@@ -24,6 +25,8 @@ public class MoOrderLine implements CustomEntity {
     private String metadata;
 
     private String name;
+
+    private Instant creationDate;
 
     @Override()
     public String getUuid() {
@@ -64,6 +67,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
     }
 
     @Override()
