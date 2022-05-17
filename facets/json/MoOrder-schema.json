@@ -16,6 +16,17 @@
             "title": "MoOrder.metadata",
             "type": "string"
         },
+        "redirectUrl": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "redirectUrl",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_redirectUrl",
+            "title": "MoOrder.redirectUrl",
+            "type": "string",
+            "maxLength": 1000
+        },
         "method": {
             "storages": ["SQL"],
             "nullable": true,
