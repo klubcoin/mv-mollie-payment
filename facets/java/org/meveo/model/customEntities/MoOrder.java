@@ -40,6 +40,8 @@ public class MoOrder implements CustomEntity {
 
     private String email;
 
+    private String webhookUrl;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -127,6 +129,14 @@ public class MoOrder implements CustomEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getWebhookUrl() {
+        return webhookUrl;
+    }
+
+    public void setWebhookUrl(String webhookUrl) {
+        this.webhookUrl = webhookUrl;
     }
 
     @Override()
