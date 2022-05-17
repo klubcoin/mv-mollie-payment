@@ -39,6 +39,8 @@ public class MoOrder implements CustomEntity {
 
     private String locale;
 
+    private String assignedTo;
+
     private String webhookUrl;
 
     private Boolean shopperCountryMustMatchBillingCountry;
@@ -138,6 +140,14 @@ public class MoOrder implements CustomEntity {
 
     public void setLocale(String locale) {
         this.locale = locale;
+    }
+
+    public String getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(String assignedTo) {
+        this.assignedTo = assignedTo;
     }
 
     public String getWebhookUrl() {
