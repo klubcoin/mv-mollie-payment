@@ -3,6 +3,8 @@ package org.meveo.model.customEntities;
 import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
+import org.meveo.model.customEntities.MoOrderLine;
+import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class MoOrder implements CustomEntity {
@@ -22,6 +24,8 @@ public class MoOrder implements CustomEntity {
     private String metadata;
 
     private String payment;
+
+    private List<MoOrderLine> lines = new ArrayList<>();
 
     private String locale;
 
@@ -58,6 +62,14 @@ public class MoOrder implements CustomEntity {
 
     public void setPayment(String payment) {
         this.payment = payment;
+    }
+
+    public List<MoOrderLine> getLines() {
+        return lines;
+    }
+
+    public void setLines(List<MoOrderLine> lines) {
+        this.lines = lines;
     }
 
     public String getLocale() {
