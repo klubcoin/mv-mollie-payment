@@ -5,15 +5,27 @@
     "id": "MoOrderLine",
     "title": "Order Line",
     "type": "object",
-    "properties": {"name": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Name",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_MoOrderLine_name",
-        "title": "MoOrderLine.name",
-        "type": "string",
-        "maxLength": 255
-    }}
+    "properties": {
+        "totalAmount": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Total amount",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_totalAmount",
+            "title": "MoOrderLine.totalAmount",
+            "type": "number"
+        },
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_name",
+            "title": "MoOrderLine.name",
+            "type": "string",
+            "maxLength": 255
+        }
+    }
 }
