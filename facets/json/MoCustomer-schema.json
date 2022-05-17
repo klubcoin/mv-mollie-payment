@@ -6,6 +6,17 @@
     "title": "Customer",
     "type": "object",
     "properties": {
+        "createdAt": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Date Created",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoCustomer_createdAt",
+            "title": "MoCustomer.createdAt",
+            "type": "string"
+        },
         "metadata": {
             "storages": ["SQL"],
             "nullable": true,
