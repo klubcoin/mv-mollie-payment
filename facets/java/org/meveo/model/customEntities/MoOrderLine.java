@@ -26,6 +26,8 @@ public class MoOrderLine implements CustomEntity {
 
     private String name;
 
+    private String category;
+
     private Instant creationDate;
 
     private Double vatAmount;
@@ -69,6 +71,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public Instant getCreationDate() {
