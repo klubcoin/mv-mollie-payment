@@ -20,29 +20,31 @@ public class MoOrderLine implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private Double totalAmount;
+    private Double unitPrice;
 
     private String metadata;
 
     private Long quantity;
 
-    private String name;
-
     private Double discountAmount;
+
+    private Instant creationDate;
+
+    private String type;
+
+    private Double vatAmount;
+
+    private Double totalAmount;
+
+    private String name;
 
     private String currency;
 
     private String category;
 
-    private Instant creationDate;
-
     private String productUrl;
 
     private String sku;
-
-    private String type;
-
-    private Double vatAmount;
 
     @Override()
     public String getUuid() {
@@ -61,12 +63,12 @@ public class MoOrderLine implements CustomEntity {
         this.storages = storages;
     }
 
-    public Double getTotalAmount() {
-        return totalAmount;
+    public Double getUnitPrice() {
+        return unitPrice;
     }
 
-    public void setTotalAmount(Double totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setUnitPrice(Double unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
     public String getMetadata() {
@@ -85,20 +87,52 @@ public class MoOrderLine implements CustomEntity {
         this.quantity = quantity;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Double getDiscountAmount() {
         return discountAmount;
     }
 
     public void setDiscountAmount(Double discountAmount) {
         this.discountAmount = discountAmount;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Double getVatAmount() {
+        return vatAmount;
+    }
+
+    public void setVatAmount(Double vatAmount) {
+        this.vatAmount = vatAmount;
+    }
+
+    public Double getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCurrency() {
@@ -117,14 +151,6 @@ public class MoOrderLine implements CustomEntity {
         this.category = category;
     }
 
-    public Instant getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
-    }
-
     public String getProductUrl() {
         return productUrl;
     }
@@ -139,22 +165,6 @@ public class MoOrderLine implements CustomEntity {
 
     public void setSku(String sku) {
         this.sku = sku;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Double getVatAmount() {
-        return vatAmount;
-    }
-
-    public void setVatAmount(Double vatAmount) {
-        this.vatAmount = vatAmount;
     }
 
     @Override()
