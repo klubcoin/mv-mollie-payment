@@ -52,6 +52,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "id": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Customer ID",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoCustomer_id",
+            "title": "MoCustomer.id",
+            "type": "string",
+            "maxLength": 255
+        },
         "locale": {
             "storages": ["SQL"],
             "nullable": true,
