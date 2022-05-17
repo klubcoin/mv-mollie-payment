@@ -4,6 +4,7 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import java.time.Instant;
+import org.meveo.model.customEntities.MoAddress;
 import org.meveo.model.customEntities.MoOrderLine;
 import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -43,6 +44,8 @@ public class MoOrder implements CustomEntity {
     private Boolean shopperCountryMustMatchBillingCountry;
 
     private Double amountRefunded;
+
+    private MoAddress shippingAddress;
 
     private String currency;
 
@@ -157,6 +160,14 @@ public class MoOrder implements CustomEntity {
 
     public void setAmountRefunded(Double amountRefunded) {
         this.amountRefunded = amountRefunded;
+    }
+
+    public MoAddress getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(MoAddress shippingAddress) {
+        this.shippingAddress = shippingAddress;
     }
 
     public String getCurrency() {
