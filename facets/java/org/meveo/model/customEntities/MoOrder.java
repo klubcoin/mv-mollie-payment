@@ -30,19 +30,21 @@ public class MoOrder implements CustomEntity {
 
     private Double amountCaptured;
 
-    private Double amountRefunded;
-
-    private String payment;
-
     private Instant creationDate;
-
-    private List<MoOrderLine> lines = new ArrayList<>();
 
     private String locale;
 
-    private String email;
-
     private String webhookUrl;
+
+    private Double amountRefunded;
+
+    private String currency;
+
+    private String payment;
+
+    private List<MoOrderLine> lines = new ArrayList<>();
+
+    private String email;
 
     private String status;
 
@@ -95,36 +97,12 @@ public class MoOrder implements CustomEntity {
         this.amountCaptured = amountCaptured;
     }
 
-    public Double getAmountRefunded() {
-        return amountRefunded;
-    }
-
-    public void setAmountRefunded(Double amountRefunded) {
-        this.amountRefunded = amountRefunded;
-    }
-
-    public String getPayment() {
-        return payment;
-    }
-
-    public void setPayment(String payment) {
-        this.payment = payment;
-    }
-
     public Instant getCreationDate() {
         return creationDate;
     }
 
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
-    }
-
-    public List<MoOrderLine> getLines() {
-        return lines;
-    }
-
-    public void setLines(List<MoOrderLine> lines) {
-        this.lines = lines;
     }
 
     public String getLocale() {
@@ -135,20 +113,52 @@ public class MoOrder implements CustomEntity {
         this.locale = locale;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getWebhookUrl() {
         return webhookUrl;
     }
 
     public void setWebhookUrl(String webhookUrl) {
         this.webhookUrl = webhookUrl;
+    }
+
+    public Double getAmountRefunded() {
+        return amountRefunded;
+    }
+
+    public void setAmountRefunded(Double amountRefunded) {
+        this.amountRefunded = amountRefunded;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public String getPayment() {
+        return payment;
+    }
+
+    public void setPayment(String payment) {
+        this.payment = payment;
+    }
+
+    public List<MoOrderLine> getLines() {
+        return lines;
+    }
+
+    public void setLines(List<MoOrderLine> lines) {
+        this.lines = lines;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getStatus() {
