@@ -23,6 +23,8 @@ public class MoOrder implements CustomEntity {
 
     private String payment;
 
+    private String locale;
+
     private String email;
 
     @Override()
@@ -56,6 +58,14 @@ public class MoOrder implements CustomEntity {
 
     public void setPayment(String payment) {
         this.payment = payment;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 
     public String getEmail() {
