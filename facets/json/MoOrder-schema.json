@@ -91,6 +91,17 @@
             "type": "string",
             "maxLength": 5
         },
+        "assignedTo": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Assigned to",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_assignedTo",
+            "title": "MoOrder.assignedTo",
+            "type": "string",
+            "maxLength": 50
+        },
         "webhookUrl": {
             "storages": ["SQL"],
             "nullable": true,
