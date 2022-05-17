@@ -5,15 +5,28 @@
     "id": "MoCustomer",
     "title": "Customer",
     "type": "object",
-    "properties": {"name": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Customer Name",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_MoCustomer_name",
-        "title": "MoCustomer.name",
-        "type": "string",
-        "maxLength": 255
-    }}
+    "properties": {
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Customer Name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoCustomer_name",
+            "title": "MoCustomer.name",
+            "type": "string",
+            "maxLength": 255
+        },
+        "email": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Email Address",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoCustomer_email",
+            "title": "MoCustomer.email",
+            "type": "string",
+            "maxLength": 255
+        }
+    }
 }
