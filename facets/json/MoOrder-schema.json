@@ -105,6 +105,17 @@
             "title": "MoOrder.email",
             "type": "string",
             "maxLength": 500
+        },
+        "webhookUrl": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "webhookUrl",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_webhookUrl",
+            "title": "MoOrder.webhookUrl",
+            "type": "string",
+            "maxLength": 1000
         }
     }
 }
