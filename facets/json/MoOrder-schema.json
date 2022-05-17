@@ -26,6 +26,17 @@
             "title": "MoOrder.payment",
             "type": "string"
         },
+        "locale": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "locale",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_locale",
+            "title": "MoOrder.locale",
+            "type": "string",
+            "maxLength": 5
+        },
         "email": {
             "storages": ["SQL"],
             "nullable": true,
