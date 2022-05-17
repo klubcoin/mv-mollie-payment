@@ -27,6 +27,16 @@
             "type": "string",
             "maxLength": 20
         },
+        "amountCaptured": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Amount captured",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_amountCaptured",
+            "title": "MoOrder.amountCaptured",
+            "type": "number"
+        },
         "amountRefunded": {
             "storages": ["SQL"],
             "nullable": true,
