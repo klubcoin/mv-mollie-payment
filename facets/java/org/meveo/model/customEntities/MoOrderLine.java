@@ -36,6 +36,8 @@ public class MoOrderLine implements CustomEntity {
 
     private String productUrl;
 
+    private String sku;
+
     private String type;
 
     private Double vatAmount;
@@ -119,6 +121,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setProductUrl(String productUrl) {
         this.productUrl = productUrl;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 
     public String getType() {
