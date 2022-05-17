@@ -51,6 +51,8 @@ public class MoOrder implements CustomEntity {
 
     private String payment;
 
+    private MoAddress billingAddress;
+
     private List<MoOrderLine> lines = new ArrayList<>();
 
     private String email;
@@ -184,6 +186,14 @@ public class MoOrder implements CustomEntity {
 
     public void setPayment(String payment) {
         this.payment = payment;
+    }
+
+    public MoAddress getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(MoAddress billingAddress) {
+        this.billingAddress = billingAddress;
     }
 
     public List<MoOrderLine> getLines() {
