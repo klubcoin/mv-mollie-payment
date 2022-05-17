@@ -70,6 +70,17 @@
             "title": "MoOrderLine.creationDate",
             "type": "string"
         },
+        "productUrl": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Product Url",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_productUrl",
+            "title": "MoOrderLine.productUrl",
+            "type": "string",
+            "maxLength": 500
+        },
         "type": {
             "storages": ["SQL"],
             "nullable": true,
