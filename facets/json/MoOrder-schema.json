@@ -4,5 +4,16 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "MoOrder",
     "title": "Order",
-    "type": "object"
+    "type": "object",
+    "properties": {"email": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "Customer email",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_MoOrder_email",
+        "title": "MoOrder.email",
+        "type": "string",
+        "maxLength": 500
+    }}
 }
