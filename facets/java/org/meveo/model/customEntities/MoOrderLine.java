@@ -32,6 +32,8 @@ public class MoOrderLine implements CustomEntity {
 
     private Instant creationDate;
 
+    private String productUrl;
+
     private String type;
 
     private Double vatAmount;
@@ -99,6 +101,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public String getProductUrl() {
+        return productUrl;
+    }
+
+    public void setProductUrl(String productUrl) {
+        this.productUrl = productUrl;
     }
 
     public String getType() {
