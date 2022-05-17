@@ -28,6 +28,8 @@ public class MoOrderLine implements CustomEntity {
 
     private Instant creationDate;
 
+    private Double vatAmount;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -75,6 +77,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Double getVatAmount() {
+        return vatAmount;
+    }
+
+    public void setVatAmount(Double vatAmount) {
+        this.vatAmount = vatAmount;
     }
 
     @Override()
