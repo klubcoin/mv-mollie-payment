@@ -16,6 +16,16 @@
             "title": "MoOrderLine.totalAmount",
             "type": "number"
         },
+        "metadata": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Metadata",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_metadata",
+            "title": "MoOrderLine.metadata",
+            "type": "string"
+        },
         "name": {
             "storages": ["SQL"],
             "nullable": true,
