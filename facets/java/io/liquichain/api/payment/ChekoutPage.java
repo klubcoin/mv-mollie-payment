@@ -45,8 +45,11 @@ public class ChekoutPage extends Script {
             + "\t<body><section>\r\n"
             + "\t<h1>Checkout</h1>\r\n";
         String message = "<p>Cannot find the order<p/>";
-        MoOrder order = null;
+        MoOrder order;
         try {
+            if (orderId.startsWith("ord_")) {
+                orderId = orderId.substring(4);
+            }
             order = crossStorageApi.find(defaultRepo, orderId, MoOrder.class);
             if ("created".equals(order.getStatus())) {
                 message =
