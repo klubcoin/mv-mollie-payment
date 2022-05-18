@@ -324,7 +324,8 @@ public class MollieCreateOrderScript extends Script {
             "      \"href\": \"https://docs.liquichain.io/reference/v2/orders-api/get-order\",\n" +
             "      \"type\": \"text/html\"\n" +
             "    }\n" +
-            "  }";
+            "  }\n" +
+            "}";
     }
 
 }

@@ -167,55 +167,55 @@ public class MollieGetOrderScript extends Script {
             result += String.format("\"lines\": [%s],", lines);
 
             String embedQuery = (String) parameters.get("embed");
-            if("payments--GET".equals(embedQuery)){
+            if ("payments--GET".equals(embedQuery)) {
                 List<Transaction> transactions = crossStorageApi
                     .find(defaultRepo, Transaction.class)
                     .by("orderId", id)
                     .getResults();
                 result += "{\"_embedded\": {\"payments\": [" +
-                transactions.stream().map(
-                    transaction ->
-                    "{\n" +
-                    "    \"resource\": \"payment\",\n" +
-                    "    \"id\": \"" + id + "\",\n" +
-                    "    \"mode\": \"test\",\n" +
-                    "    \"createdAt\": \"" + transaction.getCreationDate() + "\",\n" +
-                    "    \"amount\": {\n" +
-                    "        \"value\": \"" + transaction.getValue() + "\",\n" +
-                    "        \"currency\": \"" + transaction.getCurrency() + "\"\n" +
-                    "    },\n" +
-                    "    \"description\": \"" + transaction.getDescription() + "\",\n" +
-                    "    \"method\": null,\n" +
-                    "    \"metadata\": " + transaction.getMetadata() + ",\n" +
-                    "    \"status\": \"open\",\n" +
-                    "    \"isCancelable\": false,\n" +
-                    "    \"expiresAt\": \"" + transaction.getExpirationDate() + "\",\n" +
-                    "    \"details\": null,\n" +
-                    "    \"profileId\": \"pfl_" + transaction.getUuid() + "\",\n" +
-                    "    \"orderId\": \"" + transaction.getOrderId() + "\",\n" +
-                    "    \"sequenceType\": \"oneoff\",\n" +
-                    "    \"redirectUrl\": \"" + transaction.getRedirectUrl() + "\",\n" +
-                    "    \"webhookUrl\": \"" + transaction.getWebhookUrl() + "\",\n" +
-                    "    \"_links\": {\n" +
-                    "        \"self\": {\n" +
-                    "            \"href\": \"" + MEVEO_BASE_URL + "/rest/v1/payments/" + id + "\",\n" +
-                    "            \"type\": \"application/json\"\n" +
-                    "        },\n" +
-                    "        \"checkout\": {\n" +
-                    "            \"href\": \"" + MEVEO_BASE_URL + "/rest/paymentpages/checkout/" + orderId + "\",\n" +
-                    "            \"type\": \"text/html\"\n" +
-                    "        },\n" +
-                    "        \"dashboard\": {\n" +
-                    "            \"href\": \"" + BASE_URL + "dashboard?orderid=" + orderId + "\",\n" +
-                    "            \"type\": \"application/json\"\n" +
-                    "        },\n" +
-                    "        \"documentation\": {\n" +
-                    "            \"href\": \"https://docs.liquichain.io/reference/v2/payments-api/get-payment\",\n" +
-                    "            \"type\": \"text/html\"\n" +
-                    "        }\n" +
-                    "    }\n" +
-                    "}").collect(Collectors.joining(",\n"))
-                    +"]}}";
+                    transactions.stream().map(
+                        transaction ->
+                            "{\n" +
+                                "    \"resource\": \"payment\",\n" +
+                                "    \"id\": \"" + id + "\",\n" +
+                                "    \"mode\": \"test\",\n" +
+                                "    \"createdAt\": \"" + transaction.getCreationDate() + "\",\n" +
+                                "    \"amount\": {\n" +
+                                "        \"value\": \"" + transaction.getValue() + "\",\n" +
+                                "        \"currency\": \"" + transaction.getCurrency() + "\"\n" +
+                                "    },\n" +
+                                "    \"description\": \"" + transaction.getDescription() + "\",\n" +
+                                "    \"method\": null,\n" +
+                                "    \"metadata\": " + transaction.getMetadata() + ",\n" +
+                                "    \"status\": \"open\",\n" +
+                                "    \"isCancelable\": false,\n" +
+                                "    \"expiresAt\": \"" + transaction.getExpirationDate() + "\",\n" +
+                                "    \"details\": null,\n" +
+                                "    \"profileId\": \"pfl_" + transaction.getUuid() + "\",\n" +
+                                "    \"orderId\": \"" + transaction.getOrderId() + "\",\n" +
+                                "    \"sequenceType\": \"oneoff\",\n" +
+                                "    \"redirectUrl\": \"" + transaction.getRedirectUrl() + "\",\n" +
+                                "    \"webhookUrl\": \"" + transaction.getWebhookUrl() + "\",\n" +
+                                "    \"_links\": {\n" +
+                                "        \"self\": {\n" +
+                                "            \"href\": \"" + MEVEO_BASE_URL + "/rest/v1/payments/" + id + "\",\n" +
+                                "            \"type\": \"application/json\"\n" +
+                                "        },\n" +
+                                "        \"checkout\": {\n" +
+                                "            \"href\": \"" + MEVEO_BASE_URL + "/rest/paymentpages/checkout/" + orderId + "\",\n" +
+                                "            \"type\": \"text/html\"\n" +
+                                "        },\n" +
+                                "        \"dashboard\": {\n" +
+                                "            \"href\": \"" + BASE_URL + "dashboard?orderid=" + orderId + "\",\n" +
+                                "            \"type\": \"application/json\"\n" +
+                                "        },\n" +
+                                "        \"documentation\": {\n" +
+                                "            \"href\": \"https://docs.liquichain.io/reference/v2/payments-api/get-payment\",\n" +
+                                "            \"type\": \"text/html\"\n" +
+                                "        }\n" +
+                                "    }\n" +
+                                "}").collect(Collectors.joining(",\n"))
+                    + "]}}";
             }
 
             result += "\"_links\": {\n" +
@@ -235,7 +235,8 @@ public class MollieGetOrderScript extends Script {
                 "      \"href\": \"https://docs.liquichain.io/reference/v2/orders-api/get-order\",\n" +
                 "      \"type\": \"text/html\"\n" +
                 "    }\n" +
-                "  }";
+                "  }\n" +
+                "}";
         } catch (Exception e) {
             LOG.error("Cannot retrieve order: " + orderId, e);
             result = "{\"error\": \"Cannot retrieve order: " + orderId + "\"}";
