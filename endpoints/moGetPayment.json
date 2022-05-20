@@ -1,7 +1,7 @@
 {
   "code" : "moGetPayment",
   "description" : "get payment",
-  "secured" : true,
+  "secured" : false,
   "checkPathParams" : true,
   "serviceCode" : "io.liquichain.api.payment.MollieGetPayment",
   "synchronous" : true,
