@@ -1,6 +1,6 @@
 {
   "code" : "moCreatePayment",
-  "secured" : true,
+  "secured" : false,
   "checkPathParams" : true,
   "serviceCode" : "io.liquichain.api.payment.MollieCreatePaymentScript",
   "synchronous" : true,
