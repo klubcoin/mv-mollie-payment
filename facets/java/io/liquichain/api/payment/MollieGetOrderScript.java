@@ -218,7 +218,7 @@ public class MollieGetOrderScript extends Script {
                             "    \"webhookUrl\": \"" + transaction.getWebhookUrl() + "\",\n" +
                             "    \"_links\": {\n" +
                             "        \"self\": {\n" +
-                            "            \"href\": \"" + MEVEO_BASE_URL + "/rest/v1/payments/" + id + "\",\n" +
+                            "            \"href\": \"" + MEVEO_BASE_URL + "/rest/v1/payments/" + "tr_" + transaction.getUuid() + "\",\n" +
                             "            \"type\": \"application/json\"\n" +
                             "        },\n" +
                             "        \"checkout\": {\n" +
