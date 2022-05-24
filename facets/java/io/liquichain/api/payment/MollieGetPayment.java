@@ -89,13 +89,8 @@ public class MollieGetPayment extends Script {
             return;
         }
         String id = "tr_" + transaction.getUuid();
-        String orderId = "";
-        try {
-            Map<String, String> metadataMap = mapper.readValue(transaction.getMetadata(), new TypeReference<>() {});
-            orderId = metadataMap.get("order_id");
-        } catch (Exception e) {
-            LOG.error("Failed to retrieve order id from metadata: " + transaction.getMetadata(), e);
-        }
+        String orderId = transaction.getOrderId();
+        
         result = "{\n" +
             "    \"resource\": \"payment\",\n" +
             "    \"id\": \"" + id + "\",\n" +

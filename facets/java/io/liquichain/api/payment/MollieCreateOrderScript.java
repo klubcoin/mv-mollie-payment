@@ -16,6 +16,7 @@ import org.meveo.commons.utils.ParamBeanFactory;
 import org.meveo.model.customEntities.MoOrder;
 import org.meveo.model.customEntities.MoOrderLine;
 import org.meveo.model.customEntities.MoAddress;
+import org.meveo.model.customEntities.Transaction;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
 import org.meveo.service.storage.RepositoryService;
@@ -23,6 +24,7 @@ import org.meveo.service.storage.RepositoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.web3j.crypto.Hash;
 
 import javax.inject.Inject;
 
@@ -187,9 +189,14 @@ public class MollieCreateOrderScript extends Script {
         return null;
     }
 
-    @Override
-    public void execute(Map<String, Object> parameters) throws BusinessException {
-        this.init();
+    public static String normalizeHash(String hash) {
+        if (hash.startsWith("0x")) {
+            return hash.substring(2);
+        }
+        return hash.toLowerCase();
+    }
+
+    private MoOrder createOrder(Map<String, Object> parameters, List<MoOrderLine> orderLines) throws BusinessException {
         String orderId = getStrParam(parameters, "id");
         MoOrder order;
         if (orderId != null) {
@@ -200,9 +207,9 @@ public class MollieCreateOrderScript extends Script {
                 }
                 order = crossStorageApi.find(defaultRepo, orderId, MoOrder.class);
             } catch (Exception e) {
-                result = "Cannot retrieve order: " + orderId;
-                LOG.error(result, e);
-                return;
+                String error = "Cannot retrieve order: " + orderId;
+                LOG.error(error);
+                throw new BusinessException(error, e);
             }
         } else {
             order = new MoOrder();
@@ -223,24 +230,102 @@ public class MollieCreateOrderScript extends Script {
         order.setWebhookUrl(getStrParam(parameters, "webhookUrl").replace("http:", "https:"));
         order.setBillingAddress(parseAddress((Map<String, Object>) parameters.get("billingAddress")));
         order.setShippingAddress(parseAddress((Map<String, Object>) parameters.get("shippingAddress")));
-        List<MoOrderLine> orderLines = parseOrderLines((List<Map<String, Object>>) parameters.get("lines"));
+
         order.setLines(orderLines);
         order.setStatus("created");
         order.setCreationDate(Instant.now());
         order.setExpiresAt(order.getCreationDate().plus(Duration.ofDays(10)));
+
         String uuid;
         try {
             uuid = crossStorageApi.createOrUpdate(defaultRepo, order);
         } catch (Exception e) {
-            LOG.error("error persisting  order:{} [{}]", result, e.getMessage());
-            result = "{\"error\":\"error persisting order\"}";
+            String error = String.format("Error saving order:%s [%s]", order.getOrderNumber(), e.getMessage());
+            LOG.error(error);
+            throw new BusinessException(error, e);
+        }
+
+        try {
+            order = crossStorageApi.find(defaultRepo, uuid, MoOrder.class);
+        } catch (Exception e) {
+            String error = String.format("Error retrieving order:%s [%s]", uuid, e.getMessage());
+            LOG.error(error);
+            throw new BusinessException(error, e);
+        }
+        return order;
+    }
+
+    private Transaction createPayment(MoOrder order) throws BusinessException {
+        String amountValue = "" + order.getAmount();
+        String amountCurrency = order.getCurrency();
+        String orderId = "ord_" + order.getUuid();
+        String description = "Payment for Order #" + order.getOrderNumber();
+        String redirectUrl = order.getRedirectUrl();
+        String webhookUrl = order.getWebhookUrl();
+        String metadata = "{\"order_id\": " + order.getOrderNumber() + "}";
+        Instant createdAt = Instant.now();
+        Instant expiresAt = createdAt.plus(Duration.ofDays(10));
+
+        String data = Hash.sha3(amountValue + amountCurrency + orderId +
+            description + redirectUrl + webhookUrl + metadata + createdAt);
+
+        Transaction transaction = new Transaction();
+        transaction.setHexHash(normalizeHash(data));
+        transaction.setSignedHash(data);
+        transaction.setValue(amountValue);
+        transaction.setCurrency(amountCurrency);
+        transaction.setDescription(description);
+        transaction.setRedirectUrl(redirectUrl);
+        transaction.setWebhookUrl(webhookUrl);
+        transaction.setMetadata(metadata);
+        transaction.setCreationDate(createdAt);
+        transaction.setExpirationDate(expiresAt);
+        transaction.setOrderId(orderId);
+        transaction.setData("{\"type\":\"mollie\",\"description\":\"Mollie Payment\"}");
+        transaction.setType("mollie");
+
+        String uuid;
+        try {
+            uuid = crossStorageApi.createOrUpdate(defaultRepo, transaction);
+        } catch (Exception e) {
+            String error = String.format("Error persisting  payment transaction: %s [%s]", result, e.getMessage());
+            LOG.error(error, e);
+            throw new BusinessException(error, e);
+        }
+
+        try {
+            transaction = crossStorageApi.find(defaultRepo, uuid, Transaction.class);
+        } catch (Exception e) {
+            String error = String.format("Error retrieving payment transaction: %s [%s]", uuid, e.getMessage());
+            LOG.error(error);
+            throw new BusinessException(error, e);
+        }
+
+        return transaction;
+    }
+
+    @Override
+    public void execute(Map<String, Object> parameters) throws BusinessException {
+        this.init();
+
+        MoOrder order;
+        Transaction payment;
+        List<MoOrderLine> orderLines;
+        try {
+            orderLines = parseOrderLines((List<Map<String, Object>>) parameters.get("lines"));
+            order = this.createOrder(parameters, orderLines);
+            payment = this.createPayment(order);
+        } catch (BusinessException e) {
+            LOG.error(e.getMessage(), e);
+            result = "{\"error\":\"" + e.getMessage() + "\"}";
             return;
         }
-        String id = "ord_" + uuid;
+
+        String id = "ord_" + order.getUuid();
         result = "{"
             + "\"resource\": \"order\","
             + "\"id\": \"" + id + "\","
-            + "\"profileId\": \"pfl_" + uuid + "\","
+            + "\"profileId\": \"pfl_" + order.getUuid() + "\","
             + "\"method\": \"" + parameters.get("method") + "\","
             + "\"amount\": " + convertJsonToString(parameters.get("amount")) + ","
             + "\"status\": \"created\","
@@ -306,6 +391,48 @@ public class MollieCreateOrderScript extends Script {
             .collect(Collectors.joining(",\n"));
 
         result += String.format("\"lines\": [%s],", lines);
+
+        String paymentId = "tr_" + payment.getUuid();
+        result += "{\"_embedded\": {\"payments\": [{\n" +
+            "    \"resource\": \"payment\",\n" +
+            "    \"id\": \"" + paymentId + "\",\n" +
+            "    \"mode\": \"test\",\n" +
+            "    \"createdAt\": \"" + payment.getCreationDate() + "\",\n" +
+            "    \"amount\": {\n" +
+            "        \"value\": \"" + payment.getValue() + "\",\n" +
+            "        \"currency\": \"" + payment.getCurrency() + "\"\n" +
+            "    },\n" +
+            "    \"description\": \"" + payment.getDescription() + "\",\n" +
+            "    \"method\": null,\n" +
+            "    \"metadata\": " + payment.getMetadata() + ",\n" +
+            "    \"status\": \"open\",\n" +
+            "    \"isCancelable\": false,\n" +
+            "    \"expiresAt\": \"" + payment.getExpirationDate() + "\",\n" +
+            "    \"details\": null,\n" +
+            "    \"profileId\": \"pfl_" + payment.getUuid() + "\",\n" +
+            "    \"orderId\": \"" + payment.getOrderId() + "\",\n" +
+            "    \"sequenceType\": \"oneoff\",\n" +
+            "    \"redirectUrl\": \"" + payment.getRedirectUrl() + "\",\n" +
+            "    \"webhookUrl\": \"" + payment.getWebhookUrl() + "\",\n" +
+            "    \"_links\": {\n" +
+            "        \"self\": {\n" +
+            "            \"href\": \"" + MEVEO_BASE_URL + "/rest/v1/payments/" + paymentId + "\",\n" +
+            "            \"type\": \"application/json\"\n" +
+            "        },\n" +
+            "        \"checkout\": {\n" +
+            "            \"href\": \"" + MEVEO_BASE_URL + "/rest/paymentpages/checkout/" + id + "\",\n" +
+            "            \"type\": \"text/html\"\n" +
+            "        },\n" +
+            "        \"dashboard\": {\n" +
+            "            \"href\": \"" + BASE_URL + "dashboard?orderid=" + id + "\",\n" +
+            "            \"type\": \"application/json\"\n" +
+            "        },\n" +
+            "        \"documentation\": {\n" +
+            "            \"href\": \"https://docs.liquichain.io/reference/v2/payments-api/get-payment\",\n" +
+            "            \"type\": \"text/html\"\n" +
+            "        }\n" +
+            "    }\n" +
+            "}]}},";
 
         result += "\"_links\": {\n" +
             "    \"self\": {\n" +
