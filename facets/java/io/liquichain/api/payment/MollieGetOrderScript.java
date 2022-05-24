@@ -80,167 +80,180 @@ public class MollieGetOrderScript extends Script {
     public void execute(Map<String, Object> parameters) throws BusinessException {
         this.init();
         LOG.info("get Order[{}] {}", orderId, parameters);
+
+        if (orderId.startsWith("ord_")) {
+            orderId = orderId.substring(4);
+        }
+        MoOrder order;
         try {
-            if (orderId.startsWith("ord_")) {
-                orderId = orderId.substring(4);
-            }
-            MoOrder order = crossStorageApi.find(defaultRepo, orderId, MoOrder.class);
+            order = crossStorageApi.find(defaultRepo, orderId, MoOrder.class);
+        } catch (Exception e) {
+            String error = "Cannot retrieve order: " + orderId;
+            LOG.error(error, e);
+            result = createErrorResponse("500", "Not found", error);
+            return;
+        }
+        String id = "ord_" + order.getUuid();
+        result = "{"
+            + "\"resource\": \"order\","
+            + "\"id\": \"" + id + "\","
+            + "\"profileId\": \"pfl_" + order.getUuid() + "\","
+            + "\"method\": \"" + parameters.get("method") + "\","
+            + "\"amount\": " + convertJsonToString(parameters.get("amount")) + ","
+            + "\"status\": \"created\","
+            + "\"isCancelable\": false,"
+            + "\"metadata\": " + convertJsonToString(parameters.get("metadata")) + ","
+            + "\"createdAt\": \"" + order.getCreationDate().toString() + "\","
+            + "\"expiresAt\": \"" + order.getExpiresAt().toString() + "\","
+            + "\"mode\": \"test\","
+            + "\"locale\": \"" + parameters.get("locale") + "\","
+            + "\"billingAddress\": " + convertJsonToString(parameters.get("billingAddress")) + ","
+            + "\"shoppercountrymustmatchbillingcountry\": false,"
+            + "\"ordernumber\": \"" + parameters.get("orderNumber") + "\","
+            + "\"redirecturl\": \"" + parameters.get("redirectUrl") + "\","
+            + "\"webhookurl\": \"" + parameters.get("webhookUrl") + "\",";
 
-            String id = "ord_" + order.getUuid();
-            result = "{"
-                + "\"resource\": \"order\","
-                + "\"id\": \"" + id + "\","
-                + "\"profileId\": \"pfl_" + order.getUuid() + "\","
-                + "\"method\": \"" + parameters.get("method") + "\","
-                + "\"amount\": " + convertJsonToString(parameters.get("amount")) + ","
-                + "\"status\": \"created\","
-                + "\"isCancelable\": false,"
-                + "\"metadata\": " + convertJsonToString(parameters.get("metadata")) + ","
-                + "\"createdAt\": \"" + order.getCreationDate().toString() + "\","
-                + "\"expiresAt\": \"" + order.getExpiresAt().toString() + "\","
-                + "\"mode\": \"test\","
-                + "\"locale\": \"" + parameters.get("locale") + "\","
-                + "\"billingAddress\": " + convertJsonToString(parameters.get("billingAddress")) + ","
-                + "\"shoppercountrymustmatchbillingcountry\": false,"
-                + "\"ordernumber\": \"" + parameters.get("orderNumber") + "\","
-                + "\"redirecturl\": \"" + parameters.get("redirectUrl") + "\","
-                + "\"webhookurl\": \"" + parameters.get("webhookUrl") + "\",";
+        List<MoOrderLine> orderLines = order.getLines();
+        LOG.info("orderLines: {}", orderLines);
 
-            List<MoOrderLine> orderLines = order.getLines();
-            LOG.info("orderLines: {}", orderLines);
+        String lines = orderLines
+            .stream()
+            .map(
+                orderLine -> {
+                    MoOrderLine line = getOrderLine(orderLine.getUuid());
+                    if (line != null) {
+                        return "{\n" +
+                            "      \"resource\": \"orderline\",\n" +
+                            "      \"id\": \"odl_" + line.getUuid() + "\",\n" +
+                            "      \"orderId\": \"" + id + "\",\n" +
+                            "      \"name\": \"" + line.getName() + "\",\n" +
+                            "      \"sku\": \"" + line.getSku() + "\",\n" +
+                            "      \"type\": \"physical\",\n" +
+                            "      \"status\": \"created\",\n" +
+                            "      \"metadata\": " + line.getMetadata() + ",\n" +
+                            "      \"isCancelable\": false,\n" +
+                            "      \"quantity\": " + line.getQuantity() + ",\n" +
+                            "      \"quantityShipped\": 0,\n" +
+                            "      \"amountShipped\": {\n" +
+                            "        \"value\": \"0.00\",\n" +
+                            "        \"currency\": \"USD\"\n" +
+                            "      },\n" +
+                            "      \"quantityRefunded\": 0,\n" +
+                            "      \"amountRefunded\": {\n" +
+                            "        \"value\": \"0.00\",\n" +
+                            "        \"currency\": \"USD\"\n" +
+                            "      },\n" +
+                            "      \"quantityCanceled\": 0,\n" +
+                            "      \"amountCanceled\": {\n" +
+                            "        \"value\": \"0.00\",\n" +
+                            "        \"currency\": \"USD\"\n" +
+                            "      },\n" +
+                            "      \"shippableQuantity\": 0,\n" +
+                            "      \"refundableQuantity\": 0,\n" +
+                            "      \"cancelableQuantity\": 0,\n" +
+                            "      \"unitPrice\": {\n" +
+                            "        \"value\": \"" + line.getUnitPrice() + "\",\n" +
+                            "        \"currency\": \"" + line.getCurrency() + "\"\n" +
+                            "      },\n" +
+                            "      \"vatRate\": \"0.00\",\n" +
+                            "      \"vatAmount\": {\n" +
+                            "        \"value\": \"" + line.getVatAmount() + "\",\n" +
+                            "        \"currency\": \"" + line.getCurrency() + "\"\n" +
+                            "      },\n" +
+                            "      \"totalAmount\": {\n" +
+                            "        \"value\": \"" + line.getTotalAmount() + "\",\n" +
+                            "        \"currency\": \"" + line.getCurrency() + "\"\n" +
+                            "      },\n" +
+                            "      \"createdAt\": \"" + line.getCreationDate() + "\"\n" +
+                            "    }";
+                    }
+                    return "";
+                })
+            .collect(Collectors.joining(",\n"));
 
-            String lines = orderLines
-                .stream()
-                .map(
-                    orderLine -> {
-                        MoOrderLine line = getOrderLine(orderLine.getUuid());
-                        if (line != null) {
-                            return "{\n" +
-                                "      \"resource\": \"orderline\",\n" +
-                                "      \"id\": \"odl_" + line.getUuid() + "\",\n" +
-                                "      \"orderId\": \"" + id + "\",\n" +
-                                "      \"name\": \"" + line.getName() + "\",\n" +
-                                "      \"sku\": \"" + line.getSku() + "\",\n" +
-                                "      \"type\": \"physical\",\n" +
-                                "      \"status\": \"created\",\n" +
-                                "      \"metadata\": " + line.getMetadata() + ",\n" +
-                                "      \"isCancelable\": false,\n" +
-                                "      \"quantity\": " + line.getQuantity() + ",\n" +
-                                "      \"quantityShipped\": 0,\n" +
-                                "      \"amountShipped\": {\n" +
-                                "        \"value\": \"0.00\",\n" +
-                                "        \"currency\": \"USD\"\n" +
-                                "      },\n" +
-                                "      \"quantityRefunded\": 0,\n" +
-                                "      \"amountRefunded\": {\n" +
-                                "        \"value\": \"0.00\",\n" +
-                                "        \"currency\": \"USD\"\n" +
-                                "      },\n" +
-                                "      \"quantityCanceled\": 0,\n" +
-                                "      \"amountCanceled\": {\n" +
-                                "        \"value\": \"0.00\",\n" +
-                                "        \"currency\": \"USD\"\n" +
-                                "      },\n" +
-                                "      \"shippableQuantity\": 0,\n" +
-                                "      \"refundableQuantity\": 0,\n" +
-                                "      \"cancelableQuantity\": 0,\n" +
-                                "      \"unitPrice\": {\n" +
-                                "        \"value\": \"" + line.getUnitPrice() + "\",\n" +
-                                "        \"currency\": \"" + line.getCurrency() + "\"\n" +
-                                "      },\n" +
-                                "      \"vatRate\": \"0.00\",\n" +
-                                "      \"vatAmount\": {\n" +
-                                "        \"value\": \"" + line.getVatAmount() + "\",\n" +
-                                "        \"currency\": \"" + line.getCurrency() + "\"\n" +
-                                "      },\n" +
-                                "      \"totalAmount\": {\n" +
-                                "        \"value\": \"" + line.getTotalAmount() + "\",\n" +
-                                "        \"currency\": \"" + line.getCurrency() + "\"\n" +
-                                "      },\n" +
-                                "      \"createdAt\": \"" + line.getCreationDate() + "\"\n" +
-                                "    }";
-                        }
-                        return "";
-                    })
-                .collect(Collectors.joining(",\n"));
+        result += String.format("\"lines\": [%s],", lines);
 
-            result += String.format("\"lines\": [%s],", lines);
-
-            String embedQuery = (String) parameters.get("embed");
-            if ("payments".equals(embedQuery)) {
-                List<Transaction> transactions = crossStorageApi
+        String embedQuery = (String) parameters.get("embed");
+        if ("payments".equals(embedQuery)) {
+            List<Transaction> transactions;
+            try {
+                transactions = crossStorageApi
                     .find(defaultRepo, Transaction.class)
                     .by("orderId", id)
                     .getResults();
-                result += "{\"_embedded\": {\"payments\": [" +
-                    transactions.stream().map(
-                        transaction ->
-                            "{\n" +
-                                "    \"resource\": \"payment\",\n" +
-                                "    \"id\": \"" + id + "\",\n" +
-                                "    \"mode\": \"test\",\n" +
-                                "    \"createdAt\": \"" + transaction.getCreationDate() + "\",\n" +
-                                "    \"amount\": {\n" +
-                                "        \"value\": \"" + transaction.getValue() + "\",\n" +
-                                "        \"currency\": \"" + transaction.getCurrency() + "\"\n" +
-                                "    },\n" +
-                                "    \"description\": \"" + transaction.getDescription() + "\",\n" +
-                                "    \"method\": null,\n" +
-                                "    \"metadata\": " + transaction.getMetadata() + ",\n" +
-                                "    \"status\": \"open\",\n" +
-                                "    \"isCancelable\": false,\n" +
-                                "    \"expiresAt\": \"" + transaction.getExpirationDate() + "\",\n" +
-                                "    \"details\": null,\n" +
-                                "    \"profileId\": \"pfl_" + transaction.getUuid() + "\",\n" +
-                                "    \"orderId\": \"" + transaction.getOrderId() + "\",\n" +
-                                "    \"sequenceType\": \"oneoff\",\n" +
-                                "    \"redirectUrl\": \"" + transaction.getRedirectUrl() + "\",\n" +
-                                "    \"webhookUrl\": \"" + transaction.getWebhookUrl() + "\",\n" +
-                                "    \"_links\": {\n" +
-                                "        \"self\": {\n" +
-                                "            \"href\": \"" + MEVEO_BASE_URL + "/rest/v1/payments/" + id + "\",\n" +
-                                "            \"type\": \"application/json\"\n" +
-                                "        },\n" +
-                                "        \"checkout\": {\n" +
-                                "            \"href\": \"" + MEVEO_BASE_URL + "/rest/paymentpages/checkout/" + orderId + "\",\n" +
-                                "            \"type\": \"text/html\"\n" +
-                                "        },\n" +
-                                "        \"dashboard\": {\n" +
-                                "            \"href\": \"" + BASE_URL + "dashboard?orderid=" + orderId + "\",\n" +
-                                "            \"type\": \"application/json\"\n" +
-                                "        },\n" +
-                                "        \"documentation\": {\n" +
-                                "            \"href\": \"https://docs.liquichain.io/reference/v2/payments-api/get-payment\",\n" +
-                                "            \"type\": \"text/html\"\n" +
-                                "        }\n" +
-                                "    }\n" +
-                                "}").collect(Collectors.joining(",\n"))
-                    + "]}},";
+            } catch (Exception e) {
+                String error = "Failed to retrieve transactions for order: " + id;
+                LOG.error(error, e);
+                result = createErrorResponse("500", "Not found", error);
+                return;
             }
 
-            result += "\"_links\": {\n" +
-                "    \"self\": {\n" +
-                "      \"href\": \"" + MEVEO_BASE_URL + "/rest/v1/orders/" + id + "\",\n" +
-                "      \"type\": \"application/hal+json\"\n" +
-                "    },\n" +
-                "    \"dashboard\": {\n" +
-                "      \"href\": \"" + BASE_URL + "dashboard?orderid=" + id + "\",\n" +
-                "      \"type\": \"text/html\"\n" +
-                "    },\n" +
-                "    \"checkout\": {\n" +
-                "      \"href\": \"" + MEVEO_BASE_URL + "/rest/paymentpages/checkout/" + id + "\",\n" +
-                "      \"type\": \"text/html\"\n" +
-                "    },\n" +
-                "    \"documentation\": {\n" +
-                "      \"href\": \"https://docs.liquichain.io/reference/v2/orders-api/get-order\",\n" +
-                "      \"type\": \"text/html\"\n" +
-                "    }\n" +
-                "  }\n" +
-                "}";
-        } catch (Exception e) {
-            LOG.error("Cannot retrieve order: " + orderId, e);
-            result = "{\"error\": \"Cannot retrieve order: " + orderId + "\"}";
+            result += "{\"_embedded\": {\"payments\": [" +
+                transactions.stream().map(
+                    transaction ->
+                        "{\n" +
+                            "    \"resource\": \"payment\",\n" +
+                            "    \"id\": \"" + id + "\",\n" +
+                            "    \"mode\": \"test\",\n" +
+                            "    \"createdAt\": \"" + transaction.getCreationDate() + "\",\n" +
+                            "    \"amount\": {\n" +
+                            "        \"value\": \"" + transaction.getValue() + "\",\n" +
+                            "        \"currency\": \"" + transaction.getCurrency() + "\"\n" +
+                            "    },\n" +
+                            "    \"description\": \"" + transaction.getDescription() + "\",\n" +
+                            "    \"method\": null,\n" +
+                            "    \"metadata\": " + transaction.getMetadata() + ",\n" +
+                            "    \"status\": \"open\",\n" +
+                            "    \"isCancelable\": false,\n" +
+                            "    \"expiresAt\": \"" + transaction.getExpirationDate() + "\",\n" +
+                            "    \"details\": null,\n" +
+                            "    \"profileId\": \"pfl_" + transaction.getUuid() + "\",\n" +
+                            "    \"orderId\": \"" + transaction.getOrderId() + "\",\n" +
+                            "    \"sequenceType\": \"oneoff\",\n" +
+                            "    \"redirectUrl\": \"" + transaction.getRedirectUrl() + "\",\n" +
+                            "    \"webhookUrl\": \"" + transaction.getWebhookUrl() + "\",\n" +
+                            "    \"_links\": {\n" +
+                            "        \"self\": {\n" +
+                            "            \"href\": \"" + MEVEO_BASE_URL + "/rest/v1/payments/" + id + "\",\n" +
+                            "            \"type\": \"application/json\"\n" +
+                            "        },\n" +
+                            "        \"checkout\": {\n" +
+                            "            \"href\": \"" + MEVEO_BASE_URL + "/rest/paymentpages/checkout/" + orderId + "\",\n" +
+                            "            \"type\": \"text/html\"\n" +
+                            "        },\n" +
+                            "        \"dashboard\": {\n" +
+                            "            \"href\": \"" + BASE_URL + "dashboard?orderid=" + orderId + "\",\n" +
+                            "            \"type\": \"application/json\"\n" +
+                            "        },\n" +
+                            "        \"documentation\": {\n" +
+                            "            \"href\": \"https://docs.liquichain.io/reference/v2/payments-api/get-payment\",\n" +
+                            "            \"type\": \"text/html\"\n" +
+                            "        }\n" +
+                            "    }\n" +
+                            "}").collect(Collectors.joining(",\n"))
+                + "]}},";
         }
+
+        result += "\"_links\": {\n" +
+            "    \"self\": {\n" +
+            "      \"href\": \"" + MEVEO_BASE_URL + "/rest/v1/orders/" + id + "\",\n" +
+            "      \"type\": \"application/hal+json\"\n" +
+            "    },\n" +
+            "    \"dashboard\": {\n" +
+            "      \"href\": \"" + BASE_URL + "dashboard?orderid=" + id + "\",\n" +
+            "      \"type\": \"text/html\"\n" +
+            "    },\n" +
+            "    \"checkout\": {\n" +
+            "      \"href\": \"" + MEVEO_BASE_URL + "/rest/paymentpages/checkout/" + id + "\",\n" +
+            "      \"type\": \"text/html\"\n" +
+            "    },\n" +
+            "    \"documentation\": {\n" +
+            "      \"href\": \"https://docs.liquichain.io/reference/v2/orders-api/get-order\",\n" +
+            "      \"type\": \"text/html\"\n" +
+            "    }\n" +
+            "  }\n" +
+            "}";
+
         super.execute(parameters);
     }
 
