@@ -94,7 +94,8 @@ public class MollieGetPayment extends Script {
 
         MoOrder order;
         try {
-            order = crossStorageApi.find(defaultRepo, orderId, MoOrder.class);
+            String orderUuid = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
+            order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
         } catch (Exception e) {
             String error = "Cannot retrieve order: " + orderId;
             LOG.error(error, e);
