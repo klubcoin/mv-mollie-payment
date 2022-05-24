@@ -6,7 +6,13 @@
   "serviceCode" : "io.liquichain.api.payment.MollieGetOrderScript",
   "synchronous" : true,
   "method" : "GET",
-  "parameterMappings" : [ ],
+  "parameterMappings" : [ {
+    "serviceParameter" : "embed",
+    "multivalued" : false,
+    "parameterName" : "embed",
+    "defaultValue" : " ",
+    "valueRequired" : false
+  } ],
   "pathParameters" : [ "orderId" ],
   "roles" : [ ],
   "returnedVariableName" : "result",
