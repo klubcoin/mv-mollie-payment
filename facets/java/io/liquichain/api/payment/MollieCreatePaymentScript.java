@@ -151,7 +151,7 @@ public class MollieCreatePaymentScript extends Script {
             "    \"webhookUrl\": \"" + webhookUrl + "\",\n" +
             "    \"_links\": {\n" +
             "        \"self\": {\n" +
-            "            \"href\": \"" + MEVEO_BASE_URL + "/rest/v1/payments/" + id + "\",\n" +
+            "            \"href\": \"" + MEVEO_BASE_URL + "/rest/pg/v1/payments/" + id + "\",\n" +
             "            \"type\": \"application/json\"\n" +
             "        },\n" +
             "        \"checkout\": {\n" +

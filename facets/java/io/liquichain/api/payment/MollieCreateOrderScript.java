@@ -416,7 +416,7 @@ public class MollieCreateOrderScript extends Script {
             "    \"webhookUrl\": \"" + payment.getWebhookUrl() + "\",\n" +
             "    \"_links\": {\n" +
             "        \"self\": {\n" +
-            "            \"href\": \"" + MEVEO_BASE_URL + "/rest/v1/payments/" + paymentId + "\",\n" +
+            "            \"href\": \"" + MEVEO_BASE_URL + "/rest/pg/v1/payments/" + paymentId + "\",\n" +
             "            \"type\": \"application/json\"\n" +
             "        },\n" +
             "        \"checkout\": {\n" +
@@ -436,7 +436,7 @@ public class MollieCreateOrderScript extends Script {
 
         result += "\"_links\": {\n" +
             "    \"self\": {\n" +
-            "      \"href\": \"" + MEVEO_BASE_URL + "/rest/v1/orders/" + id + "\",\n" +
+            "      \"href\": \"" + MEVEO_BASE_URL + "/rest/pg/v1/orders/" + id + "\",\n" +
             "      \"type\": \"application/hal+json\"\n" +
             "    },\n" +
             "    \"dashboard\": {\n" +
