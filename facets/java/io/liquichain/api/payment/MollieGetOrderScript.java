@@ -197,7 +197,7 @@ public class MollieGetOrderScript extends Script {
                     transaction ->
                         "{\n" +
                             "    \"resource\": \"payment\",\n" +
-                            "    \"id\": \"" + id + "\",\n" +
+                            "    \"id\": \"" + "tr_" + transaction.getUuid() + "\",\n" +
                             "    \"mode\": \"test\",\n" +
                             "    \"createdAt\": \"" + transaction.getCreationDate() + "\",\n" +
                             "    \"amount\": {\n" +
