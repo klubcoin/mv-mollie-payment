@@ -167,7 +167,7 @@ public class MollieGetOrderScript extends Script {
             result += String.format("\"lines\": [%s],", lines);
 
             String embedQuery = (String) parameters.get("embed");
-            if ("payments---GET".equals(embedQuery)) {
+            if ("payments".equals(embedQuery)) {
                 List<Transaction> transactions = crossStorageApi
                     .find(defaultRepo, Transaction.class)
                     .by("orderId", id)

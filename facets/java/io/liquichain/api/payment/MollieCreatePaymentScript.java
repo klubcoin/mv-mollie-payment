@@ -104,6 +104,7 @@ public class MollieCreatePaymentScript extends Script {
         transaction.setExpirationDate(expiresAt);
         transaction.setOrderId(orderId);
         transaction.setData("{\"type\":\"mollie\",\"description\":\"Mollie Payment\"}");
+        transaction.setType("mollie");
 
         String uuid;
         try{
