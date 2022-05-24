@@ -17,6 +17,8 @@ import org.meveo.service.storage.RepositoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.web3j.crypto.Hash;
+
 import javax.inject.Inject;
 
 public class MollieCreatePaymentScript extends Script {
@@ -94,6 +96,9 @@ public class MollieCreatePaymentScript extends Script {
         Instant expiresAt = createdAt.plus(Duration.ofDays(10));
 
         Transaction transaction = new Transaction();
+        transaction.setHexHash(Hash
+            .sha3(amountValue + amountCurrency + orderId +
+                description + redirectUrl + webhookUrl + metadata + createdAt));
         transaction.setValue(amountValue);
         transaction.setCurrency(amountCurrency);
         transaction.setDescription(description);
@@ -107,9 +112,9 @@ public class MollieCreatePaymentScript extends Script {
         transaction.setType("mollie");
 
         String uuid;
-        try{
+        try {
             uuid = crossStorageApi.createOrUpdate(defaultRepo, transaction);
-        } catch(Exception e){
+        } catch (Exception e) {
             String error = "Failed to save payment transaction.";
             LOG.error(error, e);
             result = createErrorResponse("500", "Internal Server Error", error);
@@ -144,7 +149,7 @@ public class MollieCreatePaymentScript extends Script {
             "            \"type\": \"text/html\"\n" +
             "        },\n" +
             "        \"dashboard\": {\n" +
-            "            \"href\": \""+ BASE_URL + "dashboard?orderid=" + orderId +"\",\n" +
+            "            \"href\": \"" + BASE_URL + "dashboard?orderid=" + orderId + "\",\n" +
             "            \"type\": \"application/json\"\n" +
             "        },\n" +
             "        \"documentation\": {\n" +
