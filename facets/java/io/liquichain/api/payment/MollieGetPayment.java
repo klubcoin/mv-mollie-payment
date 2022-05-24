@@ -9,6 +9,7 @@ import org.meveo.api.exception.EntityDoesNotExistsException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.ParamBeanFactory;
+import org.meveo.model.customEntities.MoOrder;
 import org.meveo.model.customEntities.Transaction;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
@@ -85,12 +86,22 @@ public class MollieGetPayment extends Script {
         } catch (EntityDoesNotExistsException e) {
             String error = "Failed to retrieve payment transaction: " + paymentId;
             LOG.error(error, e);
-            result = createErrorResponse("500", "Internal Server Error", error);
+            result = createErrorResponse("404", "Not found", error);
             return;
         }
         String id = "tr_" + transaction.getUuid();
         String orderId = transaction.getOrderId();
-        
+
+        MoOrder order;
+        try {
+            order = crossStorageApi.find(defaultRepo, orderId, MoOrder.class);
+        } catch (Exception e) {
+            String error = "Cannot retrieve order: " + orderId;
+            LOG.error(error, e);
+            result = createErrorResponse("404", "Not found", error);
+            return;
+        }
+
         result = "{\n" +
             "    \"resource\": \"payment\",\n" +
             "    \"id\": \"" + id + "\",\n" +
@@ -101,7 +112,7 @@ public class MollieGetPayment extends Script {
             "        \"currency\": \"" + transaction.getCurrency() + "\"\n" +
             "    },\n" +
             "    \"description\": \"" + transaction.getDescription() + "\",\n" +
-            "    \"method\": null,\n" +
+            "    \"method\": \"" + order.getMethod() + "\",\n" +
             "    \"metadata\": " + transaction.getMetadata() + ",\n" +
             "    \"status\": \"open\",\n" +
             "    \"isCancelable\": false,\n" +
@@ -113,7 +124,7 @@ public class MollieGetPayment extends Script {
             "    \"webhookUrl\": \"" + transaction.getWebhookUrl() + "\",\n" +
             "    \"_links\": {\n" +
             "        \"self\": {\n" +
-            "            \"href\": \"" + MEVEO_BASE_URL + "/rest/v1/payments/" + id + "\",\n" +
+            "            \"href\": \"" + MEVEO_BASE_URL + "/rest/pg/v1/payments/" + id + "\",\n" +
             "            \"type\": \"application/json\"\n" +
             "        },\n" +
             "        \"checkout\": {\n" +

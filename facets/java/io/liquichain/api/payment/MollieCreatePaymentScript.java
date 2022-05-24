@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.ParamBeanFactory;
+import org.meveo.model.customEntities.MoOrder;
 import org.meveo.model.customEntities.Transaction;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
@@ -131,6 +132,16 @@ public class MollieCreatePaymentScript extends Script {
             return;
         }
 
+        MoOrder order;
+        try {
+            order = crossStorageApi.find(defaultRepo, orderId, MoOrder.class);
+        } catch (Exception e) {
+            String error = "Cannot retrieve order: " + orderId;
+            LOG.error(error, e);
+            result = createErrorResponse("404", "Not found", error);
+            return;
+        }
+
         String id = "tr_" + uuid;
         result = "{\n" +
             "    \"resource\": \"payment\",\n" +
@@ -139,7 +150,7 @@ public class MollieCreatePaymentScript extends Script {
             "    \"createdAt\": \"" + createdAt + "\",\n" +
             "    \"amount\": " + amount + ",\n" +
             "    \"description\": \"" + description + "\",\n" +
-            "    \"method\": null,\n" +
+            "    \"method\": \"" + order.getMethod() + "\",\n" +
             "    \"metadata\": " + metadata + ",\n" +
             "    \"status\": \"open\",\n" +
             "    \"isCancelable\": false,\n" +

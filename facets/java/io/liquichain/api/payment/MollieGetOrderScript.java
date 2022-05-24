@@ -10,6 +10,7 @@ import org.meveo.api.exception.EntityDoesNotExistsException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.ParamBeanFactory;
+import org.meveo.model.customEntities.MoAddress;
 import org.meveo.model.customEntities.MoOrder;
 import org.meveo.model.customEntities.MoOrderLine;
 import org.meveo.model.customEntities.Transaction;
@@ -63,15 +64,6 @@ public class MollieGetOrderScript extends Script {
         MEVEO_BASE_URL = BASE_URL + CONTEXT;
     }
 
-    private String convertJsonToString(Object data) {
-        try {
-            return mapper.writeValueAsString(data);
-        } catch (JsonProcessingException e) {
-            LOG.error("Failed to map result to json string.", e);
-        }
-        return data.toString();
-    }
-
     private MoOrderLine getOrderLine(String uuid) {
         try {
             return crossStorageApi.find(defaultRepo, uuid, MoOrderLine.class);
@@ -79,6 +71,17 @@ public class MollieGetOrderScript extends Script {
             LOG.error("Failed to fetch order line: {}", uuid);
         }
         return null;
+    }
+
+    private String addressToString(MoAddress address) {
+        return "{" +
+            "\"city\":\"" + address.getCity() + "\"," +
+            "\"country\":\"" + address.getCountry() + "\"," +
+            "\"postalCode\":\"" + address.getPostalCode() + "\"," +
+            "\"region\":\"" + address.getRegion() + "\"," +
+            "\"streetAdditional\":\"" + address.getStreetAdditional() + "\"," +
+            "\"streetAndNumber\":\"" + address.getStreetAndNumber() + "\"" +
+            "}";
     }
 
     @Override
@@ -95,7 +98,7 @@ public class MollieGetOrderScript extends Script {
         } catch (Exception e) {
             String error = "Cannot retrieve order: " + orderId;
             LOG.error(error, e);
-            result = createErrorResponse("500", "Not found", error);
+            result = createErrorResponse("404", "Not found", error);
             return;
         }
         String id = "ord_" + order.getUuid();
@@ -103,20 +106,20 @@ public class MollieGetOrderScript extends Script {
             + "\"resource\": \"order\","
             + "\"id\": \"" + id + "\","
             + "\"profileId\": \"pfl_" + order.getUuid() + "\","
-            + "\"method\": \"" + parameters.get("method") + "\","
-            + "\"amount\": " + convertJsonToString(parameters.get("amount")) + ","
+            + "\"method\": \"" + order.getMethod() + "\","
+            + "\"amount\": " + order.getAmount() + ","
             + "\"status\": \"created\","
             + "\"isCancelable\": false,"
-            + "\"metadata\": " + convertJsonToString(parameters.get("metadata")) + ","
+            + "\"metadata\": " + order.getMetadata() + ","
             + "\"createdAt\": \"" + order.getCreationDate().toString() + "\","
             + "\"expiresAt\": \"" + order.getExpiresAt().toString() + "\","
             + "\"mode\": \"test\","
-            + "\"locale\": \"" + parameters.get("locale") + "\","
-            + "\"billingAddress\": " + convertJsonToString(parameters.get("billingAddress")) + ","
-            + "\"shoppercountrymustmatchbillingcountry\": false,"
-            + "\"ordernumber\": \"" + parameters.get("orderNumber") + "\","
-            + "\"redirecturl\": \"" + parameters.get("redirectUrl") + "\","
-            + "\"webhookurl\": \"" + parameters.get("webhookUrl") + "\",";
+            + "\"locale\": \"" + order.getLocale() + "\","
+            + "\"billingAddress\": " + this.addressToString(order.getBillingAddress()) + ","
+            + "\"shopperCountryMustMatchBillingCountry\": false,"
+            + "\"orderNumber\": \"" + order.getOrderNumber() + "\","
+            + "\"redirectUrl\": \"" + order.getRedirectUrl() + "\","
+            + "\"webhookUrl\": \"" + order.getWebhookUrl() + "\",";
 
         List<MoOrderLine> orderLines = order.getLines();
         LOG.info("orderLines: {}", orderLines);
@@ -188,7 +191,7 @@ public class MollieGetOrderScript extends Script {
             } catch (Exception e) {
                 String error = "Failed to retrieve transactions for order: " + id;
                 LOG.error(error, e);
-                result = createErrorResponse("500", "Not found", error);
+                result = createErrorResponse("404", "Not found", error);
                 return;
             }
 
@@ -205,7 +208,7 @@ public class MollieGetOrderScript extends Script {
                             "        \"currency\": \"" + transaction.getCurrency() + "\"\n" +
                             "    },\n" +
                             "    \"description\": \"" + transaction.getDescription() + "\",\n" +
-                            "    \"method\": null,\n" +
+                            "    \"method\": \"klubcoin\",\n" +
                             "    \"metadata\": " + transaction.getMetadata() + ",\n" +
                             "    \"status\": \"open\",\n" +
                             "    \"isCancelable\": false,\n" +

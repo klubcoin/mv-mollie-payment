@@ -326,20 +326,20 @@ public class MollieCreateOrderScript extends Script {
             + "\"resource\": \"order\","
             + "\"id\": \"" + id + "\","
             + "\"profileId\": \"pfl_" + order.getUuid() + "\","
-            + "\"method\": \"" + parameters.get("method") + "\","
-            + "\"amount\": " + convertJsonToString(parameters.get("amount")) + ","
+            + "\"method\": \"" + order.getMethod() + "\","
+            + "\"amount\": " + order.getAmount() + ","
             + "\"status\": \"created\","
             + "\"isCancelable\": false,"
-            + "\"metadata\": " + convertJsonToString(parameters.get("metadata")) + ","
+            + "\"metadata\": " + order.getMetadata() + ","
             + "\"createdAt\": \"" + order.getCreationDate().toString() + "\","
             + "\"expiresAt\": \"" + order.getExpiresAt().toString() + "\","
             + "\"mode\": \"test\","
-            + "\"locale\": \"" + parameters.get("locale") + "\","
+            + "\"locale\": \"" + order.getLocale() + "\","
             + "\"billingAddress\": " + convertJsonToString(parameters.get("billingAddress")) + ","
             + "\"shoppercountrymustmatchbillingcountry\": false,"
-            + "\"ordernumber\": \"" + parameters.get("orderNumber") + "\","
-            + "\"redirecturl\": \"" + parameters.get("redirectUrl") + "\","
-            + "\"webhookurl\": \"" + parameters.get("webhookUrl") + "\",";
+            + "\"ordernumber\": \"" + order.getOrderNumber() + "\","
+            + "\"redirecturl\": \"" + order.getRedirectUrl() + "\","
+            + "\"webhookurl\": \"" + order.getWebhookUrl() + "\",";
 
         String lines = orderLines
             .stream()
@@ -403,7 +403,7 @@ public class MollieCreateOrderScript extends Script {
             "        \"currency\": \"" + payment.getCurrency() + "\"\n" +
             "    },\n" +
             "    \"description\": \"" + payment.getDescription() + "\",\n" +
-            "    \"method\": null,\n" +
+            "    \"method\": \"" + order.getMethod() + "\",\n" +
             "    \"metadata\": " + payment.getMetadata() + ",\n" +
             "    \"status\": \"open\",\n" +
             "    \"isCancelable\": false,\n" +
