@@ -39,6 +39,7 @@ public class MollieGetOrderScript extends Script {
     private String MEVEO_BASE_URL = null;
 
     private String orderId;
+    private String embed;
     private String result;
 
     public String getResult() {
@@ -47,6 +48,10 @@ public class MollieGetOrderScript extends Script {
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
+    }
+
+    public void setEmbed(String embed) {
+        this.embed = embed;
     }
 
     private void init() {
@@ -173,8 +178,7 @@ public class MollieGetOrderScript extends Script {
 
         result += String.format("\"lines\": [%s],", lines);
 
-        String embedQuery = (String) parameters.get("embed");
-        if ("payments".equals(embedQuery)) {
+        if ("payments".equals(this.embed)) {
             List<Transaction> transactions;
             try {
                 transactions = crossStorageApi
