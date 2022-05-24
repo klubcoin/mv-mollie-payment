@@ -192,7 +192,7 @@ public class MollieGetOrderScript extends Script {
                 return;
             }
 
-            result += "{\"_embedded\": {\"payments\": [" +
+            result += "\"_embedded\": {\"payments\": [" +
                 transactions.stream().map(
                     transaction ->
                         "{\n" +
@@ -235,7 +235,7 @@ public class MollieGetOrderScript extends Script {
                             "        }\n" +
                             "    }\n" +
                             "}").collect(Collectors.joining(",\n"))
-                + "]}},";
+                + "]},";
         }
 
         result += "\"_links\": {\n" +
