@@ -3,6 +3,9 @@
   "inputs" : [ {
     "name" : "orderId",
     "type" : "String"
+  }, {
+    "name" : "embed",
+    "type" : "String"
   } ],
   "outputs" : [ {
     "name" : "result",
