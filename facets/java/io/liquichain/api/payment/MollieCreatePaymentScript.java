@@ -61,6 +61,13 @@ public class MollieCreatePaymentScript extends Script {
         return null;
     }
 
+    public static String normalizeHash(String hash) {
+        if (hash.startsWith("0x")) {
+            return hash.substring(2);
+        }
+        return hash.toLowerCase();
+    }
+
     public String createErrorResponse(String status, String title, String detail) {
         String response = "{\n" +
             "  \"status\": " + status + ",\n" +
@@ -95,10 +102,13 @@ public class MollieCreatePaymentScript extends Script {
         Instant createdAt = Instant.now();
         Instant expiresAt = createdAt.plus(Duration.ofDays(10));
 
-        Transaction transaction = new Transaction();
-        transaction.setHexHash(Hash
+        String data = Hash
             .sha3(amountValue + amountCurrency + orderId +
-                description + redirectUrl + webhookUrl + metadata + createdAt));
+                description + redirectUrl + webhookUrl + metadata + createdAt);
+
+        Transaction transaction = new Transaction();
+        transaction.setHexHash(normalizeHash(data));
+        transaction.setSignedHash(data);
         transaction.setValue(amountValue);
         transaction.setCurrency(amountCurrency);
         transaction.setDescription(description);
