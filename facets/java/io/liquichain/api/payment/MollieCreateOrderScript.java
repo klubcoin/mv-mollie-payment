@@ -393,7 +393,7 @@ public class MollieCreateOrderScript extends Script {
         result += String.format("\"lines\": [%s],", lines);
 
         String paymentId = "tr_" + payment.getUuid();
-        result += "{\"_embedded\": {\"payments\": [{\n" +
+        result += "\"_embedded\": {\"payments\": [{\n" +
             "    \"resource\": \"payment\",\n" +
             "    \"id\": \"" + paymentId + "\",\n" +
             "    \"mode\": \"test\",\n" +
@@ -432,7 +432,7 @@ public class MollieCreateOrderScript extends Script {
             "            \"type\": \"text/html\"\n" +
             "        }\n" +
             "    }\n" +
-            "}]}},";
+            "}]},";
 
         result += "\"_links\": {\n" +
             "    \"self\": {\n" +
