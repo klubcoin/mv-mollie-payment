@@ -1,7 +1,7 @@
 {
   "code" : "moPaymentStatus",
   "description" : "Payment status endpoint",
-  "secured" : true,
+  "secured" : false,
   "checkPathParams" : true,
   "serviceCode" : "io.liquichain.api.payment.PaymentStatus",
   "synchronous" : true,
