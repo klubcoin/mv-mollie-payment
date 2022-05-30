@@ -1,7 +1,10 @@
 {
   "code" : "io.liquichain.api.payment.MolliePayOrder",
   "description" : "pay order",
-  "inputs" : [ ],
+  "inputs" : [ {
+    "name" : "orderId",
+    "type" : "String"
+  } ],
   "outputs" : [ {
     "name" : "result",
     "type" : "String"
