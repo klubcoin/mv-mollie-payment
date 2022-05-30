@@ -1,0 +1,19 @@
+{
+  "code" : "io.liquichain.api.payment.PaymentStatus",
+  "description" : "Retrieve payment status",
+  "inputs" : [ {
+    "name" : "orderId",
+    "type" : "String"
+  } ],
+  "outputs" : [ {
+    "name" : "result",
+    "type" : "String"
+  } ],
+  "generateOutputs" : false,
+  "type" : "JAVA",
+  "transactionType" : "SAME",
+  "executionRoles" : [ ],
+  "sourcingRoles" : [ ],
+  "mavenDependencies" : [ ],
+  "importScriptInstances" : [ ]
+}
