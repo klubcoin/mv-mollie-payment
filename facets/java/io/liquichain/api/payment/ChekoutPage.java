@@ -77,7 +77,7 @@ public class ChekoutPage extends Script {
                         + "\tqr = new QRious({\r\n"
                         + "\telement: document.getElementById('qr-code'),\r\n"
                         + "\tsize: 200,\r\n"
-                        + "\tvalue: 'ord_" + orderId + "'});\r\n"
+                        + "\tvalue: 'ord_" + orderUuid + "'});\r\n"
                         + "\tqr.set({foreground: 'black',size: 200});\r\n"
                         + "\t})();\r\n"
                         + "\t</script>\r\n";
