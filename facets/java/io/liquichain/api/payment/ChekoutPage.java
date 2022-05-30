@@ -78,8 +78,7 @@ public class ChekoutPage extends Script {
                         + "\telement: document.getElementById('qr-code'),\r\n"
                         + "\tsize: 200,\r\n"
                         + "\tvalue: 'ord_" + orderId + "'});\r\n"
-                        + "\tvar qrtext = document.getElementById(\"qr-text\").value;\r\n"
-                        + "\tqr.set({foreground: 'black',size: 200,value: qrtext});\r\n"
+                        + "\tqr.set({foreground: 'black',size: 200});\r\n"
                         + "\t})();\r\n"
                         + "\t</script>\r\n";
             } else {
