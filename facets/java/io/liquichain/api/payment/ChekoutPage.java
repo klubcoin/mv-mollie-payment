@@ -96,7 +96,7 @@ public class ChekoutPage extends Script {
                     + "\t\t\t\t\tsetTimeout(()=> { checkPaymentStatus(\"" + orderId + "\") }, 4000);\n"
                     + "\t\t\t}\n"
                     + "\t\t}\n\n"
-                    + "\t\t\tcheckPaymentStatus(id);\n"
+                    + "\t\t\tcheckPaymentStatus(\"" + orderId + "\");\n"
                     + "\t\t})();\n"
                     + "\t</script>";
             } else {
