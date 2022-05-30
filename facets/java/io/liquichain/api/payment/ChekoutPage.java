@@ -89,7 +89,7 @@ public class ChekoutPage extends Script {
                     + "\t\t\t\treturn response.json();\n"
                     + "\t\t}\n\n"
                     + "\t\t\tconst checkPaymentStatus = async (orderId) => {\n"
-                    + "\t\t\t\tconst response = getPayment(orderId);\n"
+                    + "\t\t\t\tconst response = getPaymentStatus(orderId);\n"
                     + "\t\t\t\tif(response.status === \"paid\"){\n"
                     + "\t\t\t\t\twindow.location.href = \"" + order.getRedirectUrl() + "\";\n"
                     + "\t\t\t\t} else {\n"
