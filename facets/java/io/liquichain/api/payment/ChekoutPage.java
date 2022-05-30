@@ -97,7 +97,7 @@ public class ChekoutPage extends Script {
                     + "\t\t\t\tif(response.status === \"paid\"){\n"
                     + "\t\t\t\t\twindow.location.href = \"" + order.getRedirectUrl() + "\";\n"
                     + "\t\t\t\t} else {\n"
-                    + "\t\t\t\t\tsetTimeout(()=> { checkPaymentStatus(\"" + orderId + "\") }, 4000);\n"
+                    + "\t\t\t\t\tsetTimeout(()=> { checkPaymentStatus(\"" + orderId + "\") }, 15000);\n"
                     + "\t\t\t\t}\n"
                     + "\t\t\t}\n\n"
                     + "\t\t\tcheckPaymentStatus(\"" + orderId + "\");\n"
