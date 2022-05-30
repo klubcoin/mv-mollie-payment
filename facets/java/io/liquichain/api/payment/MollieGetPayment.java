@@ -103,6 +103,8 @@ public class MollieGetPayment extends Script {
             return;
         }
 
+        String status = "created".equals(order.getStatus()) ? "open" : order.getStatus();
+
         result = "{\n" +
             "    \"resource\": \"payment\",\n" +
             "    \"id\": \"" + id + "\",\n" +
@@ -115,7 +117,7 @@ public class MollieGetPayment extends Script {
             "    \"description\": \"" + transaction.getDescription() + "\",\n" +
             "    \"method\": \"" + order.getMethod() + "\",\n" +
             "    \"metadata\": " + transaction.getMetadata() + ",\n" +
-            "    \"status\": \"open\",\n" +
+            "    \"status\": \"" + status + "\",\n" +
             "    \"isCancelable\": false,\n" +
             "    \"expiresAt\": \"" + transaction.getExpirationDate() + "\",\n" +
             "    \"details\": null,\n" +

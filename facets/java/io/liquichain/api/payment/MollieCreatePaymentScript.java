@@ -64,7 +64,7 @@ public class MollieCreatePaymentScript extends Script {
 
     public static String normalizeHash(String hash) {
         if (hash.startsWith("0x")) {
-            return hash.substring(2);
+            return hash.substring(2).toLowerCase();
         }
         return hash.toLowerCase();
     }

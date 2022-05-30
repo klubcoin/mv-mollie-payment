@@ -108,7 +108,7 @@ public class MollieGetOrderScript extends Script {
             + "\"profileId\": \"pfl_" + order.getUuid() + "\","
             + "\"method\": \"" + order.getMethod() + "\","
             + "\"amount\": " + order.getAmount() + ","
-            + "\"status\": \"created\","
+            + "\"status\": \"" + order.getStatus() + "\","
             + "\"isCancelable\": false,"
             + "\"metadata\": " + order.getMetadata() + ","
             + "\"createdAt\": \"" + order.getCreationDate().toString() + "\","
@@ -137,7 +137,7 @@ public class MollieGetOrderScript extends Script {
                             "      \"name\": \"" + line.getName() + "\",\n" +
                             "      \"sku\": \"" + line.getSku() + "\",\n" +
                             "      \"type\": \"physical\",\n" +
-                            "      \"status\": \"created\",\n" +
+                            "      \"status\": \"" + order.getStatus() + "\",\n" +
                             "      \"metadata\": " + line.getMetadata() + ",\n" +
                             "      \"isCancelable\": false,\n" +
                             "      \"quantity\": " + line.getQuantity() + ",\n" +
@@ -195,6 +195,8 @@ public class MollieGetOrderScript extends Script {
                 return;
             }
 
+            String status = "created".equals(order.getStatus()) ? "open" : order.getStatus();
+
             result += "\"_embedded\": {\"payments\": [" +
                 transactions.stream().map(
                     transaction ->
@@ -210,7 +212,7 @@ public class MollieGetOrderScript extends Script {
                             "    \"description\": \"" + transaction.getDescription() + "\",\n" +
                             "    \"method\": \"klubcoin\",\n" +
                             "    \"metadata\": " + transaction.getMetadata() + ",\n" +
-                            "    \"status\": \"open\",\n" +
+                            "    \"status\": \"" + status + "\",\n" +
                             "    \"isCancelable\": false,\n" +
                             "    \"expiresAt\": \"" + transaction.getExpirationDate() + "\",\n" +
                             "    \"details\": null,\n" +
