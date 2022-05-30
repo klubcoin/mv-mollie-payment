@@ -1,0 +1,17 @@
+{
+  "code" : "moPaymentStatus",
+  "description" : "Payment status endpoint",
+  "secured" : true,
+  "checkPathParams" : true,
+  "serviceCode" : "io.liquichain.api.payment.PaymentStatus",
+  "synchronous" : true,
+  "method" : "GET",
+  "parameterMappings" : [ ],
+  "pathParameters" : [ "orderId" ],
+  "roles" : [ ],
+  "returnedVariableName" : "result",
+  "serializeResult" : false,
+  "contentType" : "application/json",
+  "basePath" : "pg",
+  "path" : "/v1/paymentStatus/{orderId}"
+}
