@@ -37,7 +37,6 @@ public class MolliePayOrder extends Script {
     private static final String PAYMENT_NOT_FOUND = "Payment for orderId: %s, does not exist.";
     private static final String TRANSACTION_FAILED = "Transaction failed.";
     private static final String SEND_TRANSACTION_FAILED = "Sending eth transaction failed.";
-    private static final long CONNECTION_TTL = 5;
     private static final int SLEEP_DURATION = 1000;
     private static final int ATTEMPTS = 40;
 
@@ -227,13 +226,14 @@ public class MolliePayOrder extends Script {
         }
 
         String orderUuid = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
-        MoOrder order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
-
+        MoOrder order;
         try {
+            order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
             order.setStatus("paid");
             order.setAmountCaptured(order.getAmount());
             crossStorageApi.createOrUpdate(defaultRepo, order);
         } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
             result = createErrorResponse(e.getMessage());
             return;
         }
