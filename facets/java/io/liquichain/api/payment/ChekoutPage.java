@@ -64,8 +64,8 @@ public class ChekoutPage extends Script {
         String message = "<p>Cannot find the order<p/>";
         MoOrder order;
         try {
-            orderId = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
-            order = crossStorageApi.find(defaultRepo, orderId, MoOrder.class);
+            String orderUuid = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
+            order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
             if ("created".equals(order.getStatus())) {
                 message =
                     "\t<h3>To pay your order, please scan this QR-code<br/> using your " + APP_NAME + " mobile app</h3><br/>\r\n"
@@ -93,7 +93,7 @@ public class ChekoutPage extends Script {
                     + "\t\t\t\tif(response.status === \"paid\"){\n"
                     + "\t\t\t\t\twindow.location.href = \"" + order.getRedirectUrl() + "\";\n"
                     + "\t\t\t\t} else {\n"
-                    + "\t\t\t\t\tsetTimeout(()=> { checkPaymentStatus(" + orderId + ") }, 4000);\n"
+                    + "\t\t\t\t\tsetTimeout(()=> { checkPaymentStatus(\"" + orderId + "\") }, 4000);\n"
                     + "\t\t\t}\n"
                     + "\t\t}\n\n"
                     + "\t\t\tcheckPaymentStatus(id);\n"
