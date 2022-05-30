@@ -81,6 +81,24 @@ public class ChekoutPage extends Script {
                         + "\tqr.set({foreground: 'black',size: 200});\r\n"
                         + "\t})();\r\n"
                         + "\t</script>\r\n";
+                message += "\t<script>\n"
+                    + "\t\t(function() {\n"
+                    + "\t\t\tasync getPaymentStatus(orderId) {\n"
+                    + "\t\t\t\tconst url = window.location.origin + \"/rest/pg/v1/paymentStatus/\" + orderId;\n"
+                    + "\t\t\t\tconst response = await fetch(url);\n"
+                    + "\t\t\t\treturn response.json();\n"
+                    + "\t\t}\n\n"
+                    + "\t\t\tasync checkPaymentStatus(orderId){\n"
+                    + "\t\t\t\tconst response = getPayment(orderId);\n"
+                    + "\t\t\t\tif(response.status === \"paid\"){\n"
+                    + "\t\t\t\t\twindow.location.href = \"" + order.getRedirectUrl() + "\";\n"
+                    + "\t\t\t\t} else {\n"
+                    + "\t\t\t\t\tsetTimeout(()=> { checkPaymentStatus(" + orderId + ") }, 4000);\n"
+                    + "\t\t\t}\n"
+                    + "\t\t}\n\n"
+                    + "\t\t\tcheckPaymentStatus(id);\n"
+                    + "\t\t})();\n"
+                    + "\t</script>";
             } else {
                 message = "<p>Invalid order<p/>";
             }
