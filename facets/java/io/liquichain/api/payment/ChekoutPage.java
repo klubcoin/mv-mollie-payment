@@ -86,7 +86,7 @@ public class ChekoutPage extends Script {
                     + "\t\t\tconst getPaymentStatus = async (orderId) => {\n"
                     + "\t\t\t\tconst url = window.location.origin + \"/rest/pg/v1/paymentStatus/\" + orderId;\n"
                     + "\t\t\t\tconst response = await fetch(url);\n"
-                    + "\t\t\t\treturn response.json();\n"
+                    + "\t\t\t\treturn await response.json();\n"
                     + "\t\t\t}\n\n"
                     + "\t\t\tconst checkPaymentStatus = async (orderId) => {\n"
                     + "\t\t\t\tconst response = await getPaymentStatus(orderId);\n"
