@@ -63,6 +63,7 @@ public class MolliePayOrder extends Script {
     }
 
     private void init() {
+      LOG.info(" init payOrder ");
         ParamBean config = paramBeanFactory.getInstance();
         defaultRepo = repositoryService.findDefaultRepository();
         String BESU_API_URL = config.getProperty("besu.api.url", "https://testnet.liquichain.io/rpc");
