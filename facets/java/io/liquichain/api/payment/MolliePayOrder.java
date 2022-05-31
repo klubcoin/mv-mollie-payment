@@ -144,7 +144,7 @@ public class MolliePayOrder extends Script {
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         this.init();
-        LOG.info(" parameters: {}", parameters);
+        LOG.info(" payOrder parameters: {}", parameters);
         String data = (String) parameters.get("data");
         String orderId = (String) parameters.get("orderId");
         Transaction transaction;
