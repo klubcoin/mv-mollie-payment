@@ -250,8 +250,6 @@ public class MolliePayOrder extends Script {
         } catch (Exception e) {
             String error = String.format("Failed invoking webhook: %s", webhookUrl);
             LOG.error(error, e);
-            result = createErrorResponse(error);
-            return;
         } finally {
             if (response != null) {
                 response.close();
