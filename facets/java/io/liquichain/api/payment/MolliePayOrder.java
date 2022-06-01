@@ -211,7 +211,7 @@ public class MolliePayOrder extends Script {
                 transaction.setValue("" + value);
                 transaction.setSignedHash(data);
                 transaction.setBlockNumber("" + transactionReceipt.getBlockNumber());
-                transaction.setBlockHash(transactionReceipt.getBlockHash());
+                transaction.setBlockHash(normalizeHash(transactionReceipt.getBlockHash()));
                 transaction.setV(v);
                 transaction.setS(s);
                 transaction.setR(r);
