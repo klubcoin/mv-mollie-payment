@@ -243,7 +243,9 @@ public class MolliePayOrder extends Script {
         try {
             Form form = new Form().param("id", "tr_" + transaction.getUuid());
             WebTarget target = client.target(webhookUrl);
+            LOG.info("target: {}", target);
             Invocation.Builder builder = target.request(MediaType.APPLICATION_FORM_URLENCODED);
+            LOG.info("builder: {}", builder);
             response = builder.post(Entity.form(form));
         } catch (Exception e) {
             String error = String.format("Failed invoking webhook: %s", webhookUrl);
