@@ -241,11 +241,12 @@ public class MolliePayOrder extends Script {
         Response response = null;
         String webhookUrl = order.getWebhookUrl();
         try {
+            Form form = new Form().param("id", "tr_" + transaction.getUuid());
             response = client.target(webhookUrl)
                              .request(MediaType.APPLICATION_JSON)
-                             .post(Entity.json("{\"id\": \"tr_" + transaction.getUuid() + "\"}"));
+                             .post(Entity.form(form));
         } catch (Exception e) {
-            String error = String.format("Invoking webhook: %s, failed.", webhookUrl);
+            String error = String.format("Failed invoking webhook: %s", webhookUrl);
             LOG.error(error, e);
             result = createErrorResponse(error);
             return;
