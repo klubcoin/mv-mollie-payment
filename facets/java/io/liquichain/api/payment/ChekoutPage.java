@@ -64,7 +64,9 @@ public class ChekoutPage extends Script {
         String message = "<p>Cannot find the order<p/>";
         MoOrder order;
         try {
-            String orderUuid = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
+            boolean hasPrefix =orderId.startsWith("ord_");
+            orderId = hasPrefix ? orderId : "ord_" + orderId;
+            String orderUuid = orderId.substring(4);
             order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
             if ("created".equals(order.getStatus())) {
                 message =
@@ -77,7 +79,7 @@ public class ChekoutPage extends Script {
                         + "\tqr = new QRious({\r\n"
                         + "\telement: document.getElementById('qr-code'),\r\n"
                         + "\tsize: 200,\r\n"
-                        + "\tvalue: 'ord_" + orderUuid + "'});\r\n"
+                        + "\tvalue: '" + orderId + "'});\r\n"
                         + "\tqr.set({foreground: 'black',size: 200});\r\n"
                         + "\t})();\r\n"
                         + "\t</script>\r\n";
