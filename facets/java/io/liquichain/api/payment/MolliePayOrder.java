@@ -4,7 +4,9 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.*;
 
@@ -144,14 +146,6 @@ public class MolliePayOrder extends Script {
         return transactionReceiptOptional.get();
     }
 
-    private BigInteger parseValue(String data) {
-        if (StringUtils.isNotBlank(data)) {
-            String stringValue = data.substring(data.length() - 64);
-            return new BigInteger(stringValue, 16);
-        }
-        return BigInteger.ZERO;
-    }
-
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         this.init();
@@ -203,6 +197,16 @@ public class MolliePayOrder extends Script {
         }
         LOG.info("completed transactionHash: {}", completedTransactionHash);
 
+        String orderUuid = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
+        MoOrder order;
+        try {
+            order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+            result = createErrorResponse(e.getMessage());
+            return;
+        }
+
         if (rawTransaction instanceof SignedRawTransaction) {
             SignedRawTransaction signedTransaction = (SignedRawTransaction) rawTransaction;
             Sign.SignatureData signatureData = signedTransaction.getSignatureData();
@@ -211,9 +215,7 @@ public class MolliePayOrder extends Script {
                 String s = toHex(signatureData.getS());
                 String r = toHex(signatureData.getR());
                 String to = normalizeHash(rawTransaction.getTo());
-                BigInteger value = parseValue(rawTransaction.getData());
-
-                LOG.info("transaction value: {}", value);
+                BigInteger value = rawTransaction.getValue();
 
                 transaction.setHexHash(completedTransactionHash);
                 transaction.setFromHexHash(normalizeHash(transactionReceipt.getFrom()));
@@ -238,10 +240,7 @@ public class MolliePayOrder extends Script {
             }
         }
 
-        String orderUuid = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
-        MoOrder order;
         try {
-            order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
             order.setStatus("paid");
             order.setPaidAt(Instant.now());
             order.setAmountCaptured(order.getAmount());
