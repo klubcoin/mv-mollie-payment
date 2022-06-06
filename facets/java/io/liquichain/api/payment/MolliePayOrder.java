@@ -160,7 +160,7 @@ public class MolliePayOrder extends Script {
         }
 
         RawTransaction rawTransaction = TransactionDecoder.decode(data);
-        LOG.info("to:{} , value:{}", rawTransaction.getTo(), rawTransaction.getValue());
+        LOG.info("to:{} , value:{}", rawTransaction.getTo(), rawTransaction.getData());
 
         String recipient = rawTransaction.getTo();
         if (recipient == null || "0x0".equals(recipient) || "0x80".equals(recipient)) {
