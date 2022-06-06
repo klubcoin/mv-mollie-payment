@@ -14,6 +14,7 @@ import javax.ws.rs.core.*;
 
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.ParamBeanFactory;
+import org.meveo.commons.utils.StringUtils;
 import org.meveo.service.script.Script;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.model.storage.Repository;
@@ -64,7 +65,7 @@ public class MolliePayOrder extends Script {
     }
 
     private void init() {
-      LOG.info(" init payOrder ");
+        LOG.info(" init payOrder ");
         ParamBean config = paramBeanFactory.getInstance();
         defaultRepo = repositoryService.findDefaultRepository();
         String BESU_API_URL = config.getProperty("besu.api.url", "https://testnet.liquichain.io/rpc");
@@ -143,6 +144,14 @@ public class MolliePayOrder extends Script {
         return transactionReceiptOptional.get();
     }
 
+    private BigInteger parseValue(String data) {
+        if (StringUtils.isNotBlank(data)) {
+            String stringValue = data.substring(data.length() - 64);
+            return new BigInteger(stringValue, 16);
+        }
+        return BigInteger.ZERO;
+    }
+
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         this.init();
@@ -202,9 +211,9 @@ public class MolliePayOrder extends Script {
                 String s = toHex(signatureData.getS());
                 String r = toHex(signatureData.getR());
                 String to = normalizeHash(rawTransaction.getTo());
-                BigInteger value = rawTransaction.getValue();
+                BigInteger value = parseValue(rawTransaction.getData());
 
-                LOG.info("transaction data: {}", rawTransaction.getData());
+                LOG.info("transaction value: {}", value);
 
                 transaction.setHexHash(completedTransactionHash);
                 transaction.setFromHexHash(normalizeHash(transactionReceipt.getFrom()));
