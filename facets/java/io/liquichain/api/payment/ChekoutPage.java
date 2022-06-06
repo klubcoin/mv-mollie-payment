@@ -64,14 +64,13 @@ public class ChekoutPage extends Script {
         String message = "<p>Cannot find the order<p/>";
         MoOrder order;
         try {
-            boolean hasPrefix =orderId.startsWith("ord_");
+            boolean hasPrefix = orderId.startsWith("ord_");
             orderId = hasPrefix ? orderId : "ord_" + orderId;
             String orderUuid = orderId.substring(4);
             order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
             if ("created".equals(order.getStatus())) {
                 message =
                     "\t<h3>To pay your order, please scan this QR-code<br/> using your " + APP_NAME + " mobile app</h3><br/>\r\n"
-                        +"\t<div><button class='qr-btn' onclick='location.replace(\""+order.getRedirectUrl()+"\");'>Continue</button></div>\r\n"
                         + "\t<canvas id=\"qr-code\"></canvas>\r\n"
                         + "\t<script src=\"https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js\"></script>\r\n"
                         + "\t<script>\r\n"
