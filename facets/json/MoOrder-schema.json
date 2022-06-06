@@ -166,6 +166,17 @@
             "title": "MoOrder.amountRefunded",
             "type": "number"
         },
+        "paidAt": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Paid at",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_paidAt",
+            "title": "MoOrder.paidAt",
+            "type": "string"
+        },
         "shippingAddress": {
             "storages": ["SQL"],
             "nullable": true,
