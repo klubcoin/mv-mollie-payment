@@ -204,6 +204,8 @@ public class MolliePayOrder extends Script {
                 String to = normalizeHash(rawTransaction.getTo());
                 BigInteger value = rawTransaction.getValue();
 
+                LOG.info("transaction data: {}", rawTransaction.getData());
+
                 transaction.setHexHash(completedTransactionHash);
                 transaction.setFromHexHash(normalizeHash(transactionReceipt.getFrom()));
                 transaction.setToHexHash(normalizeHash(transactionReceipt.getTo()));
