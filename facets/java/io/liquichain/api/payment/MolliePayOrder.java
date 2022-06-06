@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
+import java.time.Instant;
 import java.util.*;
 
 import javax.inject.Inject;
@@ -231,6 +232,7 @@ public class MolliePayOrder extends Script {
         try {
             order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
             order.setStatus("paid");
+            order.setPaidAt(Instant.now());
             order.setAmountCaptured(order.getAmount());
             crossStorageApi.createOrUpdate(defaultRepo, order);
         } catch (Exception e) {

@@ -118,6 +118,7 @@ public class MollieGetPayment extends Script {
             "    \"method\": \"" + order.getMethod() + "\",\n" +
             "    \"metadata\": " + transaction.getMetadata() + ",\n" +
             "    \"status\": \"" + status + "\",\n" +
+            "    \"paidAt\": \"" + order.getPaidAt() + "\",\n" +
             "    \"isCancelable\": false,\n" +
             "    \"expiresAt\": \"" + transaction.getExpirationDate() + "\",\n" +
             "    \"details\": null,\n" +

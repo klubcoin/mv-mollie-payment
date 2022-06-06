@@ -138,6 +138,7 @@ public class MollieGetOrderScript extends Script {
                             "      \"sku\": \"" + line.getSku() + "\",\n" +
                             "      \"type\": \"physical\",\n" +
                             "      \"status\": \"" + order.getStatus() + "\",\n" +
+                            "      \"paidAt\": \"" + order.getPaidAt() + "\",\n" +
                             "      \"metadata\": " + line.getMetadata() + ",\n" +
                             "      \"isCancelable\": false,\n" +
                             "      \"quantity\": " + line.getQuantity() + ",\n" +
@@ -213,6 +214,7 @@ public class MollieGetOrderScript extends Script {
                             "    \"method\": \"klubcoin\",\n" +
                             "    \"metadata\": " + transaction.getMetadata() + ",\n" +
                             "    \"status\": \"" + status + "\",\n" +
+                            "    \"paidAt\": \"" + order.getPaidAt() + "\",\n" +
                             "    \"isCancelable\": false,\n" +
                             "    \"expiresAt\": \"" + transaction.getExpirationDate() + "\",\n" +
                             "    \"details\": null,\n" +
