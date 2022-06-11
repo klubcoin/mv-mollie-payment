@@ -154,7 +154,7 @@
             "versionable": false,
             "id": "CE_MoOrder_shopperCountryMustMatchBillingCountry",
             "title": "MoOrder.shopperCountryMustMatchBillingCountry",
-            "type": "string"
+            "type": "boolean"
         },
         "amountRefunded": {
             "storages": ["SQL"],
