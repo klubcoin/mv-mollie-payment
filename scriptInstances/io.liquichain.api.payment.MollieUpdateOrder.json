@@ -2,12 +2,15 @@
   "code" : "io.liquichain.api.payment.MollieUpdateOrder",
   "description" : "Update order In separated transaction",
   "inputs" : [ ],
-  "outputs" : [ ],
+  "outputs" : [ {
+    "name" : "result",
+    "type" : "String"
+  } ],
   "generateOutputs" : false,
   "type" : "JAVA",
   "transactionType" : "NEW",
   "executionRoles" : [ ],
   "sourcingRoles" : [ ],
   "mavenDependencies" : [ ],
-  "importScriptInstances" : [ "io.liquichain.core.BlockForgerScript" ]
+  "importScriptInstances" : [ "org.meveo.model.customEntities.MoOrder" ]
 }
