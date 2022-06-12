@@ -3,7 +3,7 @@
   "description" : "create order",
   "secured" : false,
   "checkPathParams" : false,
-  "serviceCode" : "io.liquichain.api.payment.MollieCreateOrderScript",
+  "serviceCode" : "io.liquichain.api.payment.MollieCreateOrder",
   "synchronous" : true,
   "method" : "POST",
   "parameterMappings" : [ ],

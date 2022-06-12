@@ -1,10 +1,11 @@
 package io.liquichain.api.payment;
 
+import static io.liquichain.api.payment.PaymentUtils.*;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.commons.utils.ParamBean;
@@ -22,8 +23,8 @@ import org.web3j.crypto.Hash;
 
 import javax.inject.Inject;
 
-public class MollieCreatePaymentScript extends Script {
-    private static final Logger LOG = LoggerFactory.getLogger(MollieCreateOrderScript.class);
+public class MollieCreatePayment extends Script {
+    private static final Logger LOG = LoggerFactory.getLogger(MollieCreateOrder.class);
 
     @Inject
     private CrossStorageApi crossStorageApi;
@@ -53,52 +54,20 @@ public class MollieCreatePaymentScript extends Script {
         MEVEO_BASE_URL = BASE_URL + CONTEXT;
     }
 
-    private String convertJsonToString(Object data) {
-        try {
-            return mapper.writeValueAsString(data);
-        } catch (JsonProcessingException e) {
-            LOG.error("Failed to map result to json string.", e);
-        }
-        return null;
-    }
-
-    public static String normalizeHash(String hash) {
-        if (hash.startsWith("0x")) {
-            return hash.substring(2).toLowerCase();
-        }
-        return hash.toLowerCase();
-    }
-
-    public String createErrorResponse(String status, String title, String detail) {
-        String response = "{\n" +
-            "  \"status\": " + status + ",\n" +
-            "  \"title\": \"" + title + "\",\n" +
-            "  \"detail\": \"" + detail + "\",\n" +
-            "  \"_links\": {\n" +
-            "    \"documentation\": {\n" +
-            "      \"href\": \"https://docs.mollie.com/errors\",\n" +
-            "      \"type\": \"text/html\"\n" +
-            "    }\n" +
-            "  }\n" +
-            "}";
-        LOG.debug("error response: {}", response);
-        return response;
-    }
-
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         super.execute(parameters);
         this.init();
 
-        Map<String, Object> amountMap = (Map<String, Object>) parameters.get("amount");
-        String amountValue = (String) amountMap.get("value");
-        String amountCurrency = (String) amountMap.get("currency");
-        Map<String, Object> metadataMap = (Map<String, Object>) parameters.get("metadata");
-        String orderId = (String) metadataMap.get("order_id");
+        Map<String, Object> amountMap = getMap(parameters, "amount");
+        String amountValue = getString(amountMap,"value");
+        String amountCurrency = getString(amountMap,"currency");
+        Map<String, Object> metadataMap = getMap(parameters,"metadata");
+        String orderId = getString(metadataMap,"order_id");
         String amount = convertJsonToString(parameters.get("amount"));
-        String description = (String) parameters.get("description");
-        String redirectUrl = (String) parameters.get("redirectUrl");
-        String webhookUrl = (String) parameters.get("webhookUrl");
+        String description = getString(parameters,"description");
+        String redirectUrl = getString(parameters,"redirectUrl");
+        String webhookUrl = getString(parameters,"webhookUrl");
         String metadata = convertJsonToString(parameters.get("metadata"));
         Instant createdAt = Instant.now();
         Instant expiresAt = createdAt.plus(Duration.ofDays(10));
@@ -121,6 +90,7 @@ public class MollieCreatePaymentScript extends Script {
         transaction.setOrderId(orderId);
         transaction.setData("{\"type\":\"mollie\",\"description\":\"Mollie Payment\"}");
         transaction.setType("mollie");
+        transaction.setUuid(generateUUID(transaction));
 
         String uuid;
         try {

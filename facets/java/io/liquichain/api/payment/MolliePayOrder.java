@@ -1,12 +1,12 @@
 package io.liquichain.api.payment;
 
+import static io.liquichain.api.payment.PaymentUtils.*;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.*;
 
@@ -16,7 +16,6 @@ import javax.ws.rs.core.*;
 
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.ParamBeanFactory;
-import org.meveo.commons.utils.StringUtils;
 import org.meveo.service.script.Script;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.model.storage.Repository;
@@ -74,47 +73,11 @@ public class MolliePayOrder extends Script {
         web3j = Web3j.build(new HttpService(BESU_API_URL));
     }
 
-    private static String normalizeHash(String hash) {
-        if (hash.startsWith("0x")) {
-            return hash.substring(2).toLowerCase();
-        }
-        return hash.toLowerCase();
+    private String createError(String error) {
+        return createErrorResponse("500", "Internal Server Error", error);
     }
 
-    private static String toHex(byte[] bytes) {
-        StringBuilder hexValue = new StringBuilder();
-        for (byte aByte : bytes) {
-            hexValue.append(String.format("%02x", aByte));
-        }
-        return hexValue.toString().toLowerCase();
-    }
-
-    private static String createResponse(String result) {
-        String resultFormat = result.startsWith("{") ? "%s" : "\"%s\"";
-        String response = "{\n" +
-            "  \"result\": " + String.format(resultFormat, result) + "\n" +
-            "}";
-        LOG.debug("response: {}", response);
-        return response;
-    }
-
-    private String createErrorResponse(String detail) {
-        String response = "{\n" +
-            "  \"status\": 500,\n" +
-            "  \"title\": \"Internal Error\",\n" +
-            "  \"detail\": \"" + detail + "\",\n" +
-            "  \"_links\": {\n" +
-            "    \"documentation\": {\n" +
-            "      \"href\": \"https://docs.mollie.com/errors\",\n" +
-            "      \"type\": \"text/html\"\n" +
-            "    }\n" +
-            "  }\n" +
-            "}";
-        LOG.debug("error response: {}", response);
-        return response;
-    }
-
-    public Optional<TransactionReceipt> sendTransactionReceiptRequest(String transactionHash)
+   public Optional<TransactionReceipt> sendTransactionReceiptRequest(String transactionHash)
         throws Exception {
         EthGetTransactionReceipt transactionReceipt = web3j
             .ethGetTransactionReceipt(transactionHash)
@@ -158,7 +121,7 @@ public class MolliePayOrder extends Script {
         } catch (Exception e) {
             String error = String.format(PAYMENT_NOT_FOUND, orderId);
             LOG.error(error, e);
-            result = createErrorResponse(error);
+            result = createError(error);
             return;
         }
 
@@ -167,7 +130,7 @@ public class MolliePayOrder extends Script {
 
         String recipient = rawTransaction.getTo();
         if (recipient == null || "0x0".equals(recipient) || "0x80".equals(recipient)) {
-            result = createErrorResponse(CONTRACT_NOT_ALLOWED_ERROR);
+            result = createError(CONTRACT_NOT_ALLOWED_ERROR);
             return;
         }
 
@@ -176,13 +139,13 @@ public class MolliePayOrder extends Script {
             EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(data).send();
             transactionHash = ethSendTransaction.getTransactionHash();
         } catch (IOException e) {
-            result = createErrorResponse(SEND_TRANSACTION_FAILED);
+            result = createError(SEND_TRANSACTION_FAILED);
             return;
         }
         LOG.info("pending transactionHash: {}", transactionHash);
 
         if (transactionHash == null || transactionHash.isEmpty()) {
-            result = createErrorResponse(TRANSACTION_FAILED);
+            result = createError(TRANSACTION_FAILED);
             return;
         }
 
@@ -192,7 +155,7 @@ public class MolliePayOrder extends Script {
             transactionReceipt = waitForTransactionReceipt(transactionHash);
             completedTransactionHash = transactionReceipt.getTransactionHash();
         } catch (Exception e) {
-            result = createErrorResponse(e.getMessage());
+            result = createError(e.getMessage());
             return;
         }
         LOG.info("completed transactionHash: {}", completedTransactionHash);
@@ -203,7 +166,7 @@ public class MolliePayOrder extends Script {
             order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
-            result = createErrorResponse(e.getMessage());
+            result = createError(e.getMessage());
             return;
         }
 
@@ -235,7 +198,7 @@ public class MolliePayOrder extends Script {
                 String uuid = crossStorageApi.createOrUpdate(defaultRepo, transaction);
                 LOG.info("Updated transaction on DB with uuid: {}", uuid);
             } catch (Exception e) {
-                result = createErrorResponse(e.getMessage());
+                result = createError(e.getMessage());
                 return;
             }
         }
@@ -247,7 +210,7 @@ public class MolliePayOrder extends Script {
             crossStorageApi.createOrUpdate(defaultRepo, order);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
-            result = createErrorResponse(e.getMessage());
+            result = createError(e.getMessage());
             return;
         }
 
@@ -273,60 +236,6 @@ public class MolliePayOrder extends Script {
         super.execute(parameters);
     }
 }
-
-
-class ErrorMessage {
-    private String code;
-    private String message;
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-}
-
-
-class JsonRpcError {
-    private String id;
-    private String jsonrpc;
-    private ErrorMessage error;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getJsonrpc() {
-        return jsonrpc;
-    }
-
-    public void setJsonrpc(String jsonrpc) {
-        this.jsonrpc = jsonrpc;
-    }
-
-    public ErrorMessage getError() {
-        return error;
-    }
-
-    public void setError(ErrorMessage error) {
-        this.error = error;
-    }
-}
-
 
 class HttpService extends Service {
 

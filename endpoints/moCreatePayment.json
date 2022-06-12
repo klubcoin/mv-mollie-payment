@@ -2,7 +2,7 @@
   "code" : "moCreatePayment",
   "secured" : false,
   "checkPathParams" : true,
-  "serviceCode" : "io.liquichain.api.payment.MollieCreatePaymentScript",
+  "serviceCode" : "io.liquichain.api.payment.MollieCreatePayment",
   "synchronous" : true,
   "method" : "POST",
   "parameterMappings" : [ ],

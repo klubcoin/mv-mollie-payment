@@ -2,8 +2,6 @@ package io.liquichain.api.payment;
 
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.meveo.api.exception.EntityDoesNotExistsException;
 import org.meveo.api.persistence.CrossStorageApi;
@@ -21,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 
 public class MollieGetPayment extends Script {
-    private static final Logger LOG = LoggerFactory.getLogger(MollieCreateOrderScript.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MollieCreateOrder.class);
 
     @Inject
     private CrossStorageApi crossStorageApi;

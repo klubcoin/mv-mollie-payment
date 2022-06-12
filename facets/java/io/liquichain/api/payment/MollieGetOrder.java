@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.meveo.api.exception.EntityDoesNotExistsException;
 import org.meveo.api.persistence.CrossStorageApi;
@@ -23,8 +22,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
-public class MollieGetOrderScript extends Script {
-    private static final Logger LOG = LoggerFactory.getLogger(MollieGetOrderScript.class);
+public class MollieGetOrder extends Script {
+    private static final Logger LOG = LoggerFactory.getLogger(MollieGetOrder.class);
 
     @Inject
     private CrossStorageApi crossStorageApi;
