@@ -6,16 +6,6 @@
     "title": "Order",
     "type": "object",
     "properties": {
-        "amount": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Amount",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_MoOrder_amount",
-            "title": "MoOrder.amount",
-            "type": "number"
-        },
         "consumerDateOfBirth": {
             "storages": ["SQL"],
             "nullable": true,
@@ -69,17 +59,6 @@
             "type": "string",
             "maxLength": 1000
         },
-        "method": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "payment method",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_MoOrder_method",
-            "title": "MoOrder.method",
-            "type": "string",
-            "maxLength": 20
-        },
         "amountCaptured": {
             "storages": ["SQL"],
             "nullable": true,
@@ -89,17 +68,6 @@
             "id": "CE_MoOrder_amountCaptured",
             "title": "MoOrder.amountCaptured",
             "type": "number"
-        },
-        "creationDate": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "format": "date-time",
-            "description": "creation date",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_MoOrder_creationDate",
-            "title": "MoOrder.creationDate",
-            "type": "string"
         },
         "locale": {
             "storages": ["SQL"],
@@ -123,27 +91,16 @@
             "type": "string",
             "maxLength": 50
         },
-        "expiresAt": {
+        "expiredAt": {
             "storages": ["SQL"],
             "nullable": true,
             "format": "date-time",
-            "description": "Expires at",
+            "description": "Expired at",
             "readOnly": false,
             "versionable": false,
-            "id": "CE_MoOrder_expiresAt",
-            "title": "MoOrder.expiresAt",
+            "id": "CE_MoOrder_expiredAt",
+            "title": "MoOrder.expiredAt",
             "type": "string"
-        },
-        "webhookUrl": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "webhookUrl",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_MoOrder_webhookUrl",
-            "title": "MoOrder.webhookUrl",
-            "type": "string",
-            "maxLength": 1000
         },
         "shopperCountryMustMatchBillingCountry": {
             "storages": ["SQL"],
@@ -166,27 +123,6 @@
             "title": "MoOrder.amountRefunded",
             "type": "number"
         },
-        "paidAt": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "format": "date-time",
-            "description": "Paid at",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_MoOrder_paidAt",
-            "title": "MoOrder.paidAt",
-            "type": "string"
-        },
-        "shippingAddress": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Shipping address",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_MoOrder_shippingAddress",
-            "title": "MoOrder.shippingAddress",
-            "$ref": "#/definitions/MoAddress"
-        },
         "currency": {
             "storages": ["SQL"],
             "nullable": true,
@@ -207,16 +143,6 @@
             "id": "CE_MoOrder_payment",
             "title": "MoOrder.payment",
             "type": "string"
-        },
-        "billingAddress": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Billing Address",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_MoOrder_billingAddress",
-            "title": "MoOrder.billingAddress",
-            "$ref": "#/definitions/MoAddress"
         },
         "lines": {
             "storages": ["SQL"],
@@ -258,6 +184,91 @@
                 "SUP_TEAM",
                 "SALES_TEAM"
             ]
+        },
+        "amount": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Amount",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_amount",
+            "title": "MoOrder.amount",
+            "type": "number"
+        },
+        "method": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "payment method",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_method",
+            "title": "MoOrder.method",
+            "type": "string",
+            "maxLength": 20
+        },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "creation date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_creationDate",
+            "title": "MoOrder.creationDate",
+            "type": "string"
+        },
+        "expiresAt": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Expires at",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_expiresAt",
+            "title": "MoOrder.expiresAt",
+            "type": "string"
+        },
+        "webhookUrl": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "webhookUrl",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_webhookUrl",
+            "title": "MoOrder.webhookUrl",
+            "type": "string",
+            "maxLength": 1000
+        },
+        "paidAt": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Paid at",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_paidAt",
+            "title": "MoOrder.paidAt",
+            "type": "string"
+        },
+        "shippingAddress": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Shipping address",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_shippingAddress",
+            "title": "MoOrder.shippingAddress",
+            "$ref": "#/definitions/MoAddress"
+        },
+        "billingAddress": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Billing Address",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_billingAddress",
+            "title": "MoOrder.billingAddress",
+            "$ref": "#/definitions/MoAddress"
         },
         "status": {
             "storages": ["SQL"],
