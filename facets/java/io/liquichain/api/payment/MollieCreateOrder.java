@@ -58,8 +58,8 @@ public class MollieCreateOrder extends Script {
         MEVEO_BASE_URL = BASE_URL + CONTEXT;
     }
 
-    private MoAddress getSavedAddress(Map<String, Object> parameters){
-        MoAddress address = parseAddress(parameters);
+    private MoAddress getSavedAddress(Map<String, Object> parameters) throws BusinessException {
+        MoAddress address = parseAddress(crossStorageApi, defaultRepo, parameters);
         try {
             crossStorageApi.createOrUpdate(defaultRepo, address);
         } catch (Exception e) {
@@ -91,7 +91,7 @@ public class MollieCreateOrder extends Script {
         }
 
         LOG.info("CreateOrder {}", parameters);
-        Map<String, Object> amountMap = getMap(parameters,"amount");
+        Map<String, Object> amountMap = getMap(parameters, "amount");
         double amountValue = Double.parseDouble(getString(amountMap, "value"));
         String amountCurrency = getString(amountMap, "currency");
         order.setMethod(getString(parameters, "method"));
@@ -103,15 +103,15 @@ public class MollieCreateOrder extends Script {
         order.setLocale(getString(parameters, "locale"));
         order.setRedirectUrl(getString(parameters, "redirectUrl").replace("http:", "https:"));
         order.setWebhookUrl(getString(parameters, "webhookUrl").replace("http:", "https:"));
-        order.setBillingAddress(getSavedAddress(getMap(parameters,"billingAddress")));
-        order.setShippingAddress(getSavedAddress(getMap(parameters,"shippingAddress")));
+        order.setBillingAddress(getSavedAddress(getMap(parameters, "billingAddress")));
+        order.setShippingAddress(getSavedAddress(getMap(parameters, "shippingAddress")));
 
         order.setLines(orderLines);
         order.setStatus("created");
         order.setCreationDate(Instant.now());
         order.setExpiresAt(order.getCreationDate().plus(Duration.ofDays(10)));
 
-        if(uuid == null){
+        if (uuid == null) {
             order.setUuid(generateUUID(order));
         }
 
@@ -191,7 +191,8 @@ public class MollieCreateOrder extends Script {
         Transaction payment;
         List<MoOrderLine> orderLines;
         try {
-            orderLines = parseOrderLines((List<Map<String, Object>>) parameters.get("lines"));
+            orderLines =
+                parseOrderLines(crossStorageApi, defaultRepo, (List<Map<String, Object>>) parameters.get("lines"));
             order = this.createOrder(parameters, orderLines);
             payment = this.createPayment(order);
         } catch (BusinessException e) {

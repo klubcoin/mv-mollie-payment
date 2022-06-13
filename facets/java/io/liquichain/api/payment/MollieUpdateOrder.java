@@ -57,13 +57,6 @@ public class MollieUpdateOrder extends Script {
         MEVEO_BASE_URL = BASE_URL + CONTEXT;
     }
 
-    private <T> T normalize(T value, T currentValue) {
-        if (value != null) {
-            return value;
-        }
-        return currentValue;
-    }
-
     private String toHttps(String url) {
         return url != null ? url.replace("http:", "https:") : null;
     }
@@ -98,7 +91,7 @@ public class MollieUpdateOrder extends Script {
                 throw new BusinessException(errorMessage, e);
             }
         } else {
-            address = parseAddress(parameters);
+            address = parseAddress(crossStorageApi, defaultRepo, parameters);
         }
         try {
             crossStorageApi.createOrUpdate(defaultRepo, address);
@@ -144,6 +137,12 @@ public class MollieUpdateOrder extends Script {
         order.setLines(orderLines);
         String status = normalize(getString(parameters, "status"), order.getStatus());
         order.setStatus(status);
+        if("canceled".equals(status)){
+
+        }
+        if("expired".equals(status)){
+
+        }
 
         try {
             uuid = crossStorageApi.createOrUpdate(defaultRepo, order);
@@ -221,9 +220,10 @@ public class MollieUpdateOrder extends Script {
         Transaction payment;
         List<MoOrderLine> orderLines;
         try {
-            orderLines = parseOrderLines((List<Map<String, Object>>) parameters.get("lines"));
-            order = this.updateOrder(parameters, orderLines);
-            payment = this.updatePayment(order);
+            orderLines =
+                parseOrderLines(crossStorageApi, defaultRepo, (List<Map<String, Object>>) parameters.get("lines"));
+            order = updateOrder(parameters, orderLines);
+            payment = updatePayment(order);
         } catch (BusinessException e) {
             LOG.error(e.getMessage(), e);
             result = "{\"error\":\"" + e.getMessage() + "\"}";
@@ -314,7 +314,7 @@ public class MollieUpdateOrder extends Script {
             "    \"description\": \"" + payment.getDescription() + "\",\n" +
             "    \"method\": \"" + order.getMethod() + "\",\n" +
             "    \"metadata\": " + payment.getMetadata() + ",\n" +
-            "    \"status\": \"open\",\n" +
+            "    \"status\": \"" + order.getStatus() + "\",\n" +
             "    \"isCancelable\": false,\n" +
             "    \"expiresAt\": \"" + payment.getExpirationDate() + "\",\n" +
             "    \"details\": null,\n" +

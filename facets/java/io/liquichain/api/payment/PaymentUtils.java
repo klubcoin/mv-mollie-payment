@@ -11,8 +11,11 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.meveo.admin.exception.BusinessException;
+import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.model.customEntities.MoAddress;
 import org.meveo.model.customEntities.MoOrderLine;
+import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,27 +145,74 @@ public class PaymentUtils extends Script {
         return response;
     }
 
+    public static <T> T normalize(T value, T currentValue) {
+        if (value != null) {
+            return value;
+        }
+        return currentValue;
+    }
+
+    private static String getObjectValue(Object object) {
+        if (object.getClass() == String.class) {
+            return "" + object;
+        } else {
+            return getFieldValues(object);
+        }
+    }
+
     private static String getFieldValue(Object object, Field field) {
         field.setAccessible(true);
         try {
-            return field.getType() == String.class ? "" + field.get(object) : "";
+            if (field.getType() == String.class) {
+                return "" + field.get(object);
+            } else if (field.getType() == Map.class) {
+                Map<String, Object> objectMap = (Map<String, Object>) field.get(object);
+                return objectMap.keySet().stream()
+                                .map(key -> key + ":" + getObjectValue(objectMap.get(key)))
+                                .collect(Collectors.joining(","));
+
+            } else if (field.getType() == List.class) {
+                List<Object> objectList = (List) field.get(object);
+                return objectList.stream().map(PaymentUtils::getObjectValue).collect(Collectors.joining(","));
+            } else {
+                return "";
+            }
         } catch (Exception e) {
             return "";
         }
     }
 
-    public static String generateUUID(Object object) {
-        return DigestUtils.sha1Hex(Arrays.stream(object.getClass().getDeclaredFields())
-                                         .map(field -> getFieldValue(object, field))
-                                         .collect(Collectors.joining())
-                                         .replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit}]", ""));
+    private static String getFieldValues(Object object) {
+        return Arrays.stream(object.getClass().getDeclaredFields())
+                     .map(field -> getFieldValue(object, field))
+                     .collect(Collectors.joining())
+                     .replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit}]", "");
     }
 
-    public static MoAddress parseAddress(Map<String, Object> parameters) {
+    public static String generateUUID(Object object) {
+        String fieldValues = getFieldValues(object);
+        String uuid = DigestUtils.sha1Hex(fieldValues);
+        LOG.info("generateUUID - fieldValues: {}", fieldValues);
+        LOG.info("generateUUID - uuid: {}", uuid);
+        return uuid;
+    }
+
+    public static MoAddress parseAddress(CrossStorageApi crossStorageApi, Repository defaultRepo,
+        Map<String, Object> parameters) throws BusinessException {
         if (parameters == null) {
             return null;
         }
-        MoAddress address = new MoAddress();
+        String id = getString(parameters, "id");
+        MoAddress address;
+        if (id != null) {
+            try {
+                address = crossStorageApi.find(defaultRepo, id, MoAddress.class);
+            } catch (Exception e) {
+                throw new BusinessException("Failed to retrieve address with id: " + id, e);
+            }
+        } else {
+            address = new MoAddress();
+        }
 
         String streetAndNumber = getString(parameters, "streetAndNumber");
         String streetAdditional = getString(parameters, "streetAdditional");
@@ -171,55 +221,86 @@ public class PaymentUtils extends Script {
         String country = getString(parameters, "country");
         String postalCode = getString(parameters, "postalCode");
 
-        address.setCity(city);
-        address.setCountry(country);
-        address.setPostalCode(postalCode);
-        address.setRegion(region);
-        address.setStreetAdditional(streetAdditional);
-        address.setStreetAndNumber(streetAndNumber);
-        address.setUuid(generateUUID(address));
+        address.setStreetAndNumber(normalize(streetAndNumber, address.getStreetAndNumber()));
+        address.setStreetAdditional(normalize(streetAdditional, address.getStreetAdditional()));
+        address.setCity(normalize(city, address.getCity()));
+        address.setRegion(normalize(region, address.getRegion()));
+        address.setCountry(normalize(country, address.getCountry()));
+        address.setPostalCode(normalize(postalCode, address.getPostalCode()));
+        if (address.getUuid() == null) {
+            address.setUuid(generateUUID(address));
+        }
 
         return address;
     }
 
-    private static MoOrderLine parseOrderLine(Map<String, Object> parameters) {
+    private static MoOrderLine parseOrderLine(CrossStorageApi crossStorageApi, Repository defaultRepo,
+        Map<String, Object> parameters) throws BusinessException {
         if (parameters == null) {
             return null;
         }
-        MoOrderLine orderLine = new MoOrderLine();
 
-        Map<String, Object> discountAmount = getMap(parameters, "discountAmount");
-        Map<String, Object> totalAmount = getMap(parameters, "totalAmount");
-        Map<String, Object> vatAmount = getMap(parameters, "vatAmount");
-        Map<String, Object> unitPrice = getMap(parameters, "unitPrice");
+        String id = getString(parameters, "id");
+        MoOrderLine orderLine;
+        if (id != null) {
+            try {
+                orderLine = crossStorageApi.find(defaultRepo, id, MoOrderLine.class);
+            } catch (Exception e) {
+                throw new BusinessException("Failed to retrieve order line with id: " + id, e);
+            }
+        } else {
+            orderLine = new MoOrderLine();
+        }
 
-        orderLine.setSku(getString(parameters, "sku"));
-        orderLine.setName(getString(parameters, "name"));
-        orderLine.setQuantity(getLong(parameters, "quantity"));
-        orderLine.setVatRate(getDouble(parameters, "vatRate"));
-        orderLine.setUnitPrice(getDouble(unitPrice, "value"));
-        orderLine.setTotalAmount(getDouble(totalAmount, "value"));
-        orderLine.setVatAmount(getDouble(vatAmount, "value"));
-        orderLine.setDiscountAmount(getDouble(discountAmount, "value"));
-        orderLine.setCurrency(getString(totalAmount, "currency"));
-        orderLine.setCategory(getString(parameters, "category"));
-        orderLine.setImageUrl(getString(parameters, "imageUrl"));
-        orderLine.setProductUrl(getString(parameters, "productUrl"));
-        orderLine.setType(getString(parameters, "type"));
-        orderLine.setMetadata(convertJsonToString(parameters.get("metadata")));
-        orderLine.setCreationDate(Instant.now());
-        orderLine.setUuid(generateUUID(orderLine));
+        Map<String, Object> discountAmountMap = getMap(parameters, "discountAmount");
+        Map<String, Object> totalAmountMap = getMap(parameters, "totalAmount");
+        Map<String, Object> vatAmountMap = getMap(parameters, "vatAmount");
+        Map<String, Object> unitPriceMap = getMap(parameters, "unitPrice");
+        String sku = getString(parameters, "sku");
+        String name = getString(parameters, "name");
+        long quantity = getLong(parameters, "quantity");
+        double vatRate = getDouble(parameters, "vatRate");
+        double unitPrice = getDouble(unitPriceMap, "value");
+        double totalAmount = getDouble(totalAmountMap, "value");
+        String currency = getString(totalAmountMap, "currency");
+        double vatAmount = getDouble(vatAmountMap, "value");
+        double discountAmount = getDouble(discountAmountMap, "value");
+        String category = getString(parameters, "category");
+        String imageUrl = getString(parameters, "imageUrl");
+        String productUrl = getString(parameters, "productUrl");
+        String type = getString(parameters, "type");
+        String metadata = convertJsonToString(parameters.get("metadata"));
+
+        orderLine.setSku(normalize(sku, orderLine.getSku()));
+        orderLine.setName(normalize(name, orderLine.getName()));
+        orderLine.setQuantity(normalize(quantity, orderLine.getQuantity()));
+        orderLine.setVatRate(normalize(vatRate, orderLine.getVatRate()));
+        orderLine.setUnitPrice(normalize(unitPrice, orderLine.getUnitPrice()));
+        orderLine.setTotalAmount(normalize(totalAmount, orderLine.getTotalAmount()));
+        orderLine.setCurrency(normalize(currency, orderLine.getCurrency()));
+        orderLine.setVatAmount(normalize(vatAmount, orderLine.getVatAmount()));
+        orderLine.setDiscountAmount(normalize(discountAmount, orderLine.getDiscountAmount()));
+        orderLine.setCategory(normalize(category, orderLine.getCategory()));
+        orderLine.setImageUrl(normalize(imageUrl, orderLine.getImageUrl()));
+        orderLine.setProductUrl(normalize(productUrl, orderLine.getProductUrl()));
+        orderLine.setType(normalize(type, orderLine.getType()));
+        orderLine.setMetadata(normalize(metadata, orderLine.getMetadata()));
+        if (id == null) {
+            orderLine.setCreationDate(Instant.now());
+            orderLine.setUuid(generateUUID(orderLine));
+        }
 
         return orderLine;
     }
 
-    public static List<MoOrderLine> parseOrderLines(List<Map<String, Object>> parameters) {
+    public static List<MoOrderLine> parseOrderLines(CrossStorageApi crossStorageApi, Repository defaultRepo,
+        List<Map<String, Object>> parameters) throws BusinessException {
         if (parameters == null || parameters.size() == 0) {
             return null;
         }
         List<MoOrderLine> orderLines = new ArrayList<>();
         for (Map<String, Object> lineParam : parameters) {
-            MoOrderLine line = parseOrderLine(lineParam);
+            MoOrderLine line = parseOrderLine(crossStorageApi, defaultRepo, lineParam);
             if (line != null) {
                 orderLines.add(line);
             }
