@@ -16,7 +16,6 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.model.customEntities.MoAddress;
 import org.meveo.model.customEntities.MoOrderLine;
 import org.meveo.model.storage.Repository;
-import org.meveo.service.script.Script;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
