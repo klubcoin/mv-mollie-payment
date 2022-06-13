@@ -4,9 +4,9 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import java.time.Instant;
-import org.meveo.model.customEntities.MoAddress;
 import org.meveo.model.customEntities.MoOrderLine;
 import java.util.ArrayList;
+import org.meveo.model.customEntities.MoAddress;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class MoOrder implements CustomEntity {
@@ -23,8 +23,6 @@ public class MoOrder implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private Double amount;
-
     private Instant consumerDateOfBirth;
 
     private String metadata;
@@ -35,39 +33,43 @@ public class MoOrder implements CustomEntity {
 
     private String redirectUrl;
 
-    private String method;
-
     private Double amountCaptured;
-
-    private Instant creationDate;
 
     private String locale;
 
     private String assignedTo;
 
-    private Instant expiresAt;
-
-    private String webhookUrl;
+    private Instant expiredAt;
 
     private Boolean shopperCountryMustMatchBillingCountry;
 
     private Double amountRefunded;
 
-    private Instant paidAt;
-
-    private MoAddress shippingAddress;
-
     private String currency;
 
     private String payment;
-
-    private MoAddress billingAddress;
 
     private List<MoOrderLine> lines = new ArrayList<>();
 
     private String email;
 
     private String group;
+
+    private Double amount;
+
+    private String method;
+
+    private Instant creationDate;
+
+    private Instant expiresAt;
+
+    private String webhookUrl;
+
+    private Instant paidAt;
+
+    private MoAddress shippingAddress;
+
+    private MoAddress billingAddress;
 
     private String status;
 
@@ -86,14 +88,6 @@ public class MoOrder implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
-    }
-
-    public Double getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Double amount) {
-        this.amount = amount;
     }
 
     public Instant getConsumerDateOfBirth() {
@@ -136,28 +130,12 @@ public class MoOrder implements CustomEntity {
         this.redirectUrl = redirectUrl;
     }
 
-    public String getMethod() {
-        return method;
-    }
-
-    public void setMethod(String method) {
-        this.method = method;
-    }
-
     public Double getAmountCaptured() {
         return amountCaptured;
     }
 
     public void setAmountCaptured(Double amountCaptured) {
         this.amountCaptured = amountCaptured;
-    }
-
-    public Instant getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
     }
 
     public String getLocale() {
@@ -176,20 +154,12 @@ public class MoOrder implements CustomEntity {
         this.assignedTo = assignedTo;
     }
 
-    public Instant getExpiresAt() {
-        return expiresAt;
+    public Instant getExpiredAt() {
+        return expiredAt;
     }
 
-    public void setExpiresAt(Instant expiresAt) {
-        this.expiresAt = expiresAt;
-    }
-
-    public String getWebhookUrl() {
-        return webhookUrl;
-    }
-
-    public void setWebhookUrl(String webhookUrl) {
-        this.webhookUrl = webhookUrl;
+    public void setExpiredAt(Instant expiredAt) {
+        this.expiredAt = expiredAt;
     }
 
     public Boolean getShopperCountryMustMatchBillingCountry() {
@@ -208,22 +178,6 @@ public class MoOrder implements CustomEntity {
         this.amountRefunded = amountRefunded;
     }
 
-    public Instant getPaidAt() {
-        return paidAt;
-    }
-
-    public void setPaidAt(Instant paidAt) {
-        this.paidAt = paidAt;
-    }
-
-    public MoAddress getShippingAddress() {
-        return shippingAddress;
-    }
-
-    public void setShippingAddress(MoAddress shippingAddress) {
-        this.shippingAddress = shippingAddress;
-    }
-
     public String getCurrency() {
         return currency;
     }
@@ -238,14 +192,6 @@ public class MoOrder implements CustomEntity {
 
     public void setPayment(String payment) {
         this.payment = payment;
-    }
-
-    public MoAddress getBillingAddress() {
-        return billingAddress;
-    }
-
-    public void setBillingAddress(MoAddress billingAddress) {
-        this.billingAddress = billingAddress;
     }
 
     public List<MoOrderLine> getLines() {
@@ -270,6 +216,70 @@ public class MoOrder implements CustomEntity {
 
     public void setGroup(String group) {
         this.group = group;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Instant getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(Instant expiresAt) {
+        this.expiresAt = expiresAt;
+    }
+
+    public String getWebhookUrl() {
+        return webhookUrl;
+    }
+
+    public void setWebhookUrl(String webhookUrl) {
+        this.webhookUrl = webhookUrl;
+    }
+
+    public Instant getPaidAt() {
+        return paidAt;
+    }
+
+    public void setPaidAt(Instant paidAt) {
+        this.paidAt = paidAt;
+    }
+
+    public MoAddress getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(MoAddress shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
+    public MoAddress getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(MoAddress billingAddress) {
+        this.billingAddress = billingAddress;
     }
 
     public String getStatus() {
