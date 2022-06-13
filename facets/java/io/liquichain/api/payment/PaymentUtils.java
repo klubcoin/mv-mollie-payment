@@ -20,7 +20,7 @@ import org.meveo.service.script.Script;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PaymentUtils extends Script {
+public class PaymentUtils {
     private static final Logger LOG = LoggerFactory.getLogger(PaymentUtils.class);
     private static final ObjectMapper mapper = new ObjectMapper();
 
