@@ -65,6 +65,8 @@ public class MoOrder implements CustomEntity {
 
     private String webhookUrl;
 
+    private Instant canceledAt;
+
     private Instant paidAt;
 
     private MoAddress shippingAddress;
@@ -256,6 +258,14 @@ public class MoOrder implements CustomEntity {
 
     public void setWebhookUrl(String webhookUrl) {
         this.webhookUrl = webhookUrl;
+    }
+
+    public Instant getCanceledAt() {
+        return canceledAt;
+    }
+
+    public void setCanceledAt(Instant canceledAt) {
+        this.canceledAt = canceledAt;
     }
 
     public Instant getPaidAt() {
