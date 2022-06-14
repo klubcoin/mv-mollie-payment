@@ -183,7 +183,7 @@ public class PaymentUtils extends Script {
                 List<Object> objectList = (List) field.get(object);
                 return objectList.stream().map(PaymentUtils::getObjectValue).collect(Collectors.joining());
             } else {
-                return "";
+                return "" + field.get(object);
             }
         } catch (Exception e) {
             return "";
@@ -428,7 +428,6 @@ public class PaymentUtils extends Script {
             return null;
         }
         List<MoOrderLine> orderLines = new ArrayList<>();
-        LOG.info("orderLines: {}", toJsonString(orderLines));
         for (Map<String, Object> line : lines) {
             MoOrderLine orderLine = parseOrderLine(crossStorageApi, defaultRepo, line);
             LOG.info("Orderline: {}", toJsonString(orderLine));
