@@ -1,53 +1,33 @@
-import EndpointInterface from "#{API_BASE_URL}/api/rest/endpoint/EndpointInterface.js";
-
-// the request schema, this should be updated
-// whenever changes to the endpoint parameters are made
-// this is important because this is used to validate and parse the request parameters
-const requestSchema = {
-  "title" : "moPaymentStatusRequest",
-  "id" : "moPaymentStatusRequest",
-  "default" : "Schema definition for moPaymentStatus",
-  "$schema" : "http://json-schema.org/draft-07/schema",
-  "type" : "object"
+const moPaymentStatus = async (parameters) =>  {
+	const baseUrl = window.location.origin;
+	const url = new URL(`${window.location.pathname.split('/')[1]}/rest/moPaymentStatus/${parameters.orderId}`, baseUrl);
+	return fetch(url.toString(), {
+		method: 'GET'
+	});
 }
 
-// the response schema, this should be updated
-// whenever changes to the endpoint parameters are made
-// this is important because this could be used to parse the result
-const responseSchema = {
-  "title" : "moPaymentStatusResponse",
-  "id" : "moPaymentStatusResponse",
-  "default" : "Schema definition for moPaymentStatus",
-  "$schema" : "http://json-schema.org/draft-07/schema",
-  "type" : "object",
-  "properties" : {
-    "result" : {
-      "title" : "result",
-      "type" : "string",
-      "minLength" : 1
-    }
-  }
+const moPaymentStatusForm = (container) => {
+	const html = `<form id='moPaymentStatus-form'>
+		<div id='moPaymentStatus-orderId-form-field'>
+			<label for='orderId'>orderId</label>
+			<input type='text' id='moPaymentStatus-orderId-param' name='orderId'/>
+		</div>
+		<button type='button'>Test</button>
+	</form>`;
+
+	container.insertAdjacentHTML('beforeend', html)
+
+	const orderId = container.querySelector('#moPaymentStatus-orderId-param');
+
+	container.querySelector('#moPaymentStatus-form button').onclick = () => {
+		const params = {
+			orderId : orderId.value !== "" ? orderId.value : undefined
+		};
+
+		moPaymentStatus(params).then(r => r.text().then(
+				t => alert(t)
+			));
+	};
 }
 
-// should contain offline mock data, make sure it adheres to the response schema
-const mockResult = {};
-
-class moPaymentStatus extends EndpointInterface {
-	constructor() {
-		// name and http method, these are inserted when code is generated
-		super("moPaymentStatus", "GET");
-		this.requestSchema = requestSchema;
-		this.responseSchema = responseSchema;
-		this.mockResult = mockResult;
-	}
-
-	getRequestSchema() {
-		return this.requestSchema;
-	}
-
-	getResponseSchema() {
-		return this.responseSchema;
-	}
-}
-
-export default new moPaymentStatus();
+export { moPaymentStatus, moPaymentStatusForm };
