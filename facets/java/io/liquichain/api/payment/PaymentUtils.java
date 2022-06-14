@@ -449,18 +449,10 @@ public class PaymentUtils extends Script {
 
         LOG.info("order: {}", toJsonString(order));
         LOG.info("orderLines: {}", toJsonString(orderLines));
-        String uuid;
         try {
-            uuid = crossStorageApi.createOrUpdate(defaultRepo, order);
+            crossStorageApi.createOrUpdate(defaultRepo, order);
         } catch (Exception e) {
             String error = "Failed to save order: " + printMapValues(parameters);
-            throw new BusinessException(error, e);
-        }
-
-        try {
-            order = crossStorageApi.find(defaultRepo, uuid, MoOrder.class);
-        } catch (Exception e) {
-            String error = "Failed to retrieve order: " + printMapValues(parameters);
             throw new BusinessException(error, e);
         }
 
