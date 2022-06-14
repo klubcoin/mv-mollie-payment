@@ -436,7 +436,7 @@ public class PaymentUtils extends Script {
                 orderLines.add(orderLine);
             }
         }
-        LOG.info("Orderlines: {}", orderLines);
+        LOG.info("Orderlines: {}", toJsonString(orderLines));
 
         return orderLines;
     }
