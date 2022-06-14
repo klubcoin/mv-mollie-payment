@@ -395,6 +395,9 @@ public class PaymentUtils extends Script {
     public static MoAddress getSavedAddress(CrossStorageApi crossStorageApi, Repository defaultRepo,
         Map<String, Object> parameters, String name) throws BusinessException {
         Map<String, Object> newAddressMap = getMap(parameters, name);
+        if (newAddressMap == null) {
+            return null;
+        }
         MoAddress address = parseAddress(crossStorageApi, defaultRepo, newAddressMap);
 
         try {
