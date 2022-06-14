@@ -37,6 +37,8 @@ public class MoOrder implements CustomEntity {
 
     private Instant expiredAt;
 
+    private Instant canceledAt;
+
     private Double amountRefunded;
 
     private Instant paidAt;
@@ -124,6 +126,14 @@ public class MoOrder implements CustomEntity {
 
     public void setExpiredAt(Instant expiredAt) {
         this.expiredAt = expiredAt;
+    }
+
+    public Instant getCanceledAt() {
+        return canceledAt;
+    }
+
+    public void setCanceledAt(Instant canceledAt) {
+        this.canceledAt = canceledAt;
     }
 
     public Double getAmountRefunded() {
