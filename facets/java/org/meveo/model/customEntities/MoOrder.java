@@ -22,11 +22,17 @@ public class MoOrder implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
-    private Instant expiredAt;
-
     private Instant consumerDateOfBirth;
 
     private String metadata;
+
+    private Double quantity_shipped;
+
+    private Instant creationDate;
+
+    private String assignedTo;
+
+    private Instant expiredAt;
 
     private Double amountRefunded;
 
@@ -34,11 +40,7 @@ public class MoOrder implements CustomEntity {
 
     private String currency;
 
-    private Instant creationDate;
-
     private List<MoOrderLine> lines = new ArrayList<>();
-
-    private String assignedTo;
 
     private String email;
 
@@ -63,14 +65,6 @@ public class MoOrder implements CustomEntity {
         this.storages = storages;
     }
 
-    public Instant getExpiredAt() {
-        return expiredAt;
-    }
-
-    public void setExpiredAt(Instant expiredAt) {
-        this.expiredAt = expiredAt;
-    }
-
     public Instant getConsumerDateOfBirth() {
         return consumerDateOfBirth;
     }
@@ -85,6 +79,38 @@ public class MoOrder implements CustomEntity {
 
     public void setMetadata(String metadata) {
         this.metadata = metadata;
+    }
+
+    public Double getQuantity_shipped() {
+        return quantity_shipped;
+    }
+
+    public void setQuantity_shipped(Double quantity_shipped) {
+        this.quantity_shipped = quantity_shipped;
+    }
+
+    public Instant getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Instant creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(String assignedTo) {
+        this.assignedTo = assignedTo;
+    }
+
+    public Instant getExpiredAt() {
+        return expiredAt;
+    }
+
+    public void setExpiredAt(Instant expiredAt) {
+        this.expiredAt = expiredAt;
     }
 
     public Double getAmountRefunded() {
@@ -111,28 +137,12 @@ public class MoOrder implements CustomEntity {
         this.currency = currency;
     }
 
-    public Instant getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Instant creationDate) {
-        this.creationDate = creationDate;
-    }
-
     public List<MoOrderLine> getLines() {
         return lines;
     }
 
     public void setLines(List<MoOrderLine> lines) {
         this.lines = lines;
-    }
-
-    public String getAssignedTo() {
-        return assignedTo;
-    }
-
-    public void setAssignedTo(String assignedTo) {
-        this.assignedTo = assignedTo;
     }
 
     public String getEmail() {
