@@ -157,6 +157,9 @@ public class PaymentUtils extends Script {
     }
 
     private static String getObjectValue(Object object) {
+        if (object == null) {
+            return "";
+        }
         if (object.getClass() == String.class) {
             return "" + object;
         } else {
