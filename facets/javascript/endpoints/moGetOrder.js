@@ -1,62 +1,43 @@
-import EndpointInterface from "#{API_BASE_URL}/api/rest/endpoint/EndpointInterface.js";
-
-// the request schema, this should be updated
-// whenever changes to the endpoint parameters are made
-// this is important because this is used to validate and parse the request parameters
-const requestSchema = {
-  "title" : "moGetOrderRequest",
-  "id" : "moGetOrderRequest",
-  "default" : "Schema definition for moGetOrder",
-  "$schema" : "http://json-schema.org/draft-07/schema",
-  "type" : "object",
-  "properties" : {
-    "embed" : {
-      "title" : "embed",
-      "id" : "moGetOrder_embed",
-      "default" : " ",
-      "type" : "string",
-      "minLength" : 1
-    }
-  }
-}
-
-// the response schema, this should be updated
-// whenever changes to the endpoint parameters are made
-// this is important because this could be used to parse the result
-const responseSchema = {
-  "title" : "moGetOrderResponse",
-  "id" : "moGetOrderResponse",
-  "default" : "Schema definition for moGetOrder",
-  "$schema" : "http://json-schema.org/draft-07/schema",
-  "type" : "object",
-  "properties" : {
-    "result" : {
-      "title" : "result",
-      "type" : "string",
-      "minLength" : 1
-    }
-  }
-}
-
-// should contain offline mock data, make sure it adheres to the response schema
-const mockResult = {};
-
-class moGetOrder extends EndpointInterface {
-	constructor() {
-		// name and http method, these are inserted when code is generated
-		super("moGetOrder", "GET");
-		this.requestSchema = requestSchema;
-		this.responseSchema = responseSchema;
-		this.mockResult = mockResult;
+const moGetOrder = async (parameters) =>  {
+	const baseUrl = window.location.origin;
+	const url = new URL(`${window.location.pathname.split('/')[1]}/rest/moGetOrder/${parameters.orderId}`, baseUrl);
+	if (parameters.embed !== undefined) {
+		url.searchParams.append('embed', parameters.embed);
 	}
 
-	getRequestSchema() {
-		return this.requestSchema;
-	}
-
-	getResponseSchema() {
-		return this.responseSchema;
-	}
+	return fetch(url.toString(), {
+		method: 'GET'
+	});
 }
 
-export default new moGetOrder();
+const moGetOrderForm = (container) => {
+	const html = `<form id='moGetOrder-form'>
+		<div id='moGetOrder-orderId-form-field'>
+			<label for='orderId'>orderId</label>
+			<input type='text' id='moGetOrder-orderId-param' name='orderId'/>
+		</div>
+		<div id='moGetOrder-embed-form-field'>
+			<label for='embed'>embed</label>
+			<input type='text' id='moGetOrder-embed-param' name='embed'/>
+		</div>
+		<button type='button'>Test</button>
+	</form>`;
+
+	container.insertAdjacentHTML('beforeend', html)
+
+	const orderId = container.querySelector('#moGetOrder-orderId-param');
+	const embed = container.querySelector('#moGetOrder-embed-param');
+
+	container.querySelector('#moGetOrder-form button').onclick = () => {
+		const params = {
+			orderId : orderId.value !== "" ? orderId.value : undefined,
+			embed : embed.value !== "" ? embed.value : undefined
+		};
+
+		moGetOrder(params).then(r => r.text().then(
+				t => alert(t)
+			));
+	};
+}
+
+export { moGetOrder, moGetOrderForm };
