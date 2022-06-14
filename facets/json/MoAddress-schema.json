@@ -4,5 +4,16 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "MoAddress",
     "title": "Address",
-    "type": "object"
+    "type": "object",
+    "properties": {"streetAdditional": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "Additional detail",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_MoAddress_streetAdditional",
+        "title": "MoAddress.streetAdditional",
+        "type": "string",
+        "maxLength": 500
+    }}
 }
