@@ -7,9 +7,6 @@
     "name" : "storages",
     "type" : "DBStorageType"
   }, {
-    "name" : "amount",
-    "type" : "Double"
-  }, {
     "name" : "consumerDateOfBirth",
     "type" : "Instant"
   }, {
@@ -25,14 +22,8 @@
     "name" : "redirectUrl",
     "type" : "String"
   }, {
-    "name" : "method",
-    "type" : "String"
-  }, {
     "name" : "amountCaptured",
     "type" : "Double"
-  }, {
-    "name" : "creationDate",
-    "type" : "Instant"
   }, {
     "name" : "locale",
     "type" : "String"
@@ -40,11 +31,8 @@
     "name" : "assignedTo",
     "type" : "String"
   }, {
-    "name" : "expiresAt",
+    "name" : "expiredAt",
     "type" : "Instant"
-  }, {
-    "name" : "webhookUrl",
-    "type" : "String"
   }, {
     "name" : "shopperCountryMustMatchBillingCountry",
     "type" : "Boolean"
@@ -52,20 +40,11 @@
     "name" : "amountRefunded",
     "type" : "Double"
   }, {
-    "name" : "paidAt",
-    "type" : "Instant"
-  }, {
-    "name" : "shippingAddress",
-    "type" : "MoAddress"
-  }, {
     "name" : "currency",
     "type" : "String"
   }, {
     "name" : "payment",
     "type" : "String"
-  }, {
-    "name" : "billingAddress",
-    "type" : "MoAddress"
   }, {
     "name" : "lines",
     "type" : "List<MoOrderLine>"
@@ -75,6 +54,33 @@
   }, {
     "name" : "group",
     "type" : "String"
+  }, {
+    "name" : "amount",
+    "type" : "Double"
+  }, {
+    "name" : "method",
+    "type" : "String"
+  }, {
+    "name" : "creationDate",
+    "type" : "Instant"
+  }, {
+    "name" : "expiresAt",
+    "type" : "Instant"
+  }, {
+    "name" : "webhookUrl",
+    "type" : "String"
+  }, {
+    "name" : "canceledAt",
+    "type" : "Instant"
+  }, {
+    "name" : "paidAt",
+    "type" : "Instant"
+  }, {
+    "name" : "shippingAddress",
+    "type" : "MoAddress"
+  }, {
+    "name" : "billingAddress",
+    "type" : "MoAddress"
   }, {
     "name" : "status",
     "type" : "String"
@@ -86,9 +92,6 @@
     "name" : "storages",
     "type" : "DBStorageType"
   }, {
-    "name" : "amount",
-    "type" : "Double"
-  }, {
     "name" : "consumerDateOfBirth",
     "type" : "Instant"
   }, {
@@ -104,14 +107,8 @@
     "name" : "redirectUrl",
     "type" : "String"
   }, {
-    "name" : "method",
-    "type" : "String"
-  }, {
     "name" : "amountCaptured",
     "type" : "Double"
-  }, {
-    "name" : "creationDate",
-    "type" : "Instant"
   }, {
     "name" : "locale",
     "type" : "String"
@@ -119,11 +116,8 @@
     "name" : "assignedTo",
     "type" : "String"
   }, {
-    "name" : "expiresAt",
+    "name" : "expiredAt",
     "type" : "Instant"
-  }, {
-    "name" : "webhookUrl",
-    "type" : "String"
   }, {
     "name" : "shopperCountryMustMatchBillingCountry",
     "type" : "Boolean"
@@ -131,20 +125,11 @@
     "name" : "amountRefunded",
     "type" : "Double"
   }, {
-    "name" : "paidAt",
-    "type" : "Instant"
-  }, {
-    "name" : "shippingAddress",
-    "type" : "MoAddress"
-  }, {
     "name" : "currency",
     "type" : "String"
   }, {
     "name" : "payment",
     "type" : "String"
-  }, {
-    "name" : "billingAddress",
-    "type" : "MoAddress"
   }, {
     "name" : "lines",
     "type" : "List<MoOrderLine>"
@@ -154,6 +139,33 @@
   }, {
     "name" : "group",
     "type" : "String"
+  }, {
+    "name" : "amount",
+    "type" : "Double"
+  }, {
+    "name" : "method",
+    "type" : "String"
+  }, {
+    "name" : "creationDate",
+    "type" : "Instant"
+  }, {
+    "name" : "expiresAt",
+    "type" : "Instant"
+  }, {
+    "name" : "webhookUrl",
+    "type" : "String"
+  }, {
+    "name" : "canceledAt",
+    "type" : "Instant"
+  }, {
+    "name" : "paidAt",
+    "type" : "Instant"
+  }, {
+    "name" : "shippingAddress",
+    "type" : "MoAddress"
+  }, {
+    "name" : "billingAddress",
+    "type" : "MoAddress"
   }, {
     "name" : "status",
     "type" : "String"
