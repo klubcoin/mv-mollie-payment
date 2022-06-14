@@ -27,6 +27,17 @@
             "title": "MoOrder.metadata",
             "type": "string"
         },
+        "paidAt": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Paid at",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_paidAt",
+            "title": "MoOrder.paidAt",
+            "type": "string"
+        },
         "assignedTo": {
             "storages": ["SQL"],
             "nullable": true,
