@@ -19,11 +19,12 @@ import org.meveo.model.customEntities.MoOrder;
 import org.meveo.model.customEntities.MoOrderLine;
 import org.meveo.model.customEntities.Transaction;
 import org.meveo.model.storage.Repository;
+import org.meveo.service.script.Script;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.crypto.Hash;
 
-public class PaymentUtils {
+public class PaymentUtils extends Script {
     private static final Logger LOG = LoggerFactory.getLogger(PaymentUtils.class);
     private static final ObjectMapper mapper = new ObjectMapper();
 
