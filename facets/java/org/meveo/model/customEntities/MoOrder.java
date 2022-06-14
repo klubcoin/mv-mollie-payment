@@ -47,6 +47,8 @@ public class MoOrder implements CustomEntity {
 
     private Instant expiredAt;
 
+    private Boolean shopperCountryMustMatchBillingCountry;
+
     private Instant canceledAt;
 
     private Double amountRefunded;
@@ -180,6 +182,14 @@ public class MoOrder implements CustomEntity {
 
     public void setExpiredAt(Instant expiredAt) {
         this.expiredAt = expiredAt;
+    }
+
+    public Boolean getShopperCountryMustMatchBillingCountry() {
+        return shopperCountryMustMatchBillingCountry;
+    }
+
+    public void setShopperCountryMustMatchBillingCountry(Boolean shopperCountryMustMatchBillingCountry) {
+        this.shopperCountryMustMatchBillingCountry = shopperCountryMustMatchBillingCountry;
     }
 
     public Instant getCanceledAt() {
