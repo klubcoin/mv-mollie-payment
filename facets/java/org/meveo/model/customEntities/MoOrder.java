@@ -22,6 +22,8 @@ public class MoOrder implements CustomEntity {
 
     private Instant expiredAt;
 
+    private Instant consumerDateOfBirth;
+
     private String metadata;
 
     private Double amountRefunded;
@@ -57,6 +59,14 @@ public class MoOrder implements CustomEntity {
 
     public void setExpiredAt(Instant expiredAt) {
         this.expiredAt = expiredAt;
+    }
+
+    public Instant getConsumerDateOfBirth() {
+        return consumerDateOfBirth;
+    }
+
+    public void setConsumerDateOfBirth(Instant consumerDateOfBirth) {
+        this.consumerDateOfBirth = consumerDateOfBirth;
     }
 
     public String getMetadata() {
