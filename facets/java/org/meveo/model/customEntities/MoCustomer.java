@@ -19,6 +19,8 @@ public class MoCustomer implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String metadata;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -34,6 +36,14 @@ public class MoCustomer implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(String metadata) {
+        this.metadata = metadata;
     }
 
     @Override()
