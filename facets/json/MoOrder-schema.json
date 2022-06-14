@@ -6,17 +6,6 @@
     "title": "Order",
     "type": "object",
     "properties": {
-        "expiredAt": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "format": "date-time",
-            "description": "Expired at",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_MoOrder_expiredAt",
-            "title": "MoOrder.expiredAt",
-            "type": "string"
-        },
         "consumerDateOfBirth": {
             "storages": ["SQL"],
             "nullable": true,
@@ -36,6 +25,49 @@
             "versionable": false,
             "id": "CE_MoOrder_metadata",
             "title": "MoOrder.metadata",
+            "type": "string"
+        },
+        "quantity_shipped": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Quantity Shipped",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_quantity_shipped",
+            "title": "MoOrder.quantity_shipped",
+            "type": "number"
+        },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "creation date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_creationDate",
+            "title": "MoOrder.creationDate",
+            "type": "string"
+        },
+        "assignedTo": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Assigned to",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_assignedTo",
+            "title": "MoOrder.assignedTo",
+            "type": "string",
+            "maxLength": 50
+        },
+        "expiredAt": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Expired at",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_expiredAt",
+            "title": "MoOrder.expiredAt",
             "type": "string"
         },
         "amountRefunded": {
@@ -70,17 +102,6 @@
             "type": "string",
             "maxLength": 3
         },
-        "creationDate": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "format": "date-time",
-            "description": "creation date",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_MoOrder_creationDate",
-            "title": "MoOrder.creationDate",
-            "type": "string"
-        },
         "lines": {
             "storages": ["SQL"],
             "nullable": true,
@@ -96,17 +117,6 @@
                 "title": "MoOrder.lines item",
                 "$ref": "#/definitions/MoOrderLine"
             }
-        },
-        "assignedTo": {
-            "storages": ["SQL"],
-            "nullable": true,
-            "description": "Assigned to",
-            "readOnly": false,
-            "versionable": false,
-            "id": "CE_MoOrder_assignedTo",
-            "title": "MoOrder.assignedTo",
-            "type": "string",
-            "maxLength": 50
         },
         "email": {
             "storages": ["SQL"],
