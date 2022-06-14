@@ -6,6 +6,19 @@
     "title": "Customer",
     "type": "object",
     "properties": {
+        "mode": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Mode",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoCustomer_mode",
+            "title": "MoCustomer.mode",
+            "enum": [
+                "test",
+                "live"
+            ]
+        },
         "createdAt": {
             "storages": ["SQL"],
             "nullable": true,
