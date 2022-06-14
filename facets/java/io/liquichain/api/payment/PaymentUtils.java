@@ -350,7 +350,6 @@ public class PaymentUtils extends Script {
         if (parameters == null) {
             return null;
         }
-
         String id = getString(parameters, "id");
         LOG.info("Orderline id: {}", id);
         MoOrderLine orderLine;
