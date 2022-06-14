@@ -31,6 +31,8 @@ public class MoOrder implements CustomEntity {
 
     private String orderNumber;
 
+    private String redirectUrl;
+
     private Double amountCaptured;
 
     private String locale;
@@ -120,6 +122,14 @@ public class MoOrder implements CustomEntity {
 
     public void setOrderNumber(String orderNumber) {
         this.orderNumber = orderNumber;
+    }
+
+    public String getRedirectUrl() {
+        return redirectUrl;
+    }
+
+    public void setRedirectUrl(String redirectUrl) {
+        this.redirectUrl = redirectUrl;
     }
 
     public Double getAmountCaptured() {
