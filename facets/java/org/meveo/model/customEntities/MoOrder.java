@@ -22,6 +22,8 @@ public class MoOrder implements CustomEntity {
 
     private Instant expiredAt;
 
+    private String metadata;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -45,6 +47,14 @@ public class MoOrder implements CustomEntity {
 
     public void setExpiredAt(Instant expiredAt) {
         this.expiredAt = expiredAt;
+    }
+
+    public String getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(String metadata) {
+        this.metadata = metadata;
     }
 
     @Override()
