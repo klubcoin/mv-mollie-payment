@@ -4,5 +4,16 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "MoCustomer",
     "title": "Customer",
-    "type": "object"
+    "type": "object",
+    "properties": {"metadata": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "Metadata",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_MoCustomer_metadata",
+        "title": "MoCustomer.metadata",
+        "type": "string",
+        "maxLength": 255
+    }}
 }
