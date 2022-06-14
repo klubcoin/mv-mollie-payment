@@ -264,7 +264,6 @@ public class PaymentUtils extends Script {
         }
         order.setStatus(status);
 
-        LOG.info("Order: {}", toJsonString(order));
         return order;
     }
 
@@ -437,7 +436,6 @@ public class PaymentUtils extends Script {
                 orderLines.add(orderLine);
             }
         }
-        LOG.info("Orderlines: {}", toJsonString(orderLines));
 
         return orderLines;
     }
@@ -448,6 +446,8 @@ public class PaymentUtils extends Script {
         List<MoOrderLine> orderLines = getSavedOrderLines(crossStorageApi, defaultRepo, orderLinesList);
         MoOrder order = parseOrder(crossStorageApi, defaultRepo, parameters, orderLines);
 
+        LOG.info("order: {}", toJsonString(order));
+        LOG.info("orderLines: {}", toJsonString(orderLines));
         String uuid;
         try {
             uuid = crossStorageApi.createOrUpdate(defaultRepo, order);
@@ -463,6 +463,7 @@ public class PaymentUtils extends Script {
             throw new BusinessException(error, e);
         }
 
+        LOG.info("order: {}", toJsonString(order));
         return order;
     }
 
