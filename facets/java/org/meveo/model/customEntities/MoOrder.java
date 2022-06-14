@@ -37,6 +37,8 @@ public class MoOrder implements CustomEntity {
 
     private String assignedTo;
 
+    private Instant expiresAt;
+
     private Instant expiredAt;
 
     private Instant canceledAt;
@@ -128,6 +130,14 @@ public class MoOrder implements CustomEntity {
 
     public void setAssignedTo(String assignedTo) {
         this.assignedTo = assignedTo;
+    }
+
+    public Instant getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(Instant expiresAt) {
+        this.expiresAt = expiresAt;
     }
 
     public Instant getExpiredAt() {
