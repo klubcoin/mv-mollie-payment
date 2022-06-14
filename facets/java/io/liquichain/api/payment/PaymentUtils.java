@@ -148,6 +148,14 @@ public class PaymentUtils extends Script {
         return currentValue;
     }
 
+    private static String printMapValues(Map<String, Object> map) {
+        return "{" +
+            map.keySet().stream()
+               .map(key -> key + ": " + getObjectValue(map.get(key)))
+               .collect(Collectors.joining(", ")) +
+            "}";
+    }
+
     private static String getObjectValue(Object object) {
         if (object.getClass() == String.class) {
             return "" + object;
@@ -165,12 +173,12 @@ public class PaymentUtils extends Script {
             } else if (field.getType() == Map.class) {
                 Map<String, Object> objectMap = (Map<String, Object>) field.get(object);
                 return objectMap.keySet().stream()
-                                .map(key -> key + ":" + getObjectValue(objectMap.get(key)))
-                                .collect(Collectors.joining(","));
+                                .map(key -> getObjectValue(objectMap.get(key)))
+                                .collect(Collectors.joining());
 
             } else if (field.getType() == List.class) {
                 List<Object> objectList = (List) field.get(object);
-                return objectList.stream().map(PaymentUtils::getObjectValue).collect(Collectors.joining(","));
+                return objectList.stream().map(PaymentUtils::getObjectValue).collect(Collectors.joining());
             } else {
                 return "";
             }
@@ -210,14 +218,14 @@ public class PaymentUtils extends Script {
                 order = crossStorageApi.find(defaultRepo, orderId, MoOrder.class);
                 uuid = order.getUuid();
             } catch (Exception e) {
-                String error = "Cannot retrieve order: " + toJsonString(parameters);
+                String error = "Cannot retrieve order: " + (parameters);
                 throw new BusinessException(error, e);
             }
         } else {
             order = new MoOrder();
         }
 
-        LOG.info("Order: {}", toJsonString(parameters));
+        LOG.info("Order: {}", printMapValues(parameters));
         Map<String, Object> amountMap = getMap(parameters, "amount");
         if (amountMap != null) {
             double amountValue = Double.parseDouble(getString(amountMap, "value"));
@@ -308,7 +316,7 @@ public class PaymentUtils extends Script {
             try {
                 address = crossStorageApi.find(defaultRepo, id, MoAddress.class);
             } catch (Exception e) {
-                throw new BusinessException("Failed to retrieve address: " + toJsonString(parameters), e);
+                throw new BusinessException("Failed to retrieve address: " + printMapValues(parameters), e);
             }
         } else {
             address = new MoAddress();
@@ -404,7 +412,7 @@ public class PaymentUtils extends Script {
         try {
             crossStorageApi.createOrUpdate(defaultRepo, address);
         } catch (Exception e) {
-            String errorMessage = "Failed to save address: " + toJsonString(newAddressMap);
+            String errorMessage = "Failed to save address: " + printMapValues(newAddressMap);
             throw new BusinessException(errorMessage, e);
         }
 
@@ -423,7 +431,7 @@ public class PaymentUtils extends Script {
                 try {
                     crossStorageApi.createOrUpdate(defaultRepo, orderLine);
                 } catch (Exception e) {
-                    String errorMessage = "Failed to save order line: " + toJsonString(parameter);
+                    String errorMessage = "Failed to save order line: " + printMapValues(parameter);
                     throw new BusinessException(errorMessage, e);
                 }
                 orderLines.add(orderLine);
@@ -443,14 +451,14 @@ public class PaymentUtils extends Script {
         try {
             uuid = crossStorageApi.createOrUpdate(defaultRepo, order);
         } catch (Exception e) {
-            String error = "Failed to save order: " + toJsonString(parameters);
+            String error = "Failed to save order: " + printMapValues(parameters);
             throw new BusinessException(error, e);
         }
 
         try {
             order = crossStorageApi.find(defaultRepo, uuid, MoOrder.class);
         } catch (Exception e) {
-            String error = "Failed to retrieve order: " + toJsonString(parameters);
+            String error = "Failed to retrieve order: " + printMapValues(parameters);
             throw new BusinessException(error, e);
         }
 
