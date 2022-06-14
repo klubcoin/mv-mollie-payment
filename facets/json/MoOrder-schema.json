@@ -4,5 +4,16 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "MoOrder",
     "title": "Order",
-    "type": "object"
+    "type": "object",
+    "properties": {"expiredAt": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "format": "date-time",
+        "description": "Expired at",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_MoOrder_expiredAt",
+        "title": "MoOrder.expiredAt",
+        "type": "string"
+    }}
 }
