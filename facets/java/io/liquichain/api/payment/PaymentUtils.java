@@ -170,10 +170,7 @@ public class PaymentUtils extends Script {
     private static String getFieldValue(Object object, Field field) {
         field.setAccessible(true);
         try {
-            if (field.getType() == String.class) {
-                Object value = field.get(object);
-                return value != null ? "" + field.get(object) : "";
-            } else if (field.getType() == Map.class) {
+            if (field.getType() == Map.class) {
                 Map<String, Object> objectMap = (Map<String, Object>) field.get(object);
                 return objectMap.keySet().stream()
                                 .map(key -> getObjectValue(objectMap.get(key)))
@@ -183,7 +180,8 @@ public class PaymentUtils extends Script {
                 List<Object> objectList = (List) field.get(object);
                 return objectList.stream().map(PaymentUtils::getObjectValue).collect(Collectors.joining());
             } else {
-                return "" + field.get(object);
+                Object value = field.get(object);
+                return value != null ? "" + field.get(object) : "";
             }
         } catch (Exception e) {
             return "";
