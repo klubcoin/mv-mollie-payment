@@ -140,6 +140,17 @@
             "type": "string",
             "maxLength": 20
         },
+        "productUrl": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Product Url",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_productUrl",
+            "title": "MoOrderLine.productUrl",
+            "type": "string",
+            "maxLength": 500
+        },
         "sku": {
             "storages": ["SQL"],
             "nullable": true,
