@@ -134,6 +134,17 @@
             "title": "MoOrder.expiredAt",
             "type": "string"
         },
+        "shopperCountryMustMatchBillingCountry": {
+            "storages": ["SQL"],
+            "default": "false",
+            "nullable": true,
+            "description": "Shop & bill country must match",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_shopperCountryMustMatchBillingCountry",
+            "title": "MoOrder.shopperCountryMustMatchBillingCountry",
+            "type": "boolean"
+        },
         "canceledAt": {
             "storages": ["SQL"],
             "nullable": true,
