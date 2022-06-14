@@ -223,7 +223,6 @@ public class PaymentUtils extends Script {
             order = new MoOrder();
         }
 
-        LOG.info("Order: {}", printMapValues(parameters));
         Map<String, Object> amountMap = getMap(parameters, "amount");
         if (amountMap != null) {
             double amountValue = Double.parseDouble(getString(amountMap, "value"));
@@ -264,6 +263,8 @@ public class PaymentUtils extends Script {
             }
         }
         order.setStatus(status);
+
+        LOG.info("Order: {}", toJsonString(order));
         return order;
     }
 
