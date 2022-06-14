@@ -37,6 +37,17 @@
             "title": "MoOrder.quantity_shipped",
             "type": "number"
         },
+        "method": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "payment method",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_method",
+            "title": "MoOrder.method",
+            "type": "string",
+            "maxLength": 20
+        },
         "amountCaptured": {
             "storages": ["SQL"],
             "nullable": true,
