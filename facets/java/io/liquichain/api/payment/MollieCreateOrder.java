@@ -2,8 +2,6 @@ package io.liquichain.api.payment;
 
 import static io.liquichain.api.payment.PaymentUtils.*;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -20,7 +18,6 @@ import org.meveo.service.storage.RepositoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.web3j.crypto.Hash;
 
 import javax.inject.Inject;
 

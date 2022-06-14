@@ -160,7 +160,8 @@ public class PaymentUtils extends Script {
         field.setAccessible(true);
         try {
             if (field.getType() == String.class) {
-                return "" + field.get(object);
+                Object value = field.get(object);
+                return value != null ? "" + field.get(object) : "";
             } else if (field.getType() == Map.class) {
                 Map<String, Object> objectMap = (Map<String, Object>) field.get(object);
                 return objectMap.keySet().stream()
