@@ -21,6 +21,8 @@ public class MoOrderLine implements CustomEntity {
 
     private String metadata;
 
+    private Double vatAmount;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -44,6 +46,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setMetadata(String metadata) {
         this.metadata = metadata;
+    }
+
+    public Double getVatAmount() {
+        return vatAmount;
+    }
+
+    public void setVatAmount(Double vatAmount) {
+        this.vatAmount = vatAmount;
     }
 
     @Override()
