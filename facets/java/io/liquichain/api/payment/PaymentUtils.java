@@ -201,10 +201,7 @@ public class PaymentUtils extends Script {
 
     public static String generateUUID(Object object) {
         String fieldValues = getFieldValues(object);
-        String uuid = DigestUtils.sha1Hex(fieldValues);
-        LOG.info("generateUUID - fieldValues: {}", fieldValues);
-        LOG.info("generateUUID - uuid: {}", uuid);
-        return uuid;
+        return DigestUtils.sha1Hex(fieldValues);
     }
 
     public static MoOrder parseOrder(CrossStorageApi crossStorageApi, Repository defaultRepo,
@@ -439,6 +436,7 @@ public class PaymentUtils extends Script {
                 orderLines.add(orderLine);
             }
         }
+        LOG.info("Orderlines: {}", orderLines);
 
         return orderLines;
     }
