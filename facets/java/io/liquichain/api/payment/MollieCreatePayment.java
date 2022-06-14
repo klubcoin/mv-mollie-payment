@@ -64,11 +64,11 @@ public class MollieCreatePayment extends Script {
         String amountCurrency = getString(amountMap,"currency");
         Map<String, Object> metadataMap = getMap(parameters,"metadata");
         String orderId = getString(metadataMap,"order_id");
-        String amount = convertJsonToString(parameters.get("amount"));
+        String amount = toJsonString(parameters.get("amount"));
         String description = getString(parameters,"description");
         String redirectUrl = getString(parameters,"redirectUrl");
         String webhookUrl = getString(parameters,"webhookUrl");
-        String metadata = convertJsonToString(parameters.get("metadata"));
+        String metadata = toJsonString(parameters.get("metadata"));
         Instant createdAt = Instant.now();
         Instant expiresAt = createdAt.plus(Duration.ofDays(10));
 

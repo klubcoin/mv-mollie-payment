@@ -1,6 +1,7 @@
 package io.liquichain.api.payment;
 
 import java.lang.reflect.Field;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,10 +15,13 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.model.customEntities.MoAddress;
+import org.meveo.model.customEntities.MoOrder;
 import org.meveo.model.customEntities.MoOrderLine;
+import org.meveo.model.customEntities.Transaction;
 import org.meveo.model.storage.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.web3j.crypto.Hash;
 
 public class PaymentUtils {
     private static final Logger LOG = LoggerFactory.getLogger(PaymentUtils.class);
@@ -87,15 +91,7 @@ public class PaymentUtils {
         return value;
     }
 
-    public static String mapValues(Map<String, Object> map) {
-        return "[ " +
-            map.keySet().stream()
-               .map(key -> key + ": " + map.get(key))
-               .collect(Collectors.joining(", ")) +
-            " ]";
-    }
-
-    public static String convertJsonToString(Object data) {
+    public static String toJsonString(Object data) {
         try {
             return mapper.writeValueAsString(data);
         } catch (JsonProcessingException e) {
@@ -188,12 +184,115 @@ public class PaymentUtils {
                      .replaceAll("[^\\p{IsAlphabetic}\\p{IsDigit}]", "");
     }
 
+    private static String toHttps(String url) {
+        return url != null ? url.replace("http:", "https:") : null;
+    }
+
     public static String generateUUID(Object object) {
         String fieldValues = getFieldValues(object);
         String uuid = DigestUtils.sha1Hex(fieldValues);
         LOG.info("generateUUID - fieldValues: {}", fieldValues);
         LOG.info("generateUUID - uuid: {}", uuid);
         return uuid;
+    }
+
+    public static MoOrder parseOrder(CrossStorageApi crossStorageApi, Repository defaultRepo,
+        Map<String, Object> parameters, List<MoOrderLine> orderLines) throws BusinessException {
+        String orderId = getString(parameters, "id");
+        MoOrder order;
+        String uuid = null;
+        LOG.info("Retrieve order: {}", orderId);
+        if (orderId != null) {
+            try {
+                orderId = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
+                order = crossStorageApi.find(defaultRepo, orderId, MoOrder.class);
+                uuid = order.getUuid();
+            } catch (Exception e) {
+                String error = "Cannot retrieve order: " + toJsonString(parameters);
+                throw new BusinessException(error, e);
+            }
+        } else {
+            order = new MoOrder();
+        }
+
+        LOG.info("Order: {}", toJsonString(parameters));
+        Map<String, Object> amountMap = getMap(parameters, "amount");
+        if (amountMap != null) {
+            double amountValue = Double.parseDouble(getString(amountMap, "value"));
+            String amountCurrency = getString(amountMap, "currency");
+            order.setAmount(amountValue);
+            order.setCurrency(amountCurrency);
+        }
+        String method = getString(parameters, "method");
+        String metadata = toJsonString(parameters.get("metadata"));
+        String orderNumber = getString(parameters, "orderNumber");
+        String locale = getString(parameters, "locale");
+        String redirectUrl = toHttps(getString(parameters, "redirectUrl"));
+        String webhookUrl = toHttps(getString(parameters, "webhookUrl"));
+
+        order.setMethod(normalize(method, order.getMethod()));
+        order.setMetadata(normalize(metadata, order.getMetadata()));
+        order.setOrderNumber(normalize(orderNumber, order.getOrderNumber()));
+        order.setLocale(normalize(locale, order.getLocale()));
+        order.setRedirectUrl(normalize(redirectUrl, order.getRedirectUrl()));
+        order.setWebhookUrl(normalize(webhookUrl, order.getWebhookUrl()));
+        order.setBillingAddress(getSavedAddress(crossStorageApi, defaultRepo, parameters, "billingAddress"));
+        order.setShippingAddress(getSavedAddress(crossStorageApi, defaultRepo, parameters, "shippingAddress"));
+        order.setLines(orderLines);
+
+        String status = "created";
+        if (uuid == null) {
+            order.setUuid(generateUUID(order));
+            order.setCreationDate(Instant.now());
+            order.setExpiresAt(Instant.now().plus(Duration.ofDays(1)));
+        } else {
+            status = normalize(getString(parameters, "status"), order.getStatus());
+            if ("canceled".equals(status)) {
+                order.setCanceledAt(Instant.now());
+            }
+            if ("expired".equals(status) || Instant.now().isAfter(order.getExpiresAt())) {
+                status = "expired";
+                order.setExpiredAt(Instant.now());
+            }
+        }
+        order.setStatus(status);
+        return order;
+    }
+
+    public static Transaction parsePayment(MoOrder order) throws BusinessException {
+        if (order == null) {
+            return null;
+        }
+        String orderId = "ord_" + order.getUuid();
+        String amountValue = "" + order.getAmount();
+        String amountCurrency = order.getCurrency();
+        String description = "Payment for Order #" + order.getOrderNumber();
+        String redirectUrl = order.getRedirectUrl();
+        String webhookUrl = order.getWebhookUrl();
+        String metadata = "{\"order_id\": " + order.getOrderNumber() + "}";
+        Instant createdAt = order.getCreationDate();
+        Instant expiresAt = order.getExpiresAt();
+
+        String signedHash = Hash.sha3(orderId + amountValue + amountCurrency +
+            description + redirectUrl + webhookUrl + metadata + createdAt);
+
+        Transaction payment = new Transaction();
+        payment.setHexHash(normalizeHash(signedHash));
+        payment.setSignedHash(signedHash);
+        payment.setValue(amountValue);
+        payment.setCurrency(amountCurrency);
+        payment.setDescription(description);
+        payment.setRedirectUrl(redirectUrl);
+        payment.setWebhookUrl(webhookUrl);
+        payment.setMetadata(metadata);
+        payment.setCreationDate(createdAt);
+        payment.setExpirationDate(expiresAt);
+        payment.setOrderId(orderId);
+        payment.setData("{\"type\":\"payonline\",\"description\":\"Pay online payment\"}");
+        payment.setType("payonline");
+        payment.setUuid(generateUUID(payment));
+
+        return payment;
     }
 
     public static MoAddress parseAddress(CrossStorageApi crossStorageApi, Repository defaultRepo,
@@ -207,7 +306,7 @@ public class PaymentUtils {
             try {
                 address = crossStorageApi.find(defaultRepo, id, MoAddress.class);
             } catch (Exception e) {
-                throw new BusinessException("Failed to retrieve address with id: " + id, e);
+                throw new BusinessException("Failed to retrieve address: " + toJsonString(parameters), e);
             }
         } else {
             address = new MoAddress();
@@ -268,7 +367,7 @@ public class PaymentUtils {
         String imageUrl = getString(parameters, "imageUrl");
         String productUrl = getString(parameters, "productUrl");
         String type = getString(parameters, "type");
-        String metadata = convertJsonToString(parameters.get("metadata"));
+        String metadata = toJsonString(parameters.get("metadata"));
 
         orderLine.setSku(normalize(sku, orderLine.getSku()));
         orderLine.setName(normalize(name, orderLine.getName()));
@@ -292,18 +391,87 @@ public class PaymentUtils {
         return orderLine;
     }
 
-    public static List<MoOrderLine> parseOrderLines(CrossStorageApi crossStorageApi, Repository defaultRepo,
+    public static MoAddress getSavedAddress(CrossStorageApi crossStorageApi, Repository defaultRepo,
+        Map<String, Object> parameters, String name) throws BusinessException {
+        Map<String, Object> newAddressMap = getMap(parameters, name);
+        MoAddress address = parseAddress(crossStorageApi, defaultRepo, newAddressMap);
+
+        try {
+            crossStorageApi.createOrUpdate(defaultRepo, address);
+        } catch (Exception e) {
+            String errorMessage = "Failed to save address: " + toJsonString(newAddressMap);
+            throw new BusinessException(errorMessage, e);
+        }
+
+        return address;
+    }
+
+    public static List<MoOrderLine> getSavedOrderLines(CrossStorageApi crossStorageApi, Repository defaultRepo,
         List<Map<String, Object>> parameters) throws BusinessException {
         if (parameters == null || parameters.size() == 0) {
             return null;
         }
         List<MoOrderLine> orderLines = new ArrayList<>();
-        for (Map<String, Object> lineParam : parameters) {
-            MoOrderLine line = parseOrderLine(crossStorageApi, defaultRepo, lineParam);
-            if (line != null) {
-                orderLines.add(line);
+        for (Map<String, Object> parameter : parameters) {
+            MoOrderLine orderLine = parseOrderLine(crossStorageApi, defaultRepo, parameter);
+            if (orderLine != null) {
+                try {
+                    crossStorageApi.createOrUpdate(defaultRepo, orderLine);
+                } catch (Exception e) {
+                    String errorMessage = "Failed to save order line: " + toJsonString(parameter);
+                    throw new BusinessException(errorMessage, e);
+                }
+                orderLines.add(orderLine);
             }
         }
+
         return orderLines;
+    }
+
+    public static MoOrder getSavedOrder(CrossStorageApi crossStorageApi, Repository defaultRepo,
+        Map<String, Object> parameters) throws BusinessException {
+        List<Map<String, Object>> orderLinesList = (List<Map<String, Object>>) parameters.get("lines");
+        List<MoOrderLine> orderLines = getSavedOrderLines(crossStorageApi, defaultRepo, orderLinesList);
+        MoOrder order = parseOrder(crossStorageApi, defaultRepo, parameters, orderLines);
+
+        String uuid;
+        try {
+            uuid = crossStorageApi.createOrUpdate(defaultRepo, order);
+        } catch (Exception e) {
+            String error = "Failed to save order: " + toJsonString(parameters);
+            throw new BusinessException(error, e);
+        }
+
+        try {
+            order = crossStorageApi.find(defaultRepo, uuid, MoOrder.class);
+        } catch (Exception e) {
+            String error = "Failed to retrieve order: " + toJsonString(parameters);
+            throw new BusinessException(error, e);
+        }
+
+        return order;
+    }
+
+    public static Transaction getSavedPayment(CrossStorageApi crossStorageApi, Repository defaultRepo, MoOrder order)
+        throws BusinessException {
+        Transaction payment = parsePayment(order);
+        if (payment != null) {
+            String uuid;
+            try {
+                uuid = crossStorageApi.createOrUpdate(defaultRepo, payment);
+            } catch (Exception e) {
+                String error = "Failed to save payment transaction: " + toJsonString(payment);
+                throw new BusinessException(error, e);
+            }
+
+            try {
+                payment = crossStorageApi.find(defaultRepo, uuid, Transaction.class);
+            } catch (Exception e) {
+                String error = "Failed to retrieve payment transaction: " + toJsonString(payment);
+                throw new BusinessException(error, e);
+            }
+        }
+
+        return payment;
     }
 }
