@@ -24,6 +24,8 @@ public class MoCustomer implements CustomEntity {
 
     private String metadata;
 
+    private String name;
+
     private String id;
 
     @Override()
@@ -57,6 +59,14 @@ public class MoCustomer implements CustomEntity {
 
     public void setMetadata(String metadata) {
         this.metadata = metadata;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getId() {
