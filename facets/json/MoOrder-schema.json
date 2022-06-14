@@ -59,6 +59,17 @@
             "type": "string",
             "maxLength": 50
         },
+        "email": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Customer email",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_email",
+            "title": "MoOrder.email",
+            "type": "string",
+            "maxLength": 500
+        },
         "status": {
             "storages": ["SQL"],
             "nullable": true,
