@@ -245,6 +245,7 @@ public class PaymentUtils extends Script {
         order.setWebhookUrl(normalize(webhookUrl, order.getWebhookUrl()));
         order.setBillingAddress(getSavedAddress(crossStorageApi, defaultRepo, parameters, "billingAddress"));
         order.setShippingAddress(getSavedAddress(crossStorageApi, defaultRepo, parameters, "shippingAddress"));
+        LOG.info("parseOrder - orderLines: {}", toJsonString(orderLines));
         order.setLines(orderLines);
 
         String status = "created";
