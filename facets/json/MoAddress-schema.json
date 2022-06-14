@@ -5,15 +5,28 @@
     "id": "MoAddress",
     "title": "Address",
     "type": "object",
-    "properties": {"streetAdditional": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Additional detail",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_MoAddress_streetAdditional",
-        "title": "MoAddress.streetAdditional",
-        "type": "string",
-        "maxLength": 500
-    }}
+    "properties": {
+        "country": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Country",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoAddress_country",
+            "title": "MoAddress.country",
+            "type": "string",
+            "maxLength": 2
+        },
+        "streetAdditional": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Additional detail",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoAddress_streetAdditional",
+            "title": "MoAddress.streetAdditional",
+            "type": "string",
+            "maxLength": 500
+        }
+    }
 }
