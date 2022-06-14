@@ -1,33 +1,53 @@
-const moGetCustomer = async (parameters) =>  {
-	const baseUrl = window.location.origin;
-	const url = new URL(`${window.location.pathname.split('/')[1]}/rest/moGetCustomer/${parameters.customerId}`, baseUrl);
-	return fetch(url.toString(), {
-		method: 'GET'
-	});
+import EndpointInterface from "#{API_BASE_URL}/api/rest/endpoint/EndpointInterface.js";
+
+// the request schema, this should be updated
+// whenever changes to the endpoint parameters are made
+// this is important because this is used to validate and parse the request parameters
+const requestSchema = {
+  "title" : "moGetCustomerRequest",
+  "id" : "moGetCustomerRequest",
+  "default" : "Schema definition for moGetCustomer",
+  "$schema" : "http://json-schema.org/draft-07/schema",
+  "type" : "object"
 }
 
-const moGetCustomerForm = (container) => {
-	const html = `<form id='moGetCustomer-form'>
-		<div id='moGetCustomer-customerId-form-field'>
-			<label for='customerId'>customerId</label>
-			<input type='text' id='moGetCustomer-customerId-param' name='customerId'/>
-		</div>
-		<button type='button'>Test</button>
-	</form>`;
-
-	container.insertAdjacentHTML('beforeend', html)
-
-	const customerId = container.querySelector('#moGetCustomer-customerId-param');
-
-	container.querySelector('#moGetCustomer-form button').onclick = () => {
-		const params = {
-			customerId : customerId.value !== "" ? customerId.value : undefined
-		};
-
-		moGetCustomer(params).then(r => r.text().then(
-				t => alert(t)
-			));
-	};
+// the response schema, this should be updated
+// whenever changes to the endpoint parameters are made
+// this is important because this could be used to parse the result
+const responseSchema = {
+  "title" : "moGetCustomerResponse",
+  "id" : "moGetCustomerResponse",
+  "default" : "Schema definition for moGetCustomer",
+  "$schema" : "http://json-schema.org/draft-07/schema",
+  "type" : "object",
+  "properties" : {
+    "result" : {
+      "title" : "result",
+      "type" : "string",
+      "minLength" : 1
+    }
+  }
 }
 
-export { moGetCustomer, moGetCustomerForm };
+// should contain offline mock data, make sure it adheres to the response schema
+const mockResult = {};
+
+class moGetCustomer extends EndpointInterface {
+	constructor() {
+		// name and http method, these are inserted when code is generated
+		super("moGetCustomer", "GET");
+		this.requestSchema = requestSchema;
+		this.responseSchema = responseSchema;
+		this.mockResult = mockResult;
+	}
+
+	getRequestSchema() {
+		return this.requestSchema;
+	}
+
+	getResponseSchema() {
+		return this.responseSchema;
+	}
+}
+
+export default new moGetCustomer();
