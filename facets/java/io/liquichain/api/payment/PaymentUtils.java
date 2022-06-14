@@ -423,18 +423,20 @@ public class PaymentUtils extends Script {
     }
 
     public static List<MoOrderLine> getSavedOrderLines(CrossStorageApi crossStorageApi, Repository defaultRepo,
-        List<Map<String, Object>> parameters) throws BusinessException {
-        if (parameters == null || parameters.size() == 0) {
+        List<Map<String, Object>> lines) throws BusinessException {
+        if (lines == null || lines.size() == 0) {
             return null;
         }
         List<MoOrderLine> orderLines = new ArrayList<>();
-        for (Map<String, Object> parameter : parameters) {
-            MoOrderLine orderLine = parseOrderLine(crossStorageApi, defaultRepo, parameter);
+        LOG.info("orderLines: {}", toJsonString(orderLines));
+        for (Map<String, Object> line : lines) {
+            MoOrderLine orderLine = parseOrderLine(crossStorageApi, defaultRepo, line);
+            LOG.info("Orderline: {}", toJsonString(orderLine));
             if (orderLine != null) {
                 try {
                     crossStorageApi.createOrUpdate(defaultRepo, orderLine);
                 } catch (Exception e) {
-                    String errorMessage = "Failed to save order line: " + printMapValues(parameter);
+                    String errorMessage = "Failed to save order line: " + printMapValues(line);
                     throw new BusinessException(errorMessage, e);
                 }
                 orderLines.add(orderLine);
