@@ -4,6 +4,8 @@ import org.meveo.model.CustomEntity;
 import java.util.List;
 import org.meveo.model.persistence.DBStorageType;
 import java.time.Instant;
+import org.meveo.model.customEntities.MoOrderLine;
+import java.util.ArrayList;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class MoOrder implements CustomEntity {
@@ -33,6 +35,8 @@ public class MoOrder implements CustomEntity {
     private String currency;
 
     private Instant creationDate;
+
+    private List<MoOrderLine> lines = new ArrayList<>();
 
     private String assignedTo;
 
@@ -113,6 +117,14 @@ public class MoOrder implements CustomEntity {
 
     public void setCreationDate(Instant creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public List<MoOrderLine> getLines() {
+        return lines;
+    }
+
+    public void setLines(List<MoOrderLine> lines) {
+        this.lines = lines;
     }
 
     public String getAssignedTo() {
