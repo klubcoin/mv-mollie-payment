@@ -206,7 +206,7 @@ public class PaymentUtils extends Script {
     }
 
     public static MoAddress parseAddress(CrossStorageApi crossStorageApi, Repository defaultRepo,
-        Map<String, Object> parameters) throws BusinessException {
+        MoAddress existingAddress, Map<String, Object> parameters) throws BusinessException {
         if (parameters == null) {
             return null;
         }
@@ -219,7 +219,7 @@ public class PaymentUtils extends Script {
                 throw new BusinessException("Failed to retrieve address: " + printMapValues(parameters), e);
             }
         } else {
-            address = new MoAddress();
+            address = existingAddress != null ? existingAddress : new MoAddress();
         }
 
         String streetAndNumber = getString(parameters, "streetAndNumber");
@@ -401,12 +401,12 @@ public class PaymentUtils extends Script {
         if (newAddressMap == null && existingAddress == null) {
             return null;
         }
-        MoAddress address = parseAddress(crossStorageApi, defaultRepo, newAddressMap);
+        MoAddress address = parseAddress(crossStorageApi, defaultRepo, existingAddress, newAddressMap);
 
         try {
             crossStorageApi.createOrUpdate(defaultRepo, address);
         } catch (Exception e) {
-            String errorMessage = "Failed to save address: " + printMapValues(newAddressMap);
+            String errorMessage = "Failed to save address: " + toJsonString(address);
             throw new BusinessException(errorMessage, e);
         }
 
