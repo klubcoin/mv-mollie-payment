@@ -207,7 +207,7 @@ public class PaymentUtils extends Script {
 
     public static MoAddress parseAddress(CrossStorageApi crossStorageApi, Repository defaultRepo,
         MoAddress existingAddress, Map<String, Object> parameters) throws BusinessException {
-        if (parameters == null) {
+        if (parameters == null && existingAddress == null) {
             return null;
         }
         String id = getString(parameters, "id");
