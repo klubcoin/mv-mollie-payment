@@ -59,9 +59,9 @@ public class MollieUpdateOrder extends Script {
         MoOrder order;
         try {
             order = getSavedOrder(crossStorageApi, defaultRepo, parameters);
-        } catch (BusinessException e) {
+        } catch (Exception e) {
             LOG.error(e.getMessage(), e);
-            result = "{\"error\":\"" + e.getMessage() + "\"}";
+            result = createErrorResponse("500", "Internal Server Error", e.getMessage());
             return;
         }
 

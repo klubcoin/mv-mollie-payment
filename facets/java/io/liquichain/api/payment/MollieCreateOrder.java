@@ -60,7 +60,7 @@ public class MollieCreateOrder extends Script {
         try {
             order = getSavedOrder(crossStorageApi, defaultRepo, parameters);
             payment = getSavedPayment(crossStorageApi, defaultRepo, order);
-        } catch (BusinessException e) {
+        } catch (Exception e) {
             LOG.error(e.getMessage(), e);
             result = createErrorResponse("500", "Internal Server Error", e.getMessage());
             return;
