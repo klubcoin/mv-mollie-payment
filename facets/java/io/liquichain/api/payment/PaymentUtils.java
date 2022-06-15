@@ -348,7 +348,6 @@ public class PaymentUtils extends Script {
             return null;
         }
         String id = getString(parameters, "id");
-        LOG.info("Orderline id: {}", id);
         MoOrderLine orderLine;
         if (id != null) {
             try {
@@ -427,7 +426,6 @@ public class PaymentUtils extends Script {
         List<MoOrderLine> orderLines = new ArrayList<>();
         for (Map<String, Object> line : lines) {
             MoOrderLine orderLine = parseOrderLine(crossStorageApi, defaultRepo, line);
-            LOG.info("Orderline: {}", toJsonString(orderLine));
             if (orderLine != null) {
                 try {
                     crossStorageApi.createOrUpdate(defaultRepo, orderLine);
@@ -448,8 +446,6 @@ public class PaymentUtils extends Script {
         List<MoOrderLine> orderLines = getSavedOrderLines(crossStorageApi, defaultRepo, orderLinesList);
         MoOrder order = parseOrder(crossStorageApi, defaultRepo, parameters, orderLines);
 
-        LOG.info("order: {}", toJsonString(order));
-        LOG.info("orderLines: {}", toJsonString(orderLines));
         try {
             crossStorageApi.createOrUpdate(defaultRepo, order);
         } catch (Exception e) {
@@ -457,7 +453,7 @@ public class PaymentUtils extends Script {
             throw new BusinessException(error, e);
         }
 
-        LOG.info("order: {}", toJsonString(order));
+        LOG.info("getSavedOrder - order: {}", toJsonString(order));
         return order;
     }
 
@@ -465,22 +461,15 @@ public class PaymentUtils extends Script {
         throws BusinessException {
         Transaction payment = parsePayment(order);
         if (payment != null) {
-            String uuid;
             try {
-                uuid = crossStorageApi.createOrUpdate(defaultRepo, payment);
+                crossStorageApi.createOrUpdate(defaultRepo, payment);
             } catch (Exception e) {
                 String error = "Failed to save payment transaction: " + toJsonString(payment);
                 throw new BusinessException(error, e);
             }
-
-            try {
-                payment = crossStorageApi.find(defaultRepo, uuid, Transaction.class);
-            } catch (Exception e) {
-                String error = "Failed to retrieve payment transaction: " + toJsonString(payment);
-                throw new BusinessException(error, e);
-            }
         }
 
+        LOG.info("getSavedPayment - payment: {}", toJsonString(payment));
         return payment;
     }
 }
