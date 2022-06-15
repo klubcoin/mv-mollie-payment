@@ -219,14 +219,14 @@ public class PaymentUtils extends Script {
                 throw new BusinessException("Failed to retrieve address: " + printMapValues(parameters), e);
             }
         } else {
-            LOG.info("parseAddress - existingAddress.getUuid(): {}", existingAddress.getUuid());
-            try {
-                existingAddress = crossStorageApi.find(defaultRepo, existingAddress.getUuid(), MoAddress.class);
-            } catch (Exception e) {
-                throw new BusinessException("Failed to retrieve address: " + toJsonString(existingAddress), e);
+            if (existingAddress != null) {
+                try {
+                    existingAddress = crossStorageApi.find(defaultRepo, existingAddress.getUuid(), MoAddress.class);
+                } catch (Exception e) {
+                    throw new BusinessException("Failed to retrieve address: " + toJsonString(existingAddress), e);
+                }
             }
             address = existingAddress != null ? existingAddress : new MoAddress();
-            LOG.info("parseAddress - address: {}", address);
         }
 
 
@@ -491,8 +491,6 @@ public class PaymentUtils extends Script {
             getSavedAddress(crossStorageApi, defaultRepo, order.getShippingAddress(), newShippingAddress);
         List<MoOrderLine> orderLines = getSavedOrderLines(crossStorageApi, defaultRepo, order.getLines(), parameters);
 
-        LOG.info("getSavedOrder - billingAddress: {}", toJsonString(billingAddress));
-        LOG.info("getSavedOrder - shippingAddress: {}", toJsonString(shippingAddress));
         order.setBillingAddress(billingAddress);
         order.setShippingAddress(shippingAddress);
         order.setLines(orderLines);
