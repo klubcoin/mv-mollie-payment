@@ -491,6 +491,8 @@ public class PaymentUtils extends Script {
             getSavedAddress(crossStorageApi, defaultRepo, order.getShippingAddress(), newShippingAddress);
         List<MoOrderLine> orderLines = getSavedOrderLines(crossStorageApi, defaultRepo, order.getLines(), parameters);
 
+        LOG.info("getSavedOrder - billingAddress: {}", toJsonString(billingAddress));
+        LOG.info("getSavedOrder - shippingAddress: {}", toJsonString(shippingAddress));
         order.setBillingAddress(billingAddress);
         order.setShippingAddress(shippingAddress);
         order.setLines(orderLines);
