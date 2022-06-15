@@ -49,6 +49,8 @@ public class MollieUpdateOrder extends Script {
         }
 
         String id = "ord_" + order.getUuid();
+        String canceledAt = order.getCanceledAt() != null ? order.getCanceledAt().toString() : "";
+        String expiredAt = order.getExpiredAt() != null ? order.getExpiredAt().toString() : "";
         result = "{"
             + "\"resource\": \"order\","
             + "\"id\": \"" + id + "\","
@@ -59,6 +61,8 @@ public class MollieUpdateOrder extends Script {
             + "\"isCancelable\": false,"
             + "\"metadata\": " + order.getMetadata() + ","
             + "\"createdAt\": \"" + order.getCreationDate().toString() + "\","
+            + "\"canceledAt\": \"" + canceledAt + "\","
+            + "\"expiredAt\": \"" + expiredAt + "\","
             + "\"expiresAt\": \"" + order.getExpiresAt().toString() + "\","
             + "\"mode\": \"test\","
             + "\"locale\": \"" + order.getLocale() + "\","
@@ -90,12 +94,14 @@ public class MollieUpdateOrder extends Script {
                                     "      \"quantityRefunded\": 0,\n" +
                                     "      \"amountRefunded\": {\n" +
                                     "        \"value\": \"0.00\",\n" +
-                                    "        \"currency\": \"USD\"\n" +
+                                    "        \"currency\": \"" + line.getCurrency() + "\"\n" +
                                     "      },\n" +
-                                    "      \"quantityCanceled\": 0,\n" +
+                                    "      \"quantityCanceled\": " +
+                                    (order.getCanceledAt() != null ? line.getQuantity() : "0") + ",\n" +
                                     "      \"amountCanceled\": {\n" +
-                                    "        \"value\": \"0.00\",\n" +
-                                    "        \"currency\": \"USD\"\n" +
+                                    "        \"value\": \"" +
+                                    (order.getCanceledAt() != null ? line.getTotalAmount() : "0.00") + "\",\n" +
+                                    "        \"currency\": \"" + line.getCurrency() + "\"\n" +
                                     "      },\n" +
                                     "      \"shippableQuantity\": 0,\n" +
                                     "      \"refundableQuantity\": 0,\n" +
