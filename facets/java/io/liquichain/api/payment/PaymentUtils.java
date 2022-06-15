@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.commons.utils.StringUtils;
 import org.meveo.model.customEntities.MoAddress;
@@ -206,7 +205,7 @@ public class PaymentUtils extends Script {
     }
 
     public static MoAddress parseAddress(CrossStorageApi crossStorageApi, Repository defaultRepo,
-        MoAddress existingAddress, Map<String, Object> parameters) throws BusinessException {
+        MoAddress existingAddress, Map<String, Object> parameters) throws PaymentUtilException {
         if (parameters == null && existingAddress == null) {
             return null;
         }
@@ -216,14 +215,14 @@ public class PaymentUtils extends Script {
             try {
                 address = crossStorageApi.find(defaultRepo, id, MoAddress.class);
             } catch (Exception e) {
-                throw new BusinessException("Failed to retrieve address: " + printMapValues(parameters), e);
+                throw new PaymentUtilException("Failed to retrieve address: " + printMapValues(parameters), e);
             }
         } else {
             if (existingAddress != null) {
                 try {
                     existingAddress = crossStorageApi.find(defaultRepo, existingAddress.getUuid(), MoAddress.class);
                 } catch (Exception e) {
-                    throw new BusinessException("Failed to retrieve address: " + toJsonString(existingAddress), e);
+                    throw new PaymentUtilException("Failed to retrieve address: " + toJsonString(existingAddress), e);
                 }
             }
             address = existingAddress != null ? existingAddress : new MoAddress();
@@ -251,7 +250,7 @@ public class PaymentUtils extends Script {
     }
 
     private static MoOrderLine parseOrderLine(CrossStorageApi crossStorageApi, Repository defaultRepo,
-        Map<String, Object> parameters) throws BusinessException {
+        Map<String, Object> parameters) throws PaymentUtilException {
         if (parameters == null) {
             return null;
         }
@@ -261,7 +260,7 @@ public class PaymentUtils extends Script {
             try {
                 orderLine = crossStorageApi.find(defaultRepo, id, MoOrderLine.class);
             } catch (Exception e) {
-                throw new BusinessException("Failed to retrieve order line with id: " + id, e);
+                throw new PaymentUtilException("Failed to retrieve order line with id: " + id, e);
             }
         } else {
             orderLine = new MoOrderLine();
@@ -309,7 +308,7 @@ public class PaymentUtils extends Script {
     }
 
     public static MoOrder parseOrder(CrossStorageApi crossStorageApi, Repository defaultRepo,
-        Map<String, Object> parameters) throws BusinessException {
+        Map<String, Object> parameters) throws PaymentUtilException {
         String orderId = getString(parameters, "id");
         MoOrder order;
         String uuid = null;
@@ -321,7 +320,7 @@ public class PaymentUtils extends Script {
                 uuid = order.getUuid();
             } catch (Exception e) {
                 String error = "Cannot retrieve order: " + (parameters);
-                throw new BusinessException(error, e);
+                throw new PaymentUtilException(error, e);
             }
         } else {
             order = new MoOrder();
@@ -368,7 +367,7 @@ public class PaymentUtils extends Script {
         return order;
     }
 
-    public static Transaction parsePayment(MoOrder order) throws BusinessException {
+    public static Transaction parsePayment(MoOrder order) throws PaymentUtilException {
         if (order == null) {
             return null;
         }
@@ -405,7 +404,7 @@ public class PaymentUtils extends Script {
     }
 
     public static MoAddress getSavedAddress(CrossStorageApi crossStorageApi, Repository defaultRepo,
-        MoAddress existingAddress, Map<String, Object> newAddressMap) throws BusinessException {
+        MoAddress existingAddress, Map<String, Object> newAddressMap) throws PaymentUtilException {
         if (newAddressMap == null && existingAddress == null) {
             return null;
         }
@@ -416,7 +415,7 @@ public class PaymentUtils extends Script {
                 crossStorageApi.createOrUpdate(defaultRepo, address);
             } catch (Exception e) {
                 String errorMessage = "Failed to save address: " + toJsonString(address);
-                throw new BusinessException(errorMessage, e);
+                throw new PaymentUtilException(errorMessage, e);
             }
         }
 
@@ -424,7 +423,7 @@ public class PaymentUtils extends Script {
     }
 
     public static List<MoOrderLine> getSavedOrderLines(CrossStorageApi crossStorageApi, Repository defaultRepo,
-        List<MoOrderLine> existingLines, Map<String, Object> parameters) throws BusinessException {
+        List<MoOrderLine> existingLines, Map<String, Object> parameters) throws PaymentUtilException {
         List<Map<String, Object>> lines = (List<Map<String, Object>>) parameters.get("lines");
         boolean hasNewLines = lines != null && lines.size() > 0;
         boolean hasExistingLines = existingLines != null && existingLines.size() > 0;
@@ -449,7 +448,7 @@ public class PaymentUtils extends Script {
                         crossStorageApi.remove(defaultRepo, orderLine.getUuid(), MoOrderLine.class);
                     } catch (Exception e) {
                         String errorMessage = "Failed to remove order line: " + toJsonString(orderLine);
-                        throw new BusinessException(errorMessage, e);
+                        throw new PaymentUtilException(errorMessage, e);
                     }
                 }
             }
@@ -460,7 +459,7 @@ public class PaymentUtils extends Script {
                         crossStorageApi.createOrUpdate(defaultRepo, orderLine);
                     } catch (Exception e) {
                         String errorMessage = "Failed to save order line: " + printMapValues(line);
-                        throw new BusinessException(errorMessage, e);
+                        throw new PaymentUtilException(errorMessage, e);
                     }
                     orderLines.add(orderLine);
                 }
@@ -472,7 +471,7 @@ public class PaymentUtils extends Script {
                     existingLine = crossStorageApi.find(defaultRepo, existingLine.getUuid(), MoOrderLine.class);
                 } catch (Exception e) {
                     String errorMessage = "Failed to retrieve order line: " + toJsonString(existingLine);
-                    throw new BusinessException(errorMessage, e);
+                    throw new PaymentUtilException(errorMessage, e);
                 }
                 orderLines.add(existingLine);
             }
@@ -481,7 +480,7 @@ public class PaymentUtils extends Script {
     }
 
     public static MoOrder getSavedOrder(CrossStorageApi crossStorageApi, Repository defaultRepo,
-        Map<String, Object> parameters) throws BusinessException {
+        Map<String, Object> parameters) throws PaymentUtilException {
         MoOrder order = parseOrder(crossStorageApi, defaultRepo, parameters);
         Map<String, Object> newBillingAddress = getMap(parameters, "billingAddress");
         Map<String, Object> newShippingAddress = getMap(parameters, "shippingAddress");
@@ -499,7 +498,7 @@ public class PaymentUtils extends Script {
             crossStorageApi.createOrUpdate(defaultRepo, order);
         } catch (Exception e) {
             String error = "Failed to save order: " + printMapValues(parameters);
-            throw new BusinessException(error, e);
+            throw new PaymentUtilException(error, e);
         }
 
         LOG.info("getSavedOrder - order: {}", toJsonString(order));
@@ -507,18 +506,25 @@ public class PaymentUtils extends Script {
     }
 
     public static Transaction getSavedPayment(CrossStorageApi crossStorageApi, Repository defaultRepo, MoOrder order)
-        throws BusinessException {
+        throws PaymentUtilException {
         Transaction payment = parsePayment(order);
         if (payment != null) {
             try {
                 crossStorageApi.createOrUpdate(defaultRepo, payment);
             } catch (Exception e) {
                 String error = "Failed to save payment transaction: " + toJsonString(payment);
-                throw new BusinessException(error, e);
+                throw new PaymentUtilException(error, e);
             }
         }
 
         LOG.info("getSavedPayment - payment: {}", toJsonString(payment));
         return payment;
+    }
+}
+
+
+class PaymentUtilException extends Exception {
+    public PaymentUtilException(String errorMessage, Exception exception) {
+        super(errorMessage, exception);
     }
 }
