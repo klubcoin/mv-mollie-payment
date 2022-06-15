@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.meveo.admin.exception.BusinessException;
 import org.meveo.api.persistence.CrossStorageApi;
+import org.meveo.commons.utils.StringUtils;
 import org.meveo.model.customEntities.MoAddress;
 import org.meveo.model.customEntities.MoOrder;
 import org.meveo.model.customEntities.MoOrderLine;
@@ -331,8 +332,6 @@ public class PaymentUtils extends Script {
         String locale = getString(parameters, "locale");
         String redirectUrl = toHttps(getString(parameters, "redirectUrl"));
         String webhookUrl = toHttps(getString(parameters, "webhookUrl"));
-        MoAddress billingAddress = getSavedAddress(crossStorageApi, defaultRepo, parameters, "billingAddress");
-        MoAddress shippingAddress = getSavedAddress(crossStorageApi, defaultRepo, parameters, "shippingAddress");
 
         order.setMethod(normalize(method, order.getMethod()));
         order.setMetadata(normalize(metadata, order.getMetadata()));
@@ -340,8 +339,6 @@ public class PaymentUtils extends Script {
         order.setLocale(normalize(locale, order.getLocale()));
         order.setRedirectUrl(normalize(redirectUrl, order.getRedirectUrl()));
         order.setWebhookUrl(normalize(webhookUrl, order.getWebhookUrl()));
-        order.setBillingAddress(normalize(billingAddress, order.getBillingAddress()));
-        order.setShippingAddress(normalize(shippingAddress, order.getShippingAddress()));
 
         String status = "created";
         if (uuid == null) {
@@ -400,9 +397,8 @@ public class PaymentUtils extends Script {
     }
 
     public static MoAddress getSavedAddress(CrossStorageApi crossStorageApi, Repository defaultRepo,
-        Map<String, Object> parameters, String name) throws BusinessException {
-        Map<String, Object> newAddressMap = getMap(parameters, name);
-        if (newAddressMap == null) {
+        MoAddress existingAddress, Map<String, Object> newAddressMap) throws BusinessException {
+        if (newAddressMap == null && existingAddress == null) {
             return null;
         }
         MoAddress address = parseAddress(crossStorageApi, defaultRepo, newAddressMap);
@@ -418,17 +414,27 @@ public class PaymentUtils extends Script {
     }
 
     public static List<MoOrderLine> getSavedOrderLines(CrossStorageApi crossStorageApi, Repository defaultRepo,
-        Map<String, Object> parameters, MoOrder order) throws BusinessException {
+        List<MoOrderLine> existingLines, Map<String, Object> parameters) throws BusinessException {
         List<Map<String, Object>> lines = (List<Map<String, Object>>) parameters.get("lines");
         boolean hasNewLines = lines != null && lines.size() > 0;
-        boolean hasExistingLines = order.getLines() != null && order.getLines().size() > 0;
+        boolean hasExistingLines = existingLines != null && existingLines.size() > 0;
         if (!hasNewLines && !hasExistingLines) {
             return null;
         }
         List<MoOrderLine> orderLines = new ArrayList<>();
         if (hasNewLines) {
-            if (hasExistingLines) { // replace existing lines
-                for (MoOrderLine orderLine : order.getLines()) {
+            if (hasExistingLines) {
+                List<String> idsToUpdate = lines
+                    .stream()
+                    .filter(line -> StringUtils.isNotBlank(getString(line, "id")))
+                    .map(line -> getString(line, "id"))
+                    .collect(Collectors.toList());
+                List<MoOrderLine> linesToRemove = existingLines
+                    .stream()
+                    .filter(line -> !idsToUpdate.contains(line.getUuid()))
+                    .collect(Collectors.toList());
+
+                for (MoOrderLine orderLine : linesToRemove) {
                     try {
                         crossStorageApi.remove(defaultRepo, orderLine.getUuid(), MoOrderLine.class);
                     } catch (Exception e) {
@@ -451,12 +457,11 @@ public class PaymentUtils extends Script {
             }
         } else {
             // no new lines but has existing lines so fetch existing lines
-            for (MoOrderLine orderLine : order.getLines()) {
-                MoOrderLine existingLine;
+            for (MoOrderLine existingLine : existingLines) {
                 try {
-                    existingLine = crossStorageApi.find(defaultRepo, orderLine.getUuid(), MoOrderLine.class);
+                    existingLine = crossStorageApi.find(defaultRepo, existingLine.getUuid(), MoOrderLine.class);
                 } catch (Exception e) {
-                    String errorMessage = "Failed to retrieve order line: " + toJsonString(orderLine);
+                    String errorMessage = "Failed to retrieve order line: " + toJsonString(existingLine);
                     throw new BusinessException(errorMessage, e);
                 }
                 orderLines.add(existingLine);
@@ -468,7 +473,16 @@ public class PaymentUtils extends Script {
     public static MoOrder getSavedOrder(CrossStorageApi crossStorageApi, Repository defaultRepo,
         Map<String, Object> parameters) throws BusinessException {
         MoOrder order = parseOrder(crossStorageApi, defaultRepo, parameters);
-        List<MoOrderLine> orderLines = getSavedOrderLines(crossStorageApi, defaultRepo, parameters, order);
+        Map<String, Object> newBillingAddress = getMap(parameters, "billingAddress");
+        Map<String, Object> newShippingAddress = getMap(parameters, "shippingAddress");
+        MoAddress billingAddress =
+            getSavedAddress(crossStorageApi, defaultRepo, order.getBillingAddress(), newBillingAddress);
+        MoAddress shippingAddress =
+            getSavedAddress(crossStorageApi, defaultRepo, order.getShippingAddress(), newShippingAddress);
+        List<MoOrderLine> orderLines = getSavedOrderLines(crossStorageApi, defaultRepo, order.getLines(), parameters);
+
+        order.setBillingAddress(billingAddress);
+        order.setShippingAddress(shippingAddress);
         order.setLines(orderLines);
 
         try {
