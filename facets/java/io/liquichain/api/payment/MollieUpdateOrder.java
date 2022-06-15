@@ -54,6 +54,7 @@ public class MollieUpdateOrder extends Script {
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
+        super.execute(parameters);
         this.init();
 
         MoOrder order;
