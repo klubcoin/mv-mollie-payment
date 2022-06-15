@@ -224,8 +224,10 @@ public class PaymentUtils extends Script {
             } catch (Exception e) {
                 throw new BusinessException("Failed to retrieve address: " + toJsonString(existingAddress), e);
             }
+            LOG.info("parseAddress - existingAddress: {}", existingAddress);
             address = existingAddress != null ? existingAddress : new MoAddress();
         }
+
 
         String streetAndNumber = getString(parameters, "streetAndNumber");
         String streetAdditional = getString(parameters, "streetAdditional");
@@ -244,6 +246,7 @@ public class PaymentUtils extends Script {
             address.setUuid(generateUUID(address));
         }
 
+        LOG.info("parseAddress - address: {}", address);
         return address;
     }
 
