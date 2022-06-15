@@ -2,7 +2,6 @@ package io.liquichain.api.payment;
 
 import static io.liquichain.api.payment.PaymentUtils.*;
 
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -11,32 +10,26 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.ParamBeanFactory;
 import org.meveo.model.customEntities.MoOrder;
-import org.meveo.model.customEntities.MoOrderLine;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
 import org.meveo.service.storage.RepositoryService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import javax.inject.Inject;
 
 public class MollieUpdateOrder extends Script {
     private static final Logger LOG = LoggerFactory.getLogger(MollieUpdateOrder.class);
 
-    @Inject
-    private CrossStorageApi crossStorageApi;
-    @Inject
-    private RepositoryService repositoryService;
-    @Inject
-    private ParamBeanFactory paramBeanFactory;
+    private final CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
+    private final RepositoryService repositoryService = getCDIBean(RepositoryService.class);
+    private final ParamBeanFactory paramBeanFactory = getCDIBean(ParamBeanFactory.class);
+    private final ParamBean config = paramBeanFactory.getInstance();
 
-    private Repository defaultRepo = null;
+    private final Repository defaultRepo = repositoryService.findDefaultRepository();
 
-    private String BASE_URL = null;
-    private String MEVEO_BASE_URL = null;
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final String BASE_URL = config.getProperty("meveo.admin.baseUrl", "http://localhost:8080/");
+    private final String CONTEXT = config.getProperty("meveo.admin.webContext", "meveo");
+    private final String MEVEO_BASE_URL = BASE_URL + CONTEXT;
 
     private String result;
 
@@ -44,19 +37,8 @@ public class MollieUpdateOrder extends Script {
         return result;
     }
 
-    private void init() {
-        this.defaultRepo = repositoryService.findDefaultRepository();
-        ParamBean config = paramBeanFactory.getInstance();
-        BASE_URL = config.getProperty("meveo.admin.baseUrl", "http://localhost:8080/");
-        String CONTEXT = config.getProperty("meveo.admin.webContext", "meveo");
-        MEVEO_BASE_URL = BASE_URL + CONTEXT;
-    }
-
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
-        super.execute(parameters);
-        this.init();
-
         MoOrder order;
         try {
             order = getSavedOrder(crossStorageApi, defaultRepo, parameters);
