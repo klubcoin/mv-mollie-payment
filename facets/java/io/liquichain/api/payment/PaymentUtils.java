@@ -236,6 +236,8 @@ public class PaymentUtils extends Script {
         String locale = getString(parameters, "locale");
         String redirectUrl = toHttps(getString(parameters, "redirectUrl"));
         String webhookUrl = toHttps(getString(parameters, "webhookUrl"));
+        MoAddress billingAddress = getSavedAddress(crossStorageApi, defaultRepo, parameters, "billingAddress");
+        MoAddress shippingAddress = getSavedAddress(crossStorageApi, defaultRepo, parameters, "shippingAddress");
 
         order.setMethod(normalize(method, order.getMethod()));
         order.setMetadata(normalize(metadata, order.getMetadata()));
@@ -243,10 +245,9 @@ public class PaymentUtils extends Script {
         order.setLocale(normalize(locale, order.getLocale()));
         order.setRedirectUrl(normalize(redirectUrl, order.getRedirectUrl()));
         order.setWebhookUrl(normalize(webhookUrl, order.getWebhookUrl()));
-        order.setBillingAddress(getSavedAddress(crossStorageApi, defaultRepo, parameters, "billingAddress"));
-        order.setShippingAddress(getSavedAddress(crossStorageApi, defaultRepo, parameters, "shippingAddress"));
-        LOG.info("parseOrder - orderLines: {}", toJsonString(orderLines));
-        order.setLines(orderLines);
+        order.setBillingAddress(normalize(billingAddress, order.getBillingAddress()));
+        order.setShippingAddress(normalize(shippingAddress, order.getShippingAddress()));
+        order.setLines(normalize(orderLines, order.getLines()));
 
         String status = "created";
         if (uuid == null) {
