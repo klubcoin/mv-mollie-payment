@@ -193,8 +193,8 @@ public class MolliePayOrder extends Script {
                 transaction.setV(v);
                 transaction.setS(s);
                 transaction.setR(r);
-                transaction.setData("{\"type\":\"mollie\",\"description\":\"Mollie Payment\"}");
-                transaction.setType("mollie");
+                transaction.setData("{\"type\":\"payonline\",\"description\":\"Pay online payment\"}");
+                transaction.setType("payonline");
                 String uuid = crossStorageApi.createOrUpdate(defaultRepo, transaction);
                 LOG.info("Updated transaction on DB with uuid: {}", uuid);
             } catch (Exception e) {

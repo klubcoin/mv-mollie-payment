@@ -52,67 +52,6 @@ public class MollieUpdateOrder extends Script {
         MEVEO_BASE_URL = BASE_URL + CONTEXT;
     }
 
-    private String toHttps(String url) {
-        return url != null ? url.replace("http:", "https:") : null;
-    }
-
-    private MoOrder updateOrder(Map<String, Object> parameters, List<MoOrderLine> orderLines) throws BusinessException {
-        String orderId = getString(parameters, "id");
-        MoOrder order;
-        String uuid;
-        LOG.info("Retrieve Order[{}]", orderId);
-        try {
-            uuid = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
-            order = crossStorageApi.find(defaultRepo, uuid, MoOrder.class);
-        } catch (Exception e) {
-            String error = "Cannot retrieve order: " + orderId;
-            LOG.error(error);
-            throw new BusinessException(error, e);
-        }
-
-        LOG.info("Update Order: {}", parameters);
-        Map<String, Object> amountMap = getMap(parameters, "amount");
-        if (amountMap != null) {
-            double amountValue = Double.parseDouble(getString(amountMap, "value"));
-            String amountCurrency = getString(amountMap, "currency");
-            order.setAmount(amountValue);
-            order.setCurrency(amountCurrency);
-        }
-        order.setMethod(normalize(getString(parameters, "method"), order.getMethod()));
-        order.setMetadata(normalize(toJsonString(parameters.get("metadata")), order.getMetadata()));
-        order.setOrderNumber(normalize(getString(parameters, "orderNumber"), order.getOrderNumber()));
-        order.setRedirectUrl(normalize(getString(parameters, "redirectUrl"), order.getRedirectUrl()));
-        order.setLocale(normalize(getString(parameters, "locale"), order.getLocale()));
-        order.setRedirectUrl(normalize(toHttps(getString(parameters, "redirectUrl")), order.getRedirectUrl()));
-        order.setWebhookUrl(normalize(toHttps(getString(parameters, "webhookUrl")), order.getWebhookUrl()));
-        order.setBillingAddress(getSavedAddress(crossStorageApi, defaultRepo, parameters, "billingAddress"));
-        order.setShippingAddress(getSavedAddress(crossStorageApi, defaultRepo, parameters, "shippingAddress"));
-        order.setLines(orderLines);
-        String status = normalize(getString(parameters, "status"), order.getStatus());
-        order.setStatus(status);
-        if ("canceled".equals(status)) {
-
-        }
-        if ("expired".equals(status)) {
-
-        }
-
-        try {
-            uuid = crossStorageApi.createOrUpdate(defaultRepo, order);
-        } catch (Exception e) {
-            String error = String.format("Error saving order:%s [%s]", order.getOrderNumber(), e.getMessage());
-            throw new BusinessException(error, e);
-        }
-
-        try {
-            order = crossStorageApi.find(defaultRepo, uuid, MoOrder.class);
-        } catch (Exception e) {
-            String error = String.format("Error retrieving order:%s [%s]", uuid, e.getMessage());
-            throw new BusinessException(error, e);
-        }
-        return order;
-    }
-
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         this.init();
