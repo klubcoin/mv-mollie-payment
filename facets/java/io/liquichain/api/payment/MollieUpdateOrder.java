@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.inject.Inject;
 
 public class MollieUpdateOrder extends Script {
-    private static final Logger LOG = LoggerFactory.getLogger(MollieCreateOrder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MollieUpdateOrder.class);
 
     @Inject
     private CrossStorageApi crossStorageApi;
