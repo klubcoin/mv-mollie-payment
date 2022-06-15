@@ -219,6 +219,11 @@ public class PaymentUtils extends Script {
                 throw new BusinessException("Failed to retrieve address: " + printMapValues(parameters), e);
             }
         } else {
+            try {
+                existingAddress = crossStorageApi.find(defaultRepo, existingAddress.getUuid(), MoAddress.class);
+            } catch (Exception e) {
+                throw new BusinessException("Failed to retrieve address: " + toJsonString(existingAddress), e);
+            }
             address = existingAddress != null ? existingAddress : new MoAddress();
         }
 
