@@ -89,54 +89,50 @@ public class MollieCreateOrder extends Script {
         String lines = order.getLines()
                             .stream()
                             .map(
-                                line -> {
-                                    LOG.info("line: {}", toJsonString(line));
-                                    LOG.info("line createdAt: {}", line.getCreationDate());
-                                    return "{\n" +
-                                        "      \"resource\": \"orderline\",\n" +
-                                        "      \"id\": \"odl_" + line.getUuid() + "\",\n" +
-                                        "      \"orderId\": \"" + id + "\",\n" +
-                                        "      \"name\": \"" + line.getName() + "\",\n" +
-                                        "      \"sku\": \"" + line.getSku() + "\",\n" +
-                                        "      \"type\": \"physical\",\n" +
-                                        "      \"status\": \"created\",\n" +
-                                        "      \"metadata\": " + line.getMetadata() + ",\n" +
-                                        "      \"isCancelable\": false,\n" +
-                                        "      \"quantity\": " + line.getQuantity() + ",\n" +
-                                        "      \"quantityShipped\": 0,\n" +
-                                        "      \"amountShipped\": {\n" +
-                                        "        \"value\": \"0.00\",\n" +
-                                        "        \"currency\": \"USD\"\n" +
-                                        "      },\n" +
-                                        "      \"quantityRefunded\": 0,\n" +
-                                        "      \"amountRefunded\": {\n" +
-                                        "        \"value\": \"0.00\",\n" +
-                                        "        \"currency\": \"USD\"\n" +
-                                        "      },\n" +
-                                        "      \"quantityCanceled\": 0,\n" +
-                                        "      \"amountCanceled\": {\n" +
-                                        "        \"value\": \"0.00\",\n" +
-                                        "        \"currency\": \"USD\"\n" +
-                                        "      },\n" +
-                                        "      \"shippableQuantity\": 0,\n" +
-                                        "      \"refundableQuantity\": 0,\n" +
-                                        "      \"cancelableQuantity\": 0,\n" +
-                                        "      \"unitPrice\": {\n" +
-                                        "        \"value\": \"" + line.getUnitPrice() + "\",\n" +
-                                        "        \"currency\": \"" + line.getCurrency() + "\"\n" +
-                                        "      },\n" +
-                                        "      \"vatRate\": \"0.00\",\n" +
-                                        "      \"vatAmount\": {\n" +
-                                        "        \"value\": \"" + line.getVatAmount() + "\",\n" +
-                                        "        \"currency\": \"" + line.getCurrency() + "\"\n" +
-                                        "      },\n" +
-                                        "      \"totalAmount\": {\n" +
-                                        "        \"value\": \"" + line.getTotalAmount() + "\",\n" +
-                                        "        \"currency\": \"" + line.getCurrency() + "\"\n" +
-                                        "      },\n" +
-                                        "      \"createdAt\": \"" + line.getCreationDate().toString() + "\"\n" +
-                                        "    }";
-                                })
+                                line -> "{\n" +
+                                    "      \"resource\": \"orderline\",\n" +
+                                    "      \"id\": \"odl_" + line.getUuid() + "\",\n" +
+                                    "      \"orderId\": \"" + id + "\",\n" +
+                                    "      \"name\": \"" + line.getName() + "\",\n" +
+                                    "      \"sku\": \"" + line.getSku() + "\",\n" +
+                                    "      \"type\": \"physical\",\n" +
+                                    "      \"status\": \"created\",\n" +
+                                    "      \"metadata\": " + line.getMetadata() + ",\n" +
+                                    "      \"isCancelable\": false,\n" +
+                                    "      \"quantity\": " + line.getQuantity() + ",\n" +
+                                    "      \"quantityShipped\": 0,\n" +
+                                    "      \"amountShipped\": {\n" +
+                                    "        \"value\": \"0.00\",\n" +
+                                    "        \"currency\": \"USD\"\n" +
+                                    "      },\n" +
+                                    "      \"quantityRefunded\": 0,\n" +
+                                    "      \"amountRefunded\": {\n" +
+                                    "        \"value\": \"0.00\",\n" +
+                                    "        \"currency\": \"USD\"\n" +
+                                    "      },\n" +
+                                    "      \"quantityCanceled\": 0,\n" +
+                                    "      \"amountCanceled\": {\n" +
+                                    "        \"value\": \"0.00\",\n" +
+                                    "        \"currency\": \"USD\"\n" +
+                                    "      },\n" +
+                                    "      \"shippableQuantity\": 0,\n" +
+                                    "      \"refundableQuantity\": 0,\n" +
+                                    "      \"cancelableQuantity\": 0,\n" +
+                                    "      \"unitPrice\": {\n" +
+                                    "        \"value\": \"" + line.getUnitPrice() + "\",\n" +
+                                    "        \"currency\": \"" + line.getCurrency() + "\"\n" +
+                                    "      },\n" +
+                                    "      \"vatRate\": \"0.00\",\n" +
+                                    "      \"vatAmount\": {\n" +
+                                    "        \"value\": \"" + line.getVatAmount() + "\",\n" +
+                                    "        \"currency\": \"" + line.getCurrency() + "\"\n" +
+                                    "      },\n" +
+                                    "      \"totalAmount\": {\n" +
+                                    "        \"value\": \"" + line.getTotalAmount() + "\",\n" +
+                                    "        \"currency\": \"" + line.getCurrency() + "\"\n" +
+                                    "      },\n" +
+                                    "      \"createdAt\": \"" + line.getCreationDate().toString() + "\"\n" +
+                                    "    }")
                             .collect(Collectors.joining(",\n"));
 
         result += String.format("\"lines\": [%s],", lines);
