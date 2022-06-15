@@ -204,107 +204,6 @@ public class PaymentUtils extends Script {
         return DigestUtils.sha1Hex(fieldValues);
     }
 
-    public static MoOrder parseOrder(CrossStorageApi crossStorageApi, Repository defaultRepo,
-        Map<String, Object> parameters, List<MoOrderLine> orderLines) throws BusinessException {
-        String orderId = getString(parameters, "id");
-        MoOrder order;
-        String uuid = null;
-        LOG.info("Retrieve order: {}", orderId);
-        if (orderId != null) {
-            try {
-                orderId = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
-                order = crossStorageApi.find(defaultRepo, orderId, MoOrder.class);
-                uuid = order.getUuid();
-            } catch (Exception e) {
-                String error = "Cannot retrieve order: " + (parameters);
-                throw new BusinessException(error, e);
-            }
-        } else {
-            order = new MoOrder();
-        }
-
-        Map<String, Object> amountMap = getMap(parameters, "amount");
-        if (amountMap != null) {
-            double amountValue = Double.parseDouble(getString(amountMap, "value"));
-            String amountCurrency = getString(amountMap, "currency");
-            order.setAmount(amountValue);
-            order.setCurrency(amountCurrency);
-        }
-        String method = getString(parameters, "method");
-        String metadata = toJsonString(parameters.get("metadata"));
-        String orderNumber = getString(parameters, "orderNumber");
-        String locale = getString(parameters, "locale");
-        String redirectUrl = toHttps(getString(parameters, "redirectUrl"));
-        String webhookUrl = toHttps(getString(parameters, "webhookUrl"));
-        MoAddress billingAddress = getSavedAddress(crossStorageApi, defaultRepo, parameters, "billingAddress");
-        MoAddress shippingAddress = getSavedAddress(crossStorageApi, defaultRepo, parameters, "shippingAddress");
-
-        order.setMethod(normalize(method, order.getMethod()));
-        order.setMetadata(normalize(metadata, order.getMetadata()));
-        order.setOrderNumber(normalize(orderNumber, order.getOrderNumber()));
-        order.setLocale(normalize(locale, order.getLocale()));
-        order.setRedirectUrl(normalize(redirectUrl, order.getRedirectUrl()));
-        order.setWebhookUrl(normalize(webhookUrl, order.getWebhookUrl()));
-        order.setBillingAddress(normalize(billingAddress, order.getBillingAddress()));
-        order.setShippingAddress(normalize(shippingAddress, order.getShippingAddress()));
-        order.setLines(normalize(orderLines, order.getLines()));
-
-        String status = "created";
-        if (uuid == null) {
-            order.setUuid(generateUUID(order));
-            order.setCreationDate(Instant.now());
-            order.setExpiresAt(Instant.now().plus(Duration.ofDays(1)));
-        } else {
-            status = normalize(getString(parameters, "status"), order.getStatus());
-            if ("canceled".equals(status)) {
-                order.setCanceledAt(Instant.now());
-            }
-            if ("expired".equals(status) || Instant.now().isAfter(order.getExpiresAt())) {
-                status = "expired";
-                order.setExpiredAt(Instant.now());
-            }
-        }
-        order.setStatus(status);
-
-        return order;
-    }
-
-    public static Transaction parsePayment(MoOrder order) throws BusinessException {
-        if (order == null) {
-            return null;
-        }
-        String orderId = "ord_" + order.getUuid();
-        String amountValue = "" + order.getAmount();
-        String amountCurrency = order.getCurrency();
-        String description = "Payment for Order #" + order.getOrderNumber();
-        String redirectUrl = order.getRedirectUrl();
-        String webhookUrl = order.getWebhookUrl();
-        String metadata = "{\"order_id\": " + order.getOrderNumber() + "}";
-        Instant createdAt = order.getCreationDate();
-        Instant expiresAt = order.getExpiresAt();
-
-        String signedHash = Hash.sha3(orderId + amountValue + amountCurrency +
-            description + redirectUrl + webhookUrl + metadata + createdAt);
-
-        Transaction payment = new Transaction();
-        payment.setHexHash(normalizeHash(signedHash));
-        payment.setSignedHash(signedHash);
-        payment.setValue(amountValue);
-        payment.setCurrency(amountCurrency);
-        payment.setDescription(description);
-        payment.setRedirectUrl(redirectUrl);
-        payment.setWebhookUrl(webhookUrl);
-        payment.setMetadata(metadata);
-        payment.setCreationDate(createdAt);
-        payment.setExpirationDate(expiresAt);
-        payment.setOrderId(orderId);
-        payment.setData("{\"type\":\"payonline\",\"description\":\"Pay online payment\"}");
-        payment.setType("payonline");
-        payment.setUuid(generateUUID(payment));
-
-        return payment;
-    }
-
     public static MoAddress parseAddress(CrossStorageApi crossStorageApi, Repository defaultRepo,
         Map<String, Object> parameters) throws BusinessException {
         if (parameters == null) {
@@ -400,6 +299,106 @@ public class PaymentUtils extends Script {
         return orderLine;
     }
 
+    public static MoOrder parseOrder(CrossStorageApi crossStorageApi, Repository defaultRepo,
+        Map<String, Object> parameters) throws BusinessException {
+        String orderId = getString(parameters, "id");
+        MoOrder order;
+        String uuid = null;
+        LOG.info("Retrieve order: {}", orderId);
+        if (orderId != null) {
+            try {
+                orderId = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
+                order = crossStorageApi.find(defaultRepo, orderId, MoOrder.class);
+                uuid = order.getUuid();
+            } catch (Exception e) {
+                String error = "Cannot retrieve order: " + (parameters);
+                throw new BusinessException(error, e);
+            }
+        } else {
+            order = new MoOrder();
+        }
+
+        Map<String, Object> amountMap = getMap(parameters, "amount");
+        if (amountMap != null) {
+            double amountValue = Double.parseDouble(getString(amountMap, "value"));
+            String amountCurrency = getString(amountMap, "currency");
+            order.setAmount(amountValue);
+            order.setCurrency(amountCurrency);
+        }
+        String method = getString(parameters, "method");
+        String metadata = toJsonString(parameters.get("metadata"));
+        String orderNumber = getString(parameters, "orderNumber");
+        String locale = getString(parameters, "locale");
+        String redirectUrl = toHttps(getString(parameters, "redirectUrl"));
+        String webhookUrl = toHttps(getString(parameters, "webhookUrl"));
+        MoAddress billingAddress = getSavedAddress(crossStorageApi, defaultRepo, parameters, "billingAddress");
+        MoAddress shippingAddress = getSavedAddress(crossStorageApi, defaultRepo, parameters, "shippingAddress");
+
+        order.setMethod(normalize(method, order.getMethod()));
+        order.setMetadata(normalize(metadata, order.getMetadata()));
+        order.setOrderNumber(normalize(orderNumber, order.getOrderNumber()));
+        order.setLocale(normalize(locale, order.getLocale()));
+        order.setRedirectUrl(normalize(redirectUrl, order.getRedirectUrl()));
+        order.setWebhookUrl(normalize(webhookUrl, order.getWebhookUrl()));
+        order.setBillingAddress(normalize(billingAddress, order.getBillingAddress()));
+        order.setShippingAddress(normalize(shippingAddress, order.getShippingAddress()));
+
+        String status = "created";
+        if (uuid == null) {
+            order.setUuid(generateUUID(order));
+            order.setCreationDate(Instant.now());
+            order.setExpiresAt(Instant.now().plus(Duration.ofDays(1)));
+        } else {
+            status = normalize(getString(parameters, "status"), order.getStatus());
+            if ("canceled".equals(status)) {
+                order.setCanceledAt(Instant.now());
+            }
+            if ("expired".equals(status) || Instant.now().isAfter(order.getExpiresAt())) {
+                status = "expired";
+                order.setExpiredAt(Instant.now());
+            }
+        }
+        order.setStatus(status);
+
+        return order;
+    }
+
+    public static Transaction parsePayment(MoOrder order) throws BusinessException {
+        if (order == null) {
+            return null;
+        }
+        String orderId = "ord_" + order.getUuid();
+        String amountValue = "" + order.getAmount();
+        String amountCurrency = order.getCurrency();
+        String description = "Payment for Order #" + order.getOrderNumber();
+        String redirectUrl = order.getRedirectUrl();
+        String webhookUrl = order.getWebhookUrl();
+        String metadata = "{\"order_id\": " + order.getOrderNumber() + "}";
+        Instant createdAt = order.getCreationDate();
+        Instant expiresAt = order.getExpiresAt();
+
+        String signedHash = Hash.sha3(orderId + amountValue + amountCurrency +
+            description + redirectUrl + webhookUrl + metadata + createdAt);
+
+        Transaction payment = new Transaction();
+        payment.setHexHash(normalizeHash(signedHash));
+        payment.setSignedHash(signedHash);
+        payment.setValue(amountValue);
+        payment.setCurrency(amountCurrency);
+        payment.setDescription(description);
+        payment.setRedirectUrl(redirectUrl);
+        payment.setWebhookUrl(webhookUrl);
+        payment.setMetadata(metadata);
+        payment.setCreationDate(createdAt);
+        payment.setExpirationDate(expiresAt);
+        payment.setOrderId(orderId);
+        payment.setData("{\"type\":\"payonline\",\"description\":\"Pay online payment\"}");
+        payment.setType("payonline");
+        payment.setUuid(generateUUID(payment));
+
+        return payment;
+    }
+
     public static MoAddress getSavedAddress(CrossStorageApi crossStorageApi, Repository defaultRepo,
         Map<String, Object> parameters, String name) throws BusinessException {
         Map<String, Object> newAddressMap = getMap(parameters, name);
@@ -419,32 +418,58 @@ public class PaymentUtils extends Script {
     }
 
     public static List<MoOrderLine> getSavedOrderLines(CrossStorageApi crossStorageApi, Repository defaultRepo,
-        List<Map<String, Object>> lines) throws BusinessException {
-        if (lines == null || lines.size() == 0) {
+        Map<String, Object> parameters, MoOrder order) throws BusinessException {
+        List<Map<String, Object>> lines = (List<Map<String, Object>>) parameters.get("lines");
+        boolean hasNewLines = lines != null && lines.size() > 0;
+        boolean hasExistingLines = order.getLines() != null && order.getLines().size() > 0;
+        if (!hasNewLines && !hasExistingLines) {
             return null;
         }
         List<MoOrderLine> orderLines = new ArrayList<>();
-        for (Map<String, Object> line : lines) {
-            MoOrderLine orderLine = parseOrderLine(crossStorageApi, defaultRepo, line);
-            if (orderLine != null) {
+        if (hasNewLines) {
+            if (hasExistingLines) { // replace existing lines
+                for (MoOrderLine orderLine : order.getLines()) {
+                    try {
+                        crossStorageApi.remove(defaultRepo, orderLine.getUuid(), MoOrderLine.class);
+                    } catch (Exception e) {
+                        String errorMessage = "Failed to remove order line: " + toJsonString(orderLine);
+                        throw new BusinessException(errorMessage, e);
+                    }
+                }
+            }
+            for (Map<String, Object> line : lines) {
+                MoOrderLine orderLine = parseOrderLine(crossStorageApi, defaultRepo, line);
+                if (orderLine != null) {
+                    try {
+                        crossStorageApi.createOrUpdate(defaultRepo, orderLine);
+                    } catch (Exception e) {
+                        String errorMessage = "Failed to save order line: " + printMapValues(line);
+                        throw new BusinessException(errorMessage, e);
+                    }
+                    orderLines.add(orderLine);
+                }
+            }
+        } else {
+            // no new lines but has existing lines so fetch existing lines
+            for (MoOrderLine orderLine : order.getLines()) {
+                MoOrderLine existingLine;
                 try {
-                    crossStorageApi.createOrUpdate(defaultRepo, orderLine);
+                    existingLine = crossStorageApi.find(defaultRepo, orderLine.getUuid(), MoOrderLine.class);
                 } catch (Exception e) {
-                    String errorMessage = "Failed to save order line: " + printMapValues(line);
+                    String errorMessage = "Failed to retrieve order line: " + toJsonString(orderLine);
                     throw new BusinessException(errorMessage, e);
                 }
-                orderLines.add(orderLine);
+                orderLines.add(existingLine);
             }
         }
-
         return orderLines;
     }
 
     public static MoOrder getSavedOrder(CrossStorageApi crossStorageApi, Repository defaultRepo,
         Map<String, Object> parameters) throws BusinessException {
-        List<Map<String, Object>> orderLinesList = (List<Map<String, Object>>) parameters.get("lines");
-        List<MoOrderLine> orderLines = getSavedOrderLines(crossStorageApi, defaultRepo, orderLinesList);
-        MoOrder order = parseOrder(crossStorageApi, defaultRepo, parameters, orderLines);
+        MoOrder order = parseOrder(crossStorageApi, defaultRepo, parameters);
+        List<MoOrderLine> orderLines = getSavedOrderLines(crossStorageApi, defaultRepo, parameters, order);
+        order.setLines(orderLines);
 
         try {
             crossStorageApi.createOrUpdate(defaultRepo, order);
