@@ -8,7 +8,7 @@
   } ],
   "generateOutputs" : false,
   "type" : "JAVA",
-  "transactionType" : "NEW",
+  "transactionType" : "SAME",
   "executionRoles" : [ ],
   "sourcingRoles" : [ ],
   "mavenDependencies" : [ ],
