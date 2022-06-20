@@ -76,13 +76,12 @@ public class MollieGetPayment extends Script {
         this.init();
 
         Transaction transaction;
+        String uuid = null;
         try {
-            if (paymentId.startsWith("tr_")) {
-                paymentId = paymentId.substring(3);
-            }
+            uuid = paymentId.startsWith("tr_") ? paymentId = paymentId.substring(3) : paymentId;
             transaction = crossStorageApi.find(defaultRepo, paymentId, Transaction.class);
         } catch (EntityDoesNotExistsException e) {
-            String error = "Failed to retrieve payment transaction: " + paymentId;
+            String error = "Failed to retrieve payment transaction: " + uuid;
             LOG.error(error, e);
             result = createErrorResponse("404", "Not found", error);
             return;

@@ -21,23 +21,17 @@ import org.slf4j.LoggerFactory;
 
 import org.web3j.crypto.Hash;
 
-import javax.inject.Inject;
-
 public class MollieCreatePayment extends Script {
     private static final Logger LOG = LoggerFactory.getLogger(MollieCreateOrder.class);
 
-    @Inject
-    private CrossStorageApi crossStorageApi;
-    @Inject
-    private RepositoryService repositoryService;
-    @Inject
-    private ParamBeanFactory paramBeanFactory;
+    private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
+    private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
+    private ParamBeanFactory paramBeanFactory = getCDIBean(ParamBeanFactory.class);
 
     private Repository defaultRepo = null;
 
     private String BASE_URL = null;
     private String MEVEO_BASE_URL = null;
-    private final ObjectMapper mapper = new ObjectMapper();
 
     private String result;
 
