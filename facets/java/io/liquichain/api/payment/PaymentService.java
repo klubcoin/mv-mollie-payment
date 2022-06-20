@@ -87,6 +87,7 @@ public class PaymentService extends Script {
         if (parameters == null) {
             return null;
         }
+
         Map<K, V> value = null;
         if (parameters.containsKey(name)) {
             Object objResult = parameters.get(name);
