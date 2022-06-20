@@ -205,6 +205,7 @@ public class MolliePayOrder extends Script {
                     result = createError(e.getMessage());
                     return;
                 }
+
                 LOG.info("completed transactionHash: {}", completedTransactionHash);
 
                 transaction.setHexHash(completedTransactionHash);
