@@ -200,11 +200,11 @@ public class PaymentService extends Script {
                 Map<String, Object> objectMap = (Map<String, Object>) field.get(object);
                 return objectMap.keySet().stream()
                                 .map(key -> getObjectValue(objectMap.get(key)))
-                                .collect(Collectors.joining());
+                                .collect(Collectors.joining(", "));
 
             } else if (field.getType() == List.class) {
                 List<Object> objectList = (List) field.get(object);
-                return objectList.stream().map(PaymentService::getObjectValue).collect(Collectors.joining());
+                return objectList.stream().map(PaymentService::getObjectValue).collect(Collectors.joining(", "));
             } else {
                 Object value = field.get(object);
                 return value != null ? "" + field.get(object) : "";
