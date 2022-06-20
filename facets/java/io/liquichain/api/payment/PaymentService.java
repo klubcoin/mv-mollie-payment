@@ -521,6 +521,7 @@ public class PaymentService extends Script {
         order.setShippingAddress(shippingAddress);
         order.setLines(orderLines);
 
+        LOG.info("getSavedOrder - saving order: {}", toJsonString(order));
         try {
             crossStorageApi.createOrUpdate(defaultRepo, order);
         } catch (Exception e) {
