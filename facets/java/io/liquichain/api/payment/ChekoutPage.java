@@ -63,6 +63,7 @@ public class ChekoutPage extends Script {
             + "\t<h1>Checkout</h1>\r\n";
         String message = "<p>Cannot find the order<p/>";
         MoOrder order;
+
         try {
             boolean hasPrefix = orderId.startsWith("ord_");
             orderId = hasPrefix ? orderId : "ord_" + orderId;

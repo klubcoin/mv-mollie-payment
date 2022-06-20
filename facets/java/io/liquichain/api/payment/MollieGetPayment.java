@@ -102,7 +102,6 @@ public class MollieGetPayment extends Script {
         }
 
         String status = "created".equals(order.getStatus()) ? "open" : order.getStatus();
-
         result = "{\n" +
             "    \"resource\": \"payment\",\n" +
             "    \"id\": \"" + id + "\",\n" +
