@@ -1,0 +1,20 @@
+{
+  "code" : "moUpdatePayment",
+  "description" : "update payment endpoint",
+  "secured" : true,
+  "checkPathParams" : true,
+  "serviceCode" : "io.liquichain.api.payment.MollieUpdatePayment",
+  "synchronous" : true,
+  "method" : "PUT",
+  "parameterMappings" : [ ],
+  "pathParameters" : [ "paymentId" ],
+  "roles" : [ ],
+  "returnedVariableName" : "result",
+  "serializeResult" : false,
+  "contentType" : "application/json",
+  "basePath" : "pg",
+  "path" : "/v1/payments/{paymentId}",
+  "pool" : {
+    "usePool" : false
+  }
+}
