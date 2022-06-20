@@ -6,6 +6,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.util.*;
@@ -76,7 +77,7 @@ public class MolliePayOrder extends Script {
         return createErrorResponse("500", "Internal Server Error", error);
     }
 
-   public Optional<TransactionReceipt> sendTransactionReceiptRequest(String transactionHash)
+    public Optional<TransactionReceipt> sendTransactionReceiptRequest(String transactionHash)
         throws Exception {
         EthGetTransactionReceipt transactionReceipt = web3j
             .ethGetTransactionReceipt(transactionHash)
@@ -108,6 +109,37 @@ public class MolliePayOrder extends Script {
         return transactionReceiptOptional.get();
     }
 
+    private TransactionReceipt processTransaction(String data) {
+        String transactionHash;
+        try {
+            EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(data).send();
+            transactionHash = ethSendTransaction.getTransactionHash();
+        } catch (IOException e) {
+            throw new RuntimeException(createError(SEND_TRANSACTION_FAILED), e);
+        }
+        LOG.info("pending transactionHash: {}", transactionHash);
+
+        if (transactionHash == null || transactionHash.isEmpty()) {
+            throw new RuntimeException(createError(TRANSACTION_FAILED));
+        }
+
+        TransactionReceipt transactionReceipt;
+        try {
+            transactionReceipt = waitForTransactionReceipt(transactionHash);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return transactionReceipt;
+    }
+
+    private BigInteger computeAmount(MoOrder order) {
+        String currency = order.getCurrency();
+        double amount = order.getAmount();
+        BigDecimal value = new BigDecimal(amount);
+        BigDecimal convertedValue = value.multiply(ConversionRateScript.CONVERSION_RATE.get(currency + "_KLUB"));
+        return new BigInteger(String.valueOf(convertedValue));
+    }
+
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         this.init();
@@ -133,51 +165,47 @@ public class MolliePayOrder extends Script {
             return;
         }
 
-        String transactionHash;
-        try {
-            EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(data).send();
-            transactionHash = ethSendTransaction.getTransactionHash();
-        } catch (IOException e) {
-            result = createError(SEND_TRANSACTION_FAILED);
-            return;
-        }
-        LOG.info("pending transactionHash: {}", transactionHash);
-
-        if (transactionHash == null || transactionHash.isEmpty()) {
-            result = createError(TRANSACTION_FAILED);
-            return;
-        }
-
-        String completedTransactionHash;
-        TransactionReceipt transactionReceipt;
-        try {
-            transactionReceipt = waitForTransactionReceipt(transactionHash);
-            completedTransactionHash = transactionReceipt.getTransactionHash();
-        } catch (Exception e) {
-            result = createError(e.getMessage());
-            return;
-        }
-        LOG.info("completed transactionHash: {}", completedTransactionHash);
-
-        String orderUuid = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
-        MoOrder order;
-        try {
-            order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-            result = createError(e.getMessage());
-            return;
-        }
-
         if (rawTransaction instanceof SignedRawTransaction) {
             SignedRawTransaction signedTransaction = (SignedRawTransaction) rawTransaction;
             Sign.SignatureData signatureData = signedTransaction.getSignatureData();
+
+            String v = toHex(signatureData.getV());
+            String s = toHex(signatureData.getS());
+            String r = toHex(signatureData.getR());
+            String to = normalizeHash(rawTransaction.getTo());
+            BigInteger value = rawTransaction.getValue();
+
+            String orderUuid = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
+            MoOrder order;
             try {
-                String v = toHex(signatureData.getV());
-                String s = toHex(signatureData.getS());
-                String r = toHex(signatureData.getR());
-                String to = normalizeHash(rawTransaction.getTo());
-                BigInteger value = rawTransaction.getValue();
+                order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
+            } catch (Exception e) {
+                LOG.error("Failed to retrieve order: " + orderId, e);
+                result = createError(e.getMessage());
+                return;
+            }
+
+            BigInteger amounToBePaid;
+            try {
+                amounToBePaid = computeAmount(order);
+            } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
+                result = createError(e.getMessage());
+                return;
+            }
+
+            if (value.equals(amounToBePaid)) {
+                TransactionReceipt transactionReceipt;
+                String completedTransactionHash;
+                try {
+                    transactionReceipt = processTransaction(data);
+                    completedTransactionHash = transactionReceipt.getTransactionHash();
+                } catch (RuntimeException e) {
+                    LOG.error(e.getMessage(), e);
+                    result = createError(e.getMessage());
+                    return;
+                }
+                LOG.info("completed transactionHash: {}", completedTransactionHash);
 
                 transaction.setHexHash(completedTransactionHash);
                 transaction.setFromHexHash(normalizeHash(transactionReceipt.getFrom()));
@@ -194,31 +222,40 @@ public class MolliePayOrder extends Script {
                 transaction.setR(r);
                 transaction.setData("{\"type\":\"payonline\",\"description\":\"Pay online payment\"}");
                 transaction.setType("payonline");
-                String uuid = crossStorageApi.createOrUpdate(defaultRepo, transaction);
-                LOG.info("Updated transaction on DB with uuid: {}", uuid);
-            } catch (Exception e) {
-                result = createError(e.getMessage());
-                return;
+                try {
+                    String uuid = crossStorageApi.createOrUpdate(defaultRepo, transaction);
+                    LOG.info("Updated transaction on DB with uuid: {}", uuid);
+                } catch (Exception e) {
+                    result = createError(e.getMessage());
+                    return;
+                }
+
+                try {
+                    order.setStatus("paid");
+                    order.setPaidAt(Instant.now());
+                    order.setAmountCaptured(order.getAmount());
+                    crossStorageApi.createOrUpdate(defaultRepo, order);
+                } catch (Exception e) {
+                    LOG.error(e.getMessage(), e);
+                    result = createError(e.getMessage());
+                    return;
+                }
+
+                callWebhook(order, transaction);
+
+                result = createResponse("{\"status\": \"paid\"}");
+            } else {
+                LOG.error("Amount sent: " + value + " != Amount required: " + amounToBePaid);
+                result = createError("Please send " + amounToBePaid + " KLUB to complete payment.");
             }
+        } else {
+            result = createError("Raw transaction was invalid.");
         }
 
-        try {
-            order.setStatus("paid");
-            order.setPaidAt(Instant.now());
-            order.setAmountCaptured(order.getAmount());
-            crossStorageApi.createOrUpdate(defaultRepo, order);
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-            result = createError(e.getMessage());
-            return;
-        }
-
-        callWebhook(order, transaction);
-
-        result = createResponse("{\"status\": \"paid\"}");
         super.execute(parameters);
     }
 }
+
 
 class HttpService extends Service {
 
