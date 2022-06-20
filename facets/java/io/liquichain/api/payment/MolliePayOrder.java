@@ -1,6 +1,6 @@
 package io.liquichain.api.payment;
 
-import static io.liquichain.api.payment.PaymentUtils.*;
+import static io.liquichain.api.payment.PaymentService.*;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;

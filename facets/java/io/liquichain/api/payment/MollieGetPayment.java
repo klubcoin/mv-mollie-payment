@@ -1,5 +1,7 @@
 package io.liquichain.api.payment;
 
+import static io.liquichain.api.payment.PaymentService.*;
+
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,22 +54,6 @@ public class MollieGetPayment extends Script {
         BASE_URL = config.getProperty("meveo.admin.baseUrl", "http://localhost:8080/");
         String CONTEXT = config.getProperty("meveo.admin.webContext", "meveo");
         MEVEO_BASE_URL = BASE_URL + CONTEXT;
-    }
-
-    public String createErrorResponse(String status, String title, String detail) {
-        String response = "{\n" +
-            "  \"status\": " + status + ",\n" +
-            "  \"title\": \"" + title + "\",\n" +
-            "  \"detail\": \"" + detail + "\",\n" +
-            "  \"_links\": {\n" +
-            "    \"documentation\": {\n" +
-            "      \"href\": \"https://docs.mollie.com/errors\",\n" +
-            "      \"type\": \"text/html\"\n" +
-            "    }\n" +
-            "  }\n" +
-            "}";
-        LOG.debug("error response: {}", response);
-        return response;
     }
 
     @Override

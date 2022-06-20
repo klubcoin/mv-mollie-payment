@@ -1,6 +1,6 @@
 package io.liquichain.api.payment;
 
-import static io.liquichain.api.payment.PaymentUtils.*;
+import static io.liquichain.api.payment.PaymentService.*;
 
 import java.util.Map;
 import java.util.stream.Collectors;

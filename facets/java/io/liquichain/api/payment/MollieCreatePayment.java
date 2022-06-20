@@ -1,12 +1,11 @@
 package io.liquichain.api.payment;
 
-import static io.liquichain.api.payment.PaymentUtils.*;
+import static io.liquichain.api.payment.PaymentService.*;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.ParamBeanFactory;

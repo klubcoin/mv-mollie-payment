@@ -1,6 +1,6 @@
 package io.liquichain.api.payment;
 
-import static io.liquichain.api.payment.PaymentUtils.*;
+import static io.liquichain.api.payment.PaymentService.*;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -10,6 +10,7 @@ import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.ParamBeanFactory;
 import org.meveo.model.customEntities.MoOrder;
+import org.meveo.model.customEntities.Transaction;
 import org.meveo.model.storage.Repository;
 import org.meveo.service.script.Script;
 import org.meveo.service.storage.RepositoryService;
@@ -51,13 +52,15 @@ public class MollieUpdateOrder extends Script {
         String id = "ord_" + order.getUuid();
         String canceledAt = order.getCanceledAt() != null ? order.getCanceledAt().toString() : "";
         String expiredAt = order.getExpiredAt() != null ? order.getExpiredAt().toString() : "";
+        String status = order.getStatus();
+
         result = "{"
             + "\"resource\": \"order\","
             + "\"id\": \"" + id + "\","
             + "\"profileId\": \"pfl_" + order.getUuid() + "\","
             + "\"method\": \"" + order.getMethod() + "\","
             + "\"amount\": " + order.getAmount() + ","
-            + "\"status\": \"created\","
+            + "\"status\": \"" + status + "\","
             + "\"isCancelable\": false,"
             + "\"metadata\": " + order.getMetadata() + ","
             + "\"createdAt\": \"" + order.getCreationDate().toString() + "\","
@@ -82,7 +85,7 @@ public class MollieUpdateOrder extends Script {
                                     "      \"name\": \"" + line.getName() + "\",\n" +
                                     "      \"sku\": \"" + line.getSku() + "\",\n" +
                                     "      \"type\": \"physical\",\n" +
-                                    "      \"status\": \"created\",\n" +
+                                    "      \"status\": \"" + status + "\",\n" +
                                     "      \"metadata\": " + line.getMetadata() + ",\n" +
                                     "      \"isCancelable\": false,\n" +
                                     "      \"quantity\": " + line.getQuantity() + ",\n" +
@@ -124,6 +127,67 @@ public class MollieUpdateOrder extends Script {
                             .collect(Collectors.joining(",\n"));
 
         result += String.format("\"lines\": [%s],", lines);
+
+
+        try {
+            Transaction payment = crossStorageApi.find(defaultRepo, Transaction.class)
+                                                 .by("orderId", id)
+                                                 .getResult();
+            if (payment != null) {
+                String paymentId = "tr_" + payment.getUuid();
+                if ("canceled".equals(status) || "expired".equals(status)) {
+                    callWebhook(order, payment);
+                }
+                String paymentStatus = "created".equals(status) ? "open" : status;
+
+                result += "\"_embedded\": {\"payments\": [{\n" +
+                    "    \"resource\": \"payment\",\n" +
+                    "    \"id\": \"" + paymentId + "\",\n" +
+                    "    \"mode\": \"test\",\n" +
+                    "    \"status\": \"" + paymentStatus + "\",\n" +
+                    "    \"createdAt\": \"" + payment.getCreationDate() + "\",\n" +
+                    "    \"paidAt\": \"" + order.getPaidAt() + "\",\n" +
+                    "    \"canceledAt\": \"" + order.getCanceledAt() + "\",\n" +
+                    "    \"expiredAt\": \"" + order.getExpiredAt() + "\",\n" +
+                    "    \"amount\": {\n" +
+                    "        \"value\": \"" + payment.getValue() + "\",\n" +
+                    "        \"currency\": \"" + payment.getCurrency() + "\"\n" +
+                    "    },\n" +
+                    "    \"description\": \"" + payment.getDescription() + "\",\n" +
+                    "    \"method\": \"" + order.getMethod() + "\",\n" +
+                    "    \"metadata\": " + payment.getMetadata() + ",\n" +
+                    "    \"isCancelable\": false,\n" +
+                    "    \"expiresAt\": \"" + payment.getExpirationDate() + "\",\n" +
+                    "    \"details\": null,\n" +
+                    "    \"profileId\": \"pfl_" + payment.getUuid() + "\",\n" +
+                    "    \"orderId\": \"" + payment.getOrderId() + "\",\n" +
+                    "    \"sequenceType\": \"oneoff\",\n" +
+                    "    \"redirectUrl\": \"" + payment.getRedirectUrl() + "\",\n" +
+                    "    \"webhookUrl\": \"" + payment.getWebhookUrl() + "\",\n" +
+                    "    \"_links\": {\n" +
+                    "        \"self\": {\n" +
+                    "            \"href\": \"" + MEVEO_BASE_URL + "/rest/pg/v1/payments/" + paymentId + "\",\n" +
+                    "            \"type\": \"application/json\"\n" +
+                    "        },\n" +
+                    "        \"checkout\": {\n" +
+                    "            \"href\": \"" + MEVEO_BASE_URL + "/rest/paymentpages/checkout/" + id + "\",\n" +
+                    "            \"type\": \"text/html\"\n" +
+                    "        },\n" +
+                    "        \"dashboard\": {\n" +
+                    "            \"href\": \"" + BASE_URL + "dashboard?orderid=" + id + "\",\n" +
+                    "            \"type\": \"application/json\"\n" +
+                    "        },\n" +
+                    "        \"documentation\": {\n" +
+                    "            \"href\": \"https://docs.liquichain.io/reference/v2/payments-api/get-payment\",\n" +
+                    "            \"type\": \"text/html\"\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "}]},";
+            }
+        } catch (Exception e) {
+            String error = "Failed to retrieve payment for order: " + id;
+            LOG.error(error, e);
+        }
 
         result += "\"_links\": {\n" +
             "    \"self\": {\n" +
