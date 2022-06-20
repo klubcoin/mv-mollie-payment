@@ -43,7 +43,6 @@ public class MolliePayOrder extends Script {
     private static final int SLEEP_DURATION = 1000;
     private static final int ATTEMPTS = 40;
 
-    private Client client;
     private Web3j web3j;
 
     @Inject
@@ -214,23 +213,7 @@ public class MolliePayOrder extends Script {
             return;
         }
 
-        Response response = null;
-        String webhookUrl = order.getWebhookUrl();
-        try {
-            Form form = new Form().param("id", "tr_" + transaction.getUuid());
-            WebTarget target = client.target(webhookUrl);
-            LOG.info("target: {}", target);
-            Invocation.Builder builder = target.request(MediaType.APPLICATION_FORM_URLENCODED);
-            LOG.info("builder: {}", builder);
-            response = builder.post(Entity.form(form));
-        } catch (Exception e) {
-            String error = String.format("Failed invoking webhook: %s", webhookUrl);
-            LOG.error(error, e);
-        } finally {
-            if (response != null) {
-                response.close();
-            }
-        }
+        callWebhook(order, transaction);
 
         result = createResponse("{\"status\": \"paid\"}");
         super.execute(parameters);

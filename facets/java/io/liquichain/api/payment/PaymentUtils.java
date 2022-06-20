@@ -24,6 +24,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.crypto.Hash;
 
+import javax.ws.rs.client.*;
+import javax.ws.rs.core.Form;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 public class PaymentUtils extends Script {
     private static final Logger LOG = LoggerFactory.getLogger(PaymentUtils.class);
     private static final ObjectMapper mapper = new ObjectMapper();
@@ -167,6 +172,27 @@ public class PaymentUtils extends Script {
         }
     }
 
+    public static void callWebhook(MoOrder order, Transaction transaction) {
+        Client client = ClientBuilder.newClient();
+        Response response = null;
+        String webhookUrl = order.getWebhookUrl();
+        try {
+            Form form = new Form().param("id", "tr_" + transaction.getUuid());
+            WebTarget target = client.target(webhookUrl);
+            LOG.info("target: {}", target);
+            Invocation.Builder builder = target.request(MediaType.APPLICATION_FORM_URLENCODED);
+            LOG.info("builder: {}", builder);
+            response = builder.post(Entity.form(form));
+        } catch (Exception e) {
+            String error = String.format("Failed invoking webhook: %s", webhookUrl);
+            LOG.error(error, e);
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+        }
+    }
+
     private static String getFieldValue(Object object, Field field) {
         field.setAccessible(true);
         try {
@@ -205,7 +231,7 @@ public class PaymentUtils extends Script {
     }
 
     public static MoAddress parseAddress(CrossStorageApi crossStorageApi, Repository defaultRepo,
-        MoAddress existingAddress, Map<String, Object> parameters)  {
+        MoAddress existingAddress, Map<String, Object> parameters) {
         if (parameters == null && existingAddress == null) {
             return null;
         }

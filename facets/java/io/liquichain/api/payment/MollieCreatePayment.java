@@ -88,8 +88,8 @@ public class MollieCreatePayment extends Script {
         transaction.setCreationDate(createdAt);
         transaction.setExpirationDate(expiresAt);
         transaction.setOrderId(orderId);
-        transaction.setData("{\"type\":\"mollie\",\"description\":\"Mollie Payment\"}");
-        transaction.setType("mollie");
+        transaction.setData("{\"type\":\"payonline\",\"description\":\"Pay online payment\"}");
+        transaction.setType("payonline");
         transaction.setUuid(generateUUID(transaction));
 
         String uuid;
