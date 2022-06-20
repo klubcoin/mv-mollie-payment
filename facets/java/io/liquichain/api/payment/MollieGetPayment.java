@@ -107,7 +107,11 @@ public class MollieGetPayment extends Script {
             "    \"resource\": \"payment\",\n" +
             "    \"id\": \"" + id + "\",\n" +
             "    \"mode\": \"test\",\n" +
+            "    \"status\": \"" + status + "\",\n" +
             "    \"createdAt\": \"" + transaction.getCreationDate() + "\",\n" +
+            "    \"paidAt\": \"" + order.getPaidAt() + "\",\n" +
+            "    \"canceledAt\": \"" + order.getCanceledAt() + "\",\n" +
+            "    \"expiredAt\": \"" + order.getExpiredAt() + "\",\n" +
             "    \"amount\": {\n" +
             "        \"value\": \"" + transaction.getValue() + "\",\n" +
             "        \"currency\": \"" + transaction.getCurrency() + "\"\n" +
@@ -115,8 +119,6 @@ public class MollieGetPayment extends Script {
             "    \"description\": \"" + transaction.getDescription() + "\",\n" +
             "    \"method\": \"" + order.getMethod() + "\",\n" +
             "    \"metadata\": " + transaction.getMetadata() + ",\n" +
-            "    \"status\": \"" + status + "\",\n" +
-            "    \"paidAt\": \"" + order.getPaidAt() + "\",\n" +
             "    \"isCancelable\": false,\n" +
             "    \"expiresAt\": \"" + transaction.getExpirationDate() + "\",\n" +
             "    \"details\": null,\n" +
