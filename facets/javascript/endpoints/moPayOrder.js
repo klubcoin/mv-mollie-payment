@@ -1,60 +1,45 @@
-import EndpointInterface from "#{API_BASE_URL}/api/rest/endpoint/EndpointInterface.js";
-
-// the request schema, this should be updated
-// whenever changes to the endpoint parameters are made
-// this is important because this is used to validate and parse the request parameters
-const requestSchema = {
-  "title" : "moPayOrderRequest",
-  "id" : "moPayOrderRequest",
-  "default" : "Schema definition for moPayOrder",
-  "$schema" : "http://json-schema.org/draft-07/schema",
-  "type" : "object",
-  "properties" : {
-    "data" : {
-      "title" : "data",
-      "type" : "string",
-      "minLength" : 1
-    }
-  }
+const moPayOrder = async (parameters) =>  {
+	const baseUrl = window.location.origin;
+	const url = new URL(`${window.location.pathname.split('/')[1]}/rest/moPayOrder/${parameters.orderId}`, baseUrl);
+	return fetch(url.toString(), {
+		method: 'POST', 
+		headers : new Headers({
+ 			'Content-Type': 'application/json'
+		}),
+		body: JSON.stringify({
+			data : parameters.data
+		})
+	});
 }
 
-// the response schema, this should be updated
-// whenever changes to the endpoint parameters are made
-// this is important because this could be used to parse the result
-const responseSchema = {
-  "title" : "moPayOrderResponse",
-  "id" : "moPayOrderResponse",
-  "default" : "Schema definition for moPayOrder",
-  "$schema" : "http://json-schema.org/draft-07/schema",
-  "type" : "object",
-  "properties" : {
-    "result" : {
-      "title" : "result",
-      "type" : "string",
-      "minLength" : 1
-    }
-  }
+const moPayOrderForm = (container) => {
+	const html = `<form id='moPayOrder-form'>
+		<div id='moPayOrder-orderId-form-field'>
+			<label for='orderId'>orderId</label>
+			<input type='text' id='moPayOrder-orderId-param' name='orderId'/>
+		</div>
+		<div id='moPayOrder-data-form-field'>
+			<label for='data'>data</label>
+			<input type='text' id='moPayOrder-data-param' name='data'/>
+		</div>
+		<button type='button'>Test</button>
+	</form>`;
+
+	container.insertAdjacentHTML('beforeend', html)
+
+	const orderId = container.querySelector('#moPayOrder-orderId-param');
+	const data = container.querySelector('#moPayOrder-data-param');
+
+	container.querySelector('#moPayOrder-form button').onclick = () => {
+		const params = {
+			orderId : orderId.value !== "" ? orderId.value : undefined,
+			data : data.value !== "" ? data.value : undefined
+		};
+
+		moPayOrder(params).then(r => r.text().then(
+				t => alert(t)
+			));
+	};
 }
 
-// should contain offline mock data, make sure it adheres to the response schema
-const mockResult = {};
-
-class moPayOrder extends EndpointInterface {
-	constructor() {
-		// name and http method, these are inserted when code is generated
-		super("moPayOrder", "POST");
-		this.requestSchema = requestSchema;
-		this.responseSchema = responseSchema;
-		this.mockResult = mockResult;
-	}
-
-	getRequestSchema() {
-		return this.requestSchema;
-	}
-
-	getResponseSchema() {
-		return this.responseSchema;
-	}
-}
-
-export default new moPayOrder();
+export { moPayOrder, moPayOrderForm };
