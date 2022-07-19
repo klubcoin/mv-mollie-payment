@@ -142,7 +142,8 @@ public class MolliePayOrder extends Script {
         double amount = order.getAmount();
         BigDecimal value = new BigDecimal(amount);
         BigDecimal convertedValue = value.multiply(ConversionRateScript.CONVERSION_RATE.get(currency + "_TO_KLUB"));
-        return new BigInteger(String.valueOf(convertedValue));
+        LOG.info("convertedValue: {}", convertedValue);
+        return convertedValue.toBigInteger();
     }
 
     @Override
@@ -197,6 +198,8 @@ public class MolliePayOrder extends Script {
                 result = createError(e.getMessage());
                 return;
             }
+
+            LOG.info("amounToBePaid: {}, value: {}", amounToBePaid, value);
 
             if (value.equals(amounToBePaid)) {
                 TransactionReceipt transactionReceipt;
