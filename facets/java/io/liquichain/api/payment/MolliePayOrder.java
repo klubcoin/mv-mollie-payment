@@ -55,10 +55,15 @@ public class MolliePayOrder extends Script {
 
     private Repository defaultRepo;
     private String orderId;
+    private String data;
     private String result;
 
     public String getResult() {
         return result;
+    }
+
+    public void setData(String data) {
+        this.data = data;
     }
 
     public void setOrderId(String orderId) {
@@ -144,9 +149,9 @@ public class MolliePayOrder extends Script {
     public void execute(Map<String, Object> parameters) throws BusinessException {
         this.init();
         LOG.info(" payOrder parameters: {}", parameters);
-        String data = (String) parameters.get("data");
         Transaction transaction;
         try {
+            orderId = orderId != null && orderId.startsWith("ord_") ? orderId : "ord_" + orderId;
             transaction = crossStorageApi.find(defaultRepo, Transaction.class).by("orderId", orderId).getResult();
         } catch (Exception e) {
             String error = String.format(PAYMENT_NOT_FOUND, orderId);
