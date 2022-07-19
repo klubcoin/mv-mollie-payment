@@ -145,7 +145,6 @@ public class MolliePayOrder extends Script {
         this.init();
         LOG.info(" payOrder parameters: {}", parameters);
         String data = (String) parameters.get("data");
-        String orderId = (String) parameters.get("orderId");
         Transaction transaction;
         try {
             transaction = crossStorageApi.find(defaultRepo, Transaction.class).by("orderId", orderId).getResult();
