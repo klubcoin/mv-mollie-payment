@@ -1,0 +1,20 @@
+{
+  "code" : "moPayOrder",
+  "description" : "Pay order endpoint",
+  "secured" : true,
+  "checkPathParams" : true,
+  "serviceCode" : "io.liquichain.api.payment.MolliePayOrder",
+  "synchronous" : true,
+  "method" : "POST",
+  "parameterMappings" : [ ],
+  "pathParameters" : [ "orderId" ],
+  "roles" : [ ],
+  "returnedVariableName" : "result",
+  "serializeResult" : false,
+  "contentType" : "application/json",
+  "basePath" : "pg",
+  "path" : "/v1/payOrder/{orderId}",
+  "pool" : {
+    "usePool" : false
+  }
+}
