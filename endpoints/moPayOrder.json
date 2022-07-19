@@ -1,7 +1,7 @@
 {
   "code" : "moPayOrder",
   "description" : "Pay order endpoint",
-  "secured" : true,
+  "secured" : false,
   "checkPathParams" : true,
   "serviceCode" : "io.liquichain.api.payment.MolliePayOrder",
   "synchronous" : true,
