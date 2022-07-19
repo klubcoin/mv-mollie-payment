@@ -141,7 +141,7 @@ public class MolliePayOrder extends Script {
         String currency = order.getCurrency();
         double amount = order.getAmount();
         BigDecimal value = new BigDecimal(amount);
-        BigDecimal convertedValue = value.multiply(ConversionRateScript.CONVERSION_RATE.get(currency + "_KLUB"));
+        BigDecimal convertedValue = value.multiply(ConversionRateScript.CONVERSION_RATE.get(currency + "_TO_KLUB"));
         return new BigInteger(String.valueOf(convertedValue));
     }
 
