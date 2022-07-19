@@ -3,7 +3,7 @@
   "description" : "payment checkout page",
   "secured" : false,
   "checkPathParams" : false,
-  "serviceCode" : "io.liquichain.api.payment.ChekoutPage",
+  "serviceCode" : "io.liquichain.api.payment.CheckoutPage",
   "synchronous" : true,
   "method" : "GET",
   "parameterMappings" : [ ],

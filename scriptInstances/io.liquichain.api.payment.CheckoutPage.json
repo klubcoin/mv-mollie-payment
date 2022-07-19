@@ -1,5 +1,5 @@
 {
-  "code" : "io.liquichain.api.payment.ChekoutPage",
+  "code" : "io.liquichain.api.payment.CheckoutPage",
   "description" : "Payment checkout page",
   "inputs" : [ {
     "name" : "orderId",
