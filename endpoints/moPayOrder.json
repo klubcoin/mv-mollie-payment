@@ -6,7 +6,12 @@
   "serviceCode" : "io.liquichain.api.payment.MolliePayOrder",
   "synchronous" : true,
   "method" : "POST",
-  "parameterMappings" : [ ],
+  "parameterMappings" : [ {
+    "serviceParameter" : "data",
+    "multivalued" : false,
+    "parameterName" : "data",
+    "valueRequired" : false
+  } ],
   "pathParameters" : [ "orderId" ],
   "roles" : [ ],
   "returnedVariableName" : "result",
