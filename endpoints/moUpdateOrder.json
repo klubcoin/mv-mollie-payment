@@ -1,0 +1,20 @@
+{
+  "code" : "moUpdateOrder",
+  "description" : "Update order",
+  "secured" : false,
+  "checkPathParams" : false,
+  "serviceCode" : "io.liquichain.api.payment.MollieUpdateOrder",
+  "synchronous" : true,
+  "method" : "PUT",
+  "parameterMappings" : [ ],
+  "pathParameters" : [ ],
+  "roles" : [ ],
+  "returnedVariableName" : "result",
+  "serializeResult" : false,
+  "contentType" : "application/json",
+  "basePath" : "pg",
+  "path" : "/v1/orders",
+  "pool" : {
+    "usePool" : false
+  }
+}
