@@ -5,14 +5,26 @@
     "id": "MoOrderLine",
     "title": "Order Line",
     "type": "object",
-    "properties": {"metadata": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "description": "Metadata",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_MoOrderLine_metadata",
-        "title": "MoOrderLine.metadata",
-        "type": "string"
-    }}
+    "properties": {
+        "metadata": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Metadata",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_metadata",
+            "title": "MoOrderLine.metadata",
+            "type": "string"
+        },
+        "vatAmount": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "VAT amount",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_vatAmount",
+            "title": "MoOrderLine.vatAmount",
+            "type": "number"
+        }
+    }
 }
