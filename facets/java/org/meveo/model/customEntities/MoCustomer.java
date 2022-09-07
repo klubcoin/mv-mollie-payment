@@ -21,6 +21,8 @@ public class MoCustomer implements CustomEntity {
 
     private String metadata;
 
+    private String id;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -44,6 +46,14 @@ public class MoCustomer implements CustomEntity {
 
     public void setMetadata(String metadata) {
         this.metadata = metadata;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override()
