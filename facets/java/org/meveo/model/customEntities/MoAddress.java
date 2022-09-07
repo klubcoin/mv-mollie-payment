@@ -19,6 +19,8 @@ public class MoAddress implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private String streetAdditional;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -34,6 +36,14 @@ public class MoAddress implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public String getStreetAdditional() {
+        return streetAdditional;
+    }
+
+    public void setStreetAdditional(String streetAdditional) {
+        this.streetAdditional = streetAdditional;
     }
 
     @Override()
