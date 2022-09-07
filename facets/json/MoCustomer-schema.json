@@ -49,6 +49,17 @@
             "title": "MoCustomer.id",
             "type": "string",
             "maxLength": 255
+        },
+        "email": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Email Address",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoCustomer_email",
+            "title": "MoCustomer.email",
+            "type": "string",
+            "maxLength": 255
         }
     }
 }
