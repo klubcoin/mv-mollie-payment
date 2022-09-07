@@ -1,53 +1,33 @@
-import EndpointInterface from "#{API_BASE_URL}/api/rest/endpoint/EndpointInterface.js";
-
-// the request schema, this should be updated
-// whenever changes to the endpoint parameters are made
-// this is important because this is used to validate and parse the request parameters
-const requestSchema = {
-  "title" : "moGetPaymentRequest",
-  "id" : "moGetPaymentRequest",
-  "default" : "Schema definition for moGetPayment",
-  "$schema" : "http://json-schema.org/draft-07/schema",
-  "type" : "object"
+const moGetPayment = async (parameters) =>  {
+	const baseUrl = window.location.origin;
+	const url = new URL(`${window.location.pathname.split('/')[1]}/rest/moGetPayment/${parameters.paymentId}`, baseUrl);
+	return fetch(url.toString(), {
+		method: 'GET'
+	});
 }
 
-// the response schema, this should be updated
-// whenever changes to the endpoint parameters are made
-// this is important because this could be used to parse the result
-const responseSchema = {
-  "title" : "moGetPaymentResponse",
-  "id" : "moGetPaymentResponse",
-  "default" : "Schema definition for moGetPayment",
-  "$schema" : "http://json-schema.org/draft-07/schema",
-  "type" : "object",
-  "properties" : {
-    "result" : {
-      "title" : "result",
-      "type" : "string",
-      "minLength" : 1
-    }
-  }
+const moGetPaymentForm = (container) => {
+	const html = `<form id='moGetPayment-form'>
+		<div id='moGetPayment-paymentId-form-field'>
+			<label for='paymentId'>paymentId</label>
+			<input type='text' id='moGetPayment-paymentId-param' name='paymentId'/>
+		</div>
+		<button type='button'>Test</button>
+	</form>`;
+
+	container.insertAdjacentHTML('beforeend', html)
+
+	const paymentId = container.querySelector('#moGetPayment-paymentId-param');
+
+	container.querySelector('#moGetPayment-form button').onclick = () => {
+		const params = {
+			paymentId : paymentId.value !== "" ? paymentId.value : undefined
+		};
+
+		moGetPayment(params).then(r => r.text().then(
+				t => alert(t)
+			));
+	};
 }
 
-// should contain offline mock data, make sure it adheres to the response schema
-const mockResult = {};
-
-class moGetPayment extends EndpointInterface {
-	constructor() {
-		// name and http method, these are inserted when code is generated
-		super("moGetPayment", "GET");
-		this.requestSchema = requestSchema;
-		this.responseSchema = responseSchema;
-		this.mockResult = mockResult;
-	}
-
-	getRequestSchema() {
-		return this.requestSchema;
-	}
-
-	getResponseSchema() {
-		return this.responseSchema;
-	}
-}
-
-export default new moGetPayment();
+export { moGetPayment, moGetPaymentForm };
