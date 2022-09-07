@@ -5,15 +5,27 @@
     "id": "MoOrder",
     "title": "Order",
     "type": "object",
-    "properties": {"expiredAt": {
-        "storages": ["SQL"],
-        "nullable": true,
-        "format": "date-time",
-        "description": "Expired at",
-        "readOnly": false,
-        "versionable": false,
-        "id": "CE_MoOrder_expiredAt",
-        "title": "MoOrder.expiredAt",
-        "type": "string"
-    }}
+    "properties": {
+        "expiredAt": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Expired at",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_expiredAt",
+            "title": "MoOrder.expiredAt",
+            "type": "string"
+        },
+        "metadata": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "metadata",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_metadata",
+            "title": "MoOrder.metadata",
+            "type": "string"
+        }
+    }
 }
