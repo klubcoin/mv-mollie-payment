@@ -44,6 +44,8 @@ public class MoOrderLine implements CustomEntity {
 
     private String category;
 
+    private String productUrl;
+
     private String sku;
 
     @Override()
@@ -157,6 +159,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getProductUrl() {
+        return productUrl;
+    }
+
+    public void setProductUrl(String productUrl) {
+        this.productUrl = productUrl;
     }
 
     public String getSku() {
