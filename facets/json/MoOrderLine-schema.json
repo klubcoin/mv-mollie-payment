@@ -60,6 +60,17 @@
             "type": "string",
             "maxLength": 20
         },
+        "creationDate": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Creation date",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_creationDate",
+            "title": "MoOrderLine.creationDate",
+            "type": "string"
+        },
         "type": {
             "storages": ["SQL"],
             "nullable": true,
