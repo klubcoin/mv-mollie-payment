@@ -178,7 +178,7 @@ public class MolliePayOrder extends Script {
             String s = toHex(signatureData.getS());
             String r = toHex(signatureData.getR());
             String to = normalizeHash(rawTransaction.getTo());
-            BigInteger value = rawTransaction.getTransaction().getValue();
+            BigInteger value = signedTransaction.getTransaction().getValue();
 
             String orderUuid = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
             MoOrder order;
