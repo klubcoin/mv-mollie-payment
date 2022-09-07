@@ -80,6 +80,17 @@
             "title": "MoOrder.expiredAt",
             "type": "string"
         },
+        "canceledAt": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "Canceled at",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_canceledAt",
+            "title": "MoOrder.canceledAt",
+            "type": "string"
+        },
         "amountRefunded": {
             "storages": ["SQL"],
             "nullable": true,
