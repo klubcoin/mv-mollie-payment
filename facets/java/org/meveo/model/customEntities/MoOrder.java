@@ -30,6 +30,8 @@ public class MoOrder implements CustomEntity {
 
     private Instant paidAt;
 
+    private String currency;
+
     private String assignedTo;
 
     private String email;
@@ -93,6 +95,14 @@ public class MoOrder implements CustomEntity {
 
     public void setPaidAt(Instant paidAt) {
         this.paidAt = paidAt;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
     public String getAssignedTo() {
