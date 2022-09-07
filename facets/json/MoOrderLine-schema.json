@@ -59,6 +59,16 @@
             "type": "string",
             "maxLength": 255
         },
+        "discountAmount": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Discount amount",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_discountAmount",
+            "title": "MoOrderLine.discountAmount",
+            "type": "number"
+        },
         "currency": {
             "storages": ["SQL"],
             "nullable": true,
