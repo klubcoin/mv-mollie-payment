@@ -8,5 +8,5 @@
   "executionRoles" : [ ],
   "sourcingRoles" : [ ],
   "mavenDependencies" : [ ],
-  "importScriptInstances" : [ "org.meveo.model.customEntities.MoOrder" ]
+  "importScriptInstances" : [ ]
 }
