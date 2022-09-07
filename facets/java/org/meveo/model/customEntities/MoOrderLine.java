@@ -30,6 +30,8 @@ public class MoOrderLine implements CustomEntity {
 
     private String name;
 
+    private Double discountAmount;
+
     private String currency;
 
     private String category;
@@ -95,6 +97,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Double getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(Double discountAmount) {
+        this.discountAmount = discountAmount;
     }
 
     public String getCurrency() {
