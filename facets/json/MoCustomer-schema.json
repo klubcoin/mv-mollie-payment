@@ -28,6 +28,17 @@
             "type": "string",
             "maxLength": 255
         },
+        "name": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Customer Name",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoCustomer_name",
+            "title": "MoCustomer.name",
+            "type": "string",
+            "maxLength": 255
+        },
         "id": {
             "storages": ["SQL"],
             "nullable": true,
