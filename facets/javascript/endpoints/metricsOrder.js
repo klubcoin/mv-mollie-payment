@@ -1,28 +1,53 @@
-const metricsOrder = async (parameters) =>  {
-	const baseUrl = window.location.origin;
-	const url = new URL(`${window.location.pathname.split('/')[1]}/rest/metricsOrder/`, baseUrl);
-	return fetch(url.toString(), {
-		method: 'GET'
-	});
+import EndpointInterface from "#{API_BASE_URL}/api/rest/endpoint/EndpointInterface.js";
+
+// the request schema, this should be updated
+// whenever changes to the endpoint parameters are made
+// this is important because this is used to validate and parse the request parameters
+const requestSchema = {
+  "title" : "metricsOrderRequest",
+  "id" : "metricsOrderRequest",
+  "default" : "Schema definition for metricsOrder",
+  "$schema" : "http://json-schema.org/draft-07/schema",
+  "type" : "object"
 }
 
-const metricsOrderForm = (container) => {
-	const html = `<form id='metricsOrder-form'>
-		<button type='button'>Test</button>
-	</form>`;
-
-	container.insertAdjacentHTML('beforeend', html)
-
-
-	container.querySelector('#metricsOrder-form button').onclick = () => {
-		const params = {
-
-		};
-
-		metricsOrder(params).then(r => r.text().then(
-				t => alert(t)
-			));
-	};
+// the response schema, this should be updated
+// whenever changes to the endpoint parameters are made
+// this is important because this could be used to parse the result
+const responseSchema = {
+  "title" : "metricsOrderResponse",
+  "id" : "metricsOrderResponse",
+  "default" : "Schema definition for metricsOrder",
+  "$schema" : "http://json-schema.org/draft-07/schema",
+  "type" : "object",
+  "properties" : {
+    "result" : {
+      "title" : "result",
+      "type" : "string",
+      "minLength" : 1
+    }
+  }
 }
 
-export { metricsOrder, metricsOrderForm };
+// should contain offline mock data, make sure it adheres to the response schema
+const mockResult = {};
+
+class metricsOrder extends EndpointInterface {
+	constructor() {
+		// name and http method, these are inserted when code is generated
+		super("metricsOrder", "GET");
+		this.requestSchema = requestSchema;
+		this.responseSchema = responseSchema;
+		this.mockResult = mockResult;
+	}
+
+	getRequestSchema() {
+		return this.requestSchema;
+	}
+
+	getResponseSchema() {
+		return this.responseSchema;
+	}
+}
+
+export default new metricsOrder();
