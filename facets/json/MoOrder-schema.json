@@ -17,6 +17,17 @@
             "title": "MoOrder.expiredAt",
             "type": "string"
         },
+        "consumerDateOfBirth": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "format": "date-time",
+            "description": "date of birth",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrder_consumerDateOfBirth",
+            "title": "MoOrder.consumerDateOfBirth",
+            "type": "string"
+        },
         "metadata": {
             "storages": ["SQL"],
             "nullable": true,
