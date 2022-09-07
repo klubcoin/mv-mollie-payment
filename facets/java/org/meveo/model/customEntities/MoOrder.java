@@ -24,6 +24,8 @@ public class MoOrder implements CustomEntity {
 
     private String metadata;
 
+    private Instant paidAt;
+
     private String assignedTo;
 
     @Override()
@@ -57,6 +59,14 @@ public class MoOrder implements CustomEntity {
 
     public void setMetadata(String metadata) {
         this.metadata = metadata;
+    }
+
+    public Instant getPaidAt() {
+        return paidAt;
+    }
+
+    public void setPaidAt(Instant paidAt) {
+        this.paidAt = paidAt;
     }
 
     public String getAssignedTo() {
