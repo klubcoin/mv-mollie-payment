@@ -6,6 +6,16 @@
     "title": "Order Line",
     "type": "object",
     "properties": {
+        "unitPrice": {
+            "storages": ["SQL"],
+            "nullable": true,
+            "description": "Unit price",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoOrderLine_unitPrice",
+            "title": "MoOrderLine.unitPrice",
+            "type": "number"
+        },
         "metadata": {
             "storages": ["SQL"],
             "nullable": true,
