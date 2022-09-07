@@ -4,5 +4,15 @@
     "$schema": "http://json-schema.org/draft-07/schema",
     "id": "MoOrderLine",
     "title": "Order Line",
-    "type": "object"
+    "type": "object",
+    "properties": {"metadata": {
+        "storages": ["SQL"],
+        "nullable": true,
+        "description": "Metadata",
+        "readOnly": false,
+        "versionable": false,
+        "id": "CE_MoOrderLine_metadata",
+        "title": "MoOrderLine.metadata",
+        "type": "string"
+    }}
 }
