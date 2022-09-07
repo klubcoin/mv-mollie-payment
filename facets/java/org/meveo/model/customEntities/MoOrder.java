@@ -23,6 +23,8 @@ public class MoOrder implements CustomEntity {
     @JsonIgnore()
     private DBStorageType storages;
 
+    private Double amount;
+
     private Instant consumerDateOfBirth;
 
     private String metadata;
@@ -74,6 +76,14 @@ public class MoOrder implements CustomEntity {
 
     public void setStorages(DBStorageType storages) {
         this.storages = storages;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 
     public Instant getConsumerDateOfBirth() {
