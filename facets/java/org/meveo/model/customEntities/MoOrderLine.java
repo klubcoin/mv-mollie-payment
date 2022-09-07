@@ -23,6 +23,8 @@ public class MoOrderLine implements CustomEntity {
 
     private String imageUrl;
 
+    private String name;
+
     private String category;
 
     private Double vatAmount;
@@ -58,6 +60,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getCategory() {
