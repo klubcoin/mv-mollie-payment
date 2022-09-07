@@ -22,6 +22,8 @@ public class MoOrderLine implements CustomEntity {
 
     private String metadata;
 
+    private Long quantity;
+
     private String imageUrl;
 
     private String name;
@@ -59,6 +61,14 @@ public class MoOrderLine implements CustomEntity {
 
     public void setMetadata(String metadata) {
         this.metadata = metadata;
+    }
+
+    public Long getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
     }
 
     public String getImageUrl() {
