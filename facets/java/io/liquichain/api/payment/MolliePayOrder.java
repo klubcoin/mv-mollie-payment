@@ -180,7 +180,6 @@ public class MolliePayOrder extends Script {
             String to = normalizeHash(rawTransaction.getTo());
             BigInteger value = rawTransaction.getTransaction().getValue();
 
-
             String orderUuid = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
             MoOrder order;
             try {
