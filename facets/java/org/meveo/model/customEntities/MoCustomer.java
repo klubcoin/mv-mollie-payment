@@ -28,6 +28,8 @@ public class MoCustomer implements CustomEntity {
 
     private String id;
 
+    private String email;
+
     @Override()
     public String getUuid() {
         return uuid;
@@ -75,6 +77,14 @@ public class MoCustomer implements CustomEntity {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override()
