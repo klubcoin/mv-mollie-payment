@@ -142,8 +142,9 @@ public class MolliePayOrder extends Script {
         double amount = order.getAmount();
         BigDecimal value = new BigDecimal(amount);
         BigDecimal convertedValue = value.multiply(ConversionRateScript.CONVERSION_RATE.get(currency + "_TO_KLUB"));
-        LOG.info("convertedValue: {}", convertedValue);
-        return convertedValue.toBigInteger();
+        BigInteger computedAmount = convertedValue.multiply(BigDecimal.TEN.pow(18)).toBigInteger();
+        LOG.info("computedAmount: {}", computedAmount);
+        return computedAmount;
     }
 
     @Override
@@ -262,7 +263,6 @@ public class MolliePayOrder extends Script {
         } else {
             result = createError("Raw transaction was invalid.");
         }
-
         super.execute(parameters);
     }
 }
