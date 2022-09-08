@@ -178,9 +178,12 @@ public class MolliePayOrder extends Script {
             String s = toHex(signatureData.getS());
             String r = toHex(signatureData.getR());
             String to = normalizeHash(rawTransaction.getTo());
-            BigInteger value = signedTransaction.getTransaction().getValue();
+            String transactionData = signedTransaction.getTransaction().getData();
+            BigInteger value = transactionData.startsWith("a9059cbb")
+                ? new BigInteger(transactionData.substring(72), 16)
+                : signedTransaction.getTransaction().getValue();
 
-            String orderUuid = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
+            String orderUuid = orderId.startsWith("ord_") ?  orderId.substring(4) : orderId;
             MoOrder order;
             try {
                 order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
