@@ -55,7 +55,19 @@ public class MollieUpdateOrder extends Script {
         String status = order.getStatus();
 
         if ("expired".equals(status)) {
-            // TODO - call woocommerce order update status
+            try{
+                Transaction payment = crossStorageApi.find(defaultRepo, Transaction.class)
+                                                     .by("orderId", id)
+                                                     .getResult();
+                if(payment != null){
+                    callWebhook(order, payment);
+                }
+            } catch (Exception e){
+                LOG.error(e.getMessage(), e);
+                result = createErrorResponse("500", "Internal Server Error", e.getMessage());
+                return;
+            }
+
             result = createErrorResponse(
                 "400", "Expired", "QR Code Purchase Verification already expired. Please try again."
             );
