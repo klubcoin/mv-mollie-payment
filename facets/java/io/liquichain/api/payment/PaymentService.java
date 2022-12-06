@@ -375,18 +375,18 @@ public class PaymentService extends Script {
         order.setWebhookUrl(normalize(webhookUrl, order.getWebhookUrl()));
 
         String status = "created";
+        Instant now = Instant.now();
         if (uuid == null) {
             order.setUuid(generateUUID(order));
-            order.setCreationDate(Instant.now());
-            order.setExpiresAt(Instant.now().plus(Duration.ofDays(1)));
+            order.setCreationDate(now);
+            order.setExpiresAt(now.plus(Duration.ofDays(1)));
         } else {
             status = normalize(getString(parameters, "status"), order.getStatus());
-            if ("canceled".equals(status)) {
-                order.setCanceledAt(Instant.now());
-            }
-            if ("expired".equals(status) || Instant.now().isAfter(order.getExpiresAt())) {
+            if (now.isAfter(order.getExpiresAt())) {
                 status = "expired";
-                order.setExpiredAt(Instant.now());
+                order.setExpiredAt(now);
+            } else if ("canceled".equals(status)) {
+                order.setCanceledAt(now);
             }
         }
         order.setStatus(status);

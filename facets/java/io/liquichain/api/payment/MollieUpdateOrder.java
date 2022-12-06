@@ -54,6 +54,14 @@ public class MollieUpdateOrder extends Script {
         String expiredAt = order.getExpiredAt() != null ? order.getExpiredAt().toString() : "";
         String status = order.getStatus();
 
+        if ("expired".equals(status)) {
+            // TODO - call woocommerce order update status
+            result = createErrorResponse(
+                "400", "Expired", "QR Code Purchase Verification already expired. Please try again."
+            );
+            return;
+        }
+
         result = "{"
             + "\"resource\": \"order\","
             + "\"id\": \"" + id + "\","
@@ -135,7 +143,7 @@ public class MollieUpdateOrder extends Script {
                                                  .getResult();
             if (payment != null) {
                 String paymentId = "tr_" + payment.getUuid();
-                if ("canceled".equals(status) || "expired".equals(status)) {
+                if ("canceled".equals(status)) {
                     callWebhook(order, payment);
                 }
                 String paymentStatus = "created".equals(status) ? "open" : status;
