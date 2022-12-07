@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.web3j.crypto.Hash;
 
 public class MollieCreatePayment extends Script {
-    private static final Logger LOG = LoggerFactory.getLogger(MollieCreateOrder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MollieCreatePayment.class);
 
     private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
     private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
@@ -97,8 +97,15 @@ public class MollieCreatePayment extends Script {
 
         MoOrder order;
         try {
-            String orderUuid = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
-            order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
+            boolean isUuid = orderId.startsWith("ord_");
+            if(isUuid){
+                String orderUuid = orderId.substring(4);
+                order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
+            } else {
+                order = crossStorageApi.find(defaultRepo, MoOrder.class)
+                                       .by("orderNumber", orderId)
+                                       .getResult();
+            }
         } catch (Exception e) {
             String error = "Cannot retrieve order: " + orderId;
             LOG.error(error, e);
