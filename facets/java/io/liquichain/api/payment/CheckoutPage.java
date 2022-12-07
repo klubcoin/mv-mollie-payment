@@ -111,7 +111,7 @@ public class CheckoutPage extends Script {
                     + "\t\t\t\t\tsetTimeout(()=> { checkPaymentStatus(\"" + orderId + "\") }, 15000);\n"
                     + "\t\t\t\t}\n"
                     + "\t\t\t}\n\n"
-                    + "\t\t\tcheckPaymentStatus(\"" + orderId + "\");\n"
+                    + "\t\t\tcheckPaymentStatus(\"" + normalizedId + "\");\n"
                     + "\t\t})();\n"
                     + "\t</script>";
             } else {
