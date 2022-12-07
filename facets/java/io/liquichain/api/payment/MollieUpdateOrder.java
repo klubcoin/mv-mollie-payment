@@ -40,6 +40,7 @@ public class MollieUpdateOrder extends Script {
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
+        LOG.info("MollieUpdateOrder {}", parameters);
         MoOrder order;
         try {
             order = getSavedOrder(crossStorageApi, defaultRepo, parameters);
