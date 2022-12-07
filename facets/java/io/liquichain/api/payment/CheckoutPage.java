@@ -65,10 +65,16 @@ public class CheckoutPage extends Script {
         MoOrder order;
 
         try {
-            boolean hasPrefix = orderId.startsWith("ord_");
-            orderId = hasPrefix ? orderId : "ord_" + orderId;
-            String orderUuid = orderId.substring(4);
-            order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
+            boolean isUuid = orderId.startsWith("ord_");
+            if (isUuid) {
+                String orderUuid = orderId.substring(4);
+                order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
+            } else {
+                order = crossStorageApi.find(defaultRepo, MoOrder.class)
+                                       .by("orderNumber", orderId)
+                                       .getResult();
+            }
+
             if ("created".equals(order.getStatus())) {
                 message =
                     "\t<h3>To pay your order, please scan this QR-code<br/> using your " + APP_NAME + " mobile app</h3><br/>\r\n"
