@@ -108,7 +108,7 @@ public class CheckoutPage extends Script {
                     + "\t\t\t\tif(status === \"paid\" || status === \"canceled\" || status === \"expired\"){\n"
                     + "\t\t\t\t\twindow.location.href = \"" + order.getRedirectUrl() + "\";\n"
                     + "\t\t\t\t} else {\n"
-                    + "\t\t\t\t\tsetTimeout(()=> { checkPaymentStatus(\"" + orderId + "\") }, 15000);\n"
+                    + "\t\t\t\t\tsetTimeout(()=> { checkPaymentStatus(\"" + normalizedId + "\") }, 15000);\n"
                     + "\t\t\t\t}\n"
                     + "\t\t\t}\n\n"
                     + "\t\t\tcheckPaymentStatus(\"" + normalizedId + "\");\n"
