@@ -66,14 +66,17 @@ public class CheckoutPage extends Script {
 
         try {
             boolean isUuid = orderId.startsWith("ord_");
+            String orderUuid;
             if (isUuid) {
-                String orderUuid = orderId.substring(4);
+                orderUuid = orderId.substring(4);
                 order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
             } else {
                 order = crossStorageApi.find(defaultRepo, MoOrder.class)
                                        .by("orderNumber", orderId)
                                        .getResult();
+                orderUuid = order.getUuid();
             }
+            String normalizedId = "ord_" + orderUuid;
 
             if ("created".equals(order.getStatus())) {
                 message =
@@ -86,7 +89,7 @@ public class CheckoutPage extends Script {
                         + "\tqr = new QRious({\r\n"
                         + "\telement: document.getElementById('qr-code'),\r\n"
                         + "\tsize: 200,\r\n"
-                        + "\tvalue: \"https://link.klubcoin.net/payment/" + orderId + "\"});\r\n"
+                        + "\tvalue: \"https://link.klubcoin.net/payment/" + normalizedId + "\"});\r\n"
                         + "\tqr.set({foreground: 'black',size: 200});\r\n"
                         + "\t})();\r\n"
                         + "\t</script>\r\n";
