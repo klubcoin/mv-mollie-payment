@@ -60,6 +60,7 @@ public class MollieUpdateOrder extends Script {
                                                      .by("orderId", id)
                                                      .getResult();
                 if(payment != null){
+                    LOG.info("Payment expired, calling webhook.");
                     callWebhook(order, payment);
                 }
             } catch (Exception e){
@@ -156,6 +157,7 @@ public class MollieUpdateOrder extends Script {
             if (payment != null) {
                 String paymentId = "tr_" + payment.getUuid();
                 if ("canceled".equals(status)) {
+                    LOG.info("Order status cancelled, calling webhook.");
                     callWebhook(order, payment);
                 }
                 String paymentStatus = "created".equals(status) ? "open" : status;
@@ -203,6 +205,8 @@ public class MollieUpdateOrder extends Script {
                     "        }\n" +
                     "    }\n" +
                     "}]},";
+            } else {
+                LOG.info("Payment for order: {}, does not exist. Will not be able to call webhook.", id);
             }
         } catch (Exception e) {
             String error = "Failed to retrieve payment for order: " + id;
