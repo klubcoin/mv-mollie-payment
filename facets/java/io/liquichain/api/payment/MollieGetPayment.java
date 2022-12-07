@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 
 public class MollieGetPayment extends Script {
-    private static final Logger LOG = LoggerFactory.getLogger(MollieCreateOrder.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MollieGetPayment.class);
 
     @Inject
     private CrossStorageApi crossStorageApi;
