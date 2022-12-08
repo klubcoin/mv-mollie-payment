@@ -50,6 +50,8 @@ public class MollieGetCustomer extends Script {
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
+        LOG.info("MollieGetCustomer parameters: {}", parameters);
+
         if (customerId == null) {
             result = createErrorResponse(NOT_FOUND_STATUS, NOT_FOUND, CUSTOMER_ID_REQUIRED);
         }

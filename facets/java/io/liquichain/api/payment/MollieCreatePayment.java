@@ -51,6 +51,7 @@ public class MollieCreatePayment extends Script {
     public void execute(Map<String, Object> parameters) throws BusinessException {
         super.execute(parameters);
         this.init();
+        LOG.info("MollieCreatePayment parameters: {}", parameters);
 
         Map<String, Object> amountMap = getMap(parameters, "amount");
         String amountValue = getString(amountMap, "value");

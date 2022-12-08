@@ -50,6 +50,8 @@ public class CheckoutPage extends Script {
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         this.init();
+        LOG.info("CheckoutPage parameters: {}", parameters);
+
         result = "<!DOCTYPE html>\r\n"
             + "<html lang=\"en\">\r\n"
             + "\t<head>\r\n"

@@ -60,6 +60,7 @@ public class MollieGetPayment extends Script {
     public void execute(Map<String, Object> parameters) throws BusinessException {
         super.execute(parameters);
         this.init();
+        LOG.info("MollieGetPayment paymentId: {}, parameters: {}", paymentId, parameters);
 
         Transaction transaction;
         String uuid = null;

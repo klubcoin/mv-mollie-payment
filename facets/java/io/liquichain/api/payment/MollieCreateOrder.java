@@ -55,6 +55,8 @@ public class MollieCreateOrder extends Script {
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         this.init();
+        LOG.info("MollieCreateOrder parameters: {}", parameters);
+
         MoOrder order;
         Transaction payment;
         try {

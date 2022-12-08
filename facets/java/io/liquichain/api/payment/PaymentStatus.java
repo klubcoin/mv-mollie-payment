@@ -41,6 +41,8 @@ public class PaymentStatus extends Script {
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         this.init();
+        LOG.info("PaymentStatus orderId: {}, parameters: {}", orderId, parameters);
+
         String orderUuid = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
         try {
             MoOrder order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);

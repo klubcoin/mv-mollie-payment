@@ -46,6 +46,8 @@ public class MollieUpdatePayment extends Script {
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         super.execute(parameters);
+        LOG.info("MollieUpdatePayment parameters: {}", parameters);
+
         if (StringUtils.isBlank(paymentId)) {
             String error = "Payment id is required.";
             LOG.error(error);

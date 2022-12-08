@@ -29,7 +29,7 @@ public class MollieGetMethods extends Script {
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
-        LOG.info("method from path={}", getMethod());
+        LOG.info("MollieGetMethods method from path={}", getMethod());
         result = "{\r\n"
             + "    \"count\": 2,\r\n"
             + "    \"_embedded\": {\r\n"

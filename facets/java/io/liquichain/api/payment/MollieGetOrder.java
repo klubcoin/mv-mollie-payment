@@ -86,7 +86,7 @@ public class MollieGetOrder extends Script {
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         this.init();
-        LOG.info("get Order[{}] {}", orderId, parameters);
+        LOG.info("MollieGetOrder orderId: {}, parameters: {}", orderId, parameters);
 
         if (orderId.startsWith("ord_")) {
             orderId = orderId.substring(4);

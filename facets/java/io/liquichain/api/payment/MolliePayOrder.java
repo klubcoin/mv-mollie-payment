@@ -150,7 +150,8 @@ public class MolliePayOrder extends Script {
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         this.init();
-        LOG.info(" payOrder parameters: {}", parameters);
+        LOG.info("MolliePayOrder parameters: {}", parameters);
+
         Transaction transaction;
         try {
             orderId = orderId != null && orderId.startsWith("ord_") ? orderId : "ord_" + orderId;
