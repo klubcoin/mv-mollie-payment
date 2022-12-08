@@ -4,7 +4,7 @@ import static io.liquichain.api.payment.PaymentService.*;
 
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.meveo.api.exception.EntityDoesNotExistsException;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.commons.utils.ParamBean;
@@ -31,10 +31,10 @@ public class MollieGetPayment extends Script {
     private ParamBeanFactory paramBeanFactory;
 
     private Repository defaultRepo = null;
+    private Gson gson  = new Gson();
 
     private String BASE_URL = null;
     private String MEVEO_BASE_URL = null;
-    private final ObjectMapper mapper = new ObjectMapper();
 
     private String paymentId;
     private String result;
@@ -67,7 +67,7 @@ public class MollieGetPayment extends Script {
         try {
             uuid = paymentId.startsWith("tr_") ? paymentId = paymentId.substring(3) : paymentId;
             transaction = crossStorageApi.find(defaultRepo, paymentId, Transaction.class);
-            LOG.info("MollieGetpayment - transaction: {}", transaction);
+            LOG.info("MollieGetpayment - transaction: {}", gson.toJson(transaction));
         } catch (EntityDoesNotExistsException e) {
             String error = "Failed to retrieve payment transaction: " + uuid;
             LOG.error(error, e);
@@ -88,7 +88,7 @@ public class MollieGetPayment extends Script {
                                        .by("orderNumber", orderId)
                                        .getResult();
             }
-            LOG.info("MollieGetpayment - order: {}", order);
+            LOG.info("MollieGetpayment - order: {}", gson.toJson(order));
         } catch (Exception e) {
             String error = "Cannot retrieve order: " + orderId;
             LOG.error(error, e);
