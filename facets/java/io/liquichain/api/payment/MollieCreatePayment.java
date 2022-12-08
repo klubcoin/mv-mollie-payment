@@ -69,6 +69,28 @@ public class MollieCreatePayment extends Script {
             .sha3(amountValue + amountCurrency + orderId +
                 description + redirectUrl + webhookUrl + metadata + createdAt);
 
+        MoOrder order;
+        String orderUuid;
+        String normalizedId;
+        try {
+            boolean isUuid = orderId.startsWith("ord_");
+            if (isUuid) {
+                orderUuid = orderId.substring(4);
+                order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
+            } else {
+                order = crossStorageApi.find(defaultRepo, MoOrder.class)
+                                       .by("orderNumber", orderId)
+                                       .getResult();
+                orderUuid = order.getUuid();
+            }
+            normalizedId = "ord_" + orderUuid;
+        } catch (Exception e) {
+            String error = "Cannot retrieve order: " + orderId;
+            LOG.error(error, e);
+            result = createErrorResponse("404", "Not found", error);
+            return;
+        }
+
         Transaction transaction = new Transaction();
         transaction.setHexHash(normalizeHash(data));
         transaction.setSignedHash(data);
@@ -80,7 +102,7 @@ public class MollieCreatePayment extends Script {
         transaction.setMetadata(metadata);
         transaction.setCreationDate(createdAt);
         transaction.setExpirationDate(expiresAt);
-        transaction.setOrderId(orderId);
+        transaction.setOrderId(normalizedId);
         transaction.setData("{\"type\":\"payonline\",\"description\":\"Pay online payment\"}");
         transaction.setType("payonline");
         transaction.setUuid(generateUUID(transaction));
@@ -92,24 +114,6 @@ public class MollieCreatePayment extends Script {
             String error = "Failed to save payment transaction.";
             LOG.error(error, e);
             result = createErrorResponse("500", "Internal Server Error", error);
-            return;
-        }
-
-        MoOrder order;
-        try {
-            boolean isUuid = orderId.startsWith("ord_");
-            if (isUuid) {
-                String orderUuid = orderId.substring(4);
-                order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
-            } else {
-                order = crossStorageApi.find(defaultRepo, MoOrder.class)
-                                       .by("orderNumber", orderId)
-                                       .getResult();
-            }
-        } catch (Exception e) {
-            String error = "Cannot retrieve order: " + orderId;
-            LOG.error(error, e);
-            result = createErrorResponse("404", "Not found", error);
             return;
         }
 
@@ -128,7 +132,7 @@ public class MollieCreatePayment extends Script {
             "    \"isCancelable\": false,\n" +
             "    \"expiresAt\": \"" + expiresAt + "\",\n" +
             "    \"details\": null,\n" +
-            "    \"profileId\": \"pfl_QkEhN94Ba\",\n" +
+            "    \"profileId\": \"pfl_" + transaction.getUuid() + "\",\n" +
             "    \"sequenceType\": \"oneoff\",\n" +
             "    \"redirectUrl\": \"" + redirectUrl + "\",\n" +
             "    \"webhookUrl\": \"" + webhookUrl + "\",\n" +
@@ -138,11 +142,11 @@ public class MollieCreatePayment extends Script {
             "            \"type\": \"application/json\"\n" +
             "        },\n" +
             "        \"checkout\": {\n" +
-            "            \"href\": \"" + MEVEO_BASE_URL + "/rest/paymentpages/checkout/" + orderId + "\",\n" +
+            "            \"href\": \"" + MEVEO_BASE_URL + "/rest/paymentpages/checkout/" + normalizedId + "\",\n" +
             "            \"type\": \"text/html\"\n" +
             "        },\n" +
             "        \"dashboard\": {\n" +
-            "            \"href\": \"" + BASE_URL + "dashboard?orderid=" + orderId + "\",\n" +
+            "            \"href\": \"" + BASE_URL + "dashboard?orderid=" + normalizedId + "\",\n" +
             "            \"type\": \"application/json\"\n" +
             "        },\n" +
             "        \"documentation\": {\n" +

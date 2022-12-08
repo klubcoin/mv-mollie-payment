@@ -214,7 +214,7 @@ public class MollieGetOrder extends Script {
                             "    \"metadata\": " + transaction.getMetadata() + ",\n" +
                             "    \"status\": \"" + status + "\",\n" +
                             "    \"paidAt\": \"" + order.getPaidAt() + "\",\n" +
-                            "    \"isCancelable\": false,\n" +
+                            "    \"isCancelable\": true,\n" +
                             "    \"expiresAt\": \"" + transaction.getExpirationDate() + "\",\n" +
                             "    \"details\": null,\n" +
                             "    \"profileId\": \"pfl_" + transaction.getUuid() + "\",\n" +

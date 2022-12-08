@@ -83,7 +83,7 @@ public class MollieUpdateOrder extends Script {
             + "\"method\": \"" + order.getMethod() + "\","
             + "\"amount\": " + order.getAmount() + ","
             + "\"status\": \"" + status + "\","
-            + "\"isCancelable\": false,"
+            + "\"isCancelable\": true,"
             + "\"metadata\": " + order.getMetadata() + ","
             + "\"createdAt\": \"" + order.getCreationDate().toString() + "\","
             + "\"canceledAt\": \"" + canceledAt + "\","
@@ -109,7 +109,7 @@ public class MollieUpdateOrder extends Script {
                                     "      \"type\": \"physical\",\n" +
                                     "      \"status\": \"" + status + "\",\n" +
                                     "      \"metadata\": " + line.getMetadata() + ",\n" +
-                                    "      \"isCancelable\": false,\n" +
+                                    "      \"isCancelable\": true,\n" +
                                     "      \"quantity\": " + line.getQuantity() + ",\n" +
                                     "      \"quantityShipped\": 0,\n" +
                                     "      \"amountShipped\": {\n" +
@@ -179,7 +179,7 @@ public class MollieUpdateOrder extends Script {
                     "    \"description\": \"" + payment.getDescription() + "\",\n" +
                     "    \"method\": \"" + order.getMethod() + "\",\n" +
                     "    \"metadata\": " + payment.getMetadata() + ",\n" +
-                    "    \"isCancelable\": false,\n" +
+                    "    \"isCancelable\": true,\n" +
                     "    \"expiresAt\": \"" + payment.getExpirationDate() + "\",\n" +
                     "    \"details\": null,\n" +
                     "    \"profileId\": \"pfl_" + payment.getUuid() + "\",\n" +

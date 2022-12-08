@@ -74,7 +74,7 @@ public class MollieCreateOrder extends Script {
             + "\"method\": \"" + order.getMethod() + "\","
             + "\"amount\": " + order.getAmount() + ","
             + "\"status\": \"created\","
-            + "\"isCancelable\": false,"
+            + "\"isCancelable\": true,"
             + "\"metadata\": " + order.getMetadata() + ","
             + "\"createdAt\": \"" + order.getCreationDate().toString() + "\","
             + "\"expiresAt\": \"" + order.getExpiresAt().toString() + "\","
