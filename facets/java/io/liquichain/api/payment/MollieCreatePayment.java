@@ -23,9 +23,9 @@ import org.web3j.crypto.Hash;
 public class MollieCreatePayment extends Script {
     private static final Logger LOG = LoggerFactory.getLogger(MollieCreatePayment.class);
 
-    private CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
-    private RepositoryService repositoryService = getCDIBean(RepositoryService.class);
-    private ParamBeanFactory paramBeanFactory = getCDIBean(ParamBeanFactory.class);
+    private final CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
+    private final RepositoryService repositoryService = getCDIBean(RepositoryService.class);
+    private final ParamBeanFactory paramBeanFactory = getCDIBean(ParamBeanFactory.class);
 
     private Repository defaultRepo = null;
 
@@ -53,14 +53,14 @@ public class MollieCreatePayment extends Script {
         this.init();
 
         Map<String, Object> amountMap = getMap(parameters, "amount");
-        String amountValue = getString(amountMap,"value");
-        String amountCurrency = getString(amountMap,"currency");
-        Map<String, Object> metadataMap = getMap(parameters,"metadata");
-        String orderId = getString(metadataMap,"order_id");
+        String amountValue = getString(amountMap, "value");
+        String amountCurrency = getString(amountMap, "currency");
+        Map<String, Object> metadataMap = getMap(parameters, "metadata");
+        String orderId = getString(metadataMap, "order_id");
         String amount = toJsonString(parameters.get("amount"));
-        String description = getString(parameters,"description");
-        String redirectUrl = getString(parameters,"redirectUrl");
-        String webhookUrl = getString(parameters,"webhookUrl");
+        String description = getString(parameters, "description");
+        String redirectUrl = getString(parameters, "redirectUrl");
+        String webhookUrl = getString(parameters, "webhookUrl");
         String metadata = toJsonString(parameters.get("metadata"));
         Instant createdAt = Instant.now();
         Instant expiresAt = createdAt.plus(Duration.ofDays(10));
@@ -98,7 +98,7 @@ public class MollieCreatePayment extends Script {
         MoOrder order;
         try {
             boolean isUuid = orderId.startsWith("ord_");
-            if(isUuid){
+            if (isUuid) {
                 String orderUuid = orderId.substring(4);
                 order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
             } else {
@@ -114,6 +114,7 @@ public class MollieCreatePayment extends Script {
         }
 
         String id = "tr_" + uuid;
+        String paymentStatus = parseStatus(order);
         result = "{\n" +
             "    \"resource\": \"payment\",\n" +
             "    \"id\": \"" + id + "\",\n" +
@@ -123,7 +124,7 @@ public class MollieCreatePayment extends Script {
             "    \"description\": \"" + description + "\",\n" +
             "    \"method\": \"" + order.getMethod() + "\",\n" +
             "    \"metadata\": " + metadata + ",\n" +
-            "    \"status\": \"open\",\n" +
+            "    \"status\": \"" + paymentStatus + "\",\n" +
             "    \"isCancelable\": false,\n" +
             "    \"expiresAt\": \"" + expiresAt + "\",\n" +
             "    \"details\": null,\n" +
@@ -150,6 +151,17 @@ public class MollieCreatePayment extends Script {
             "        }\n" +
             "    }\n" +
             "}";
+    }
+
+    private String parseStatus(MoOrder order) {
+        String status = order.getStatus();
+        Instant now = Instant.now();
+        if (now.isAfter(order.getExpiresAt())) {
+            return "expired";
+        } else if ("created".equals(status)) {
+            return "open";
+        }
+        return status;
     }
 
 }
