@@ -1,7 +1,10 @@
 {
   "code" : "io.liquichain.api.payment.webhook.OnMollieUpdateOrder",
   "description" : "Sends webhook call when Mollie Order is updated",
-  "inputs" : [ ],
+  "inputs" : [ {
+    "name" : "order",
+    "type" : "MoOrder"
+  } ],
   "outputs" : [ ],
   "generateOutputs" : false,
   "type" : "JAVA",
