@@ -5,7 +5,10 @@
     "name" : "orderId",
     "type" : "String"
   } ],
-  "outputs" : [ ],
+  "outputs" : [ {
+    "name" : "result",
+    "type" : "Map<String,String>"
+  } ],
   "generateOutputs" : false,
   "type" : "JAVA",
   "transactionType" : "SAME",
