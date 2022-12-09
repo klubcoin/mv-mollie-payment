@@ -3,6 +3,7 @@
   "code" : "OnMollieUpdateOrder",
   "classNameFilter" : "org.meveo.model.customEntities.CustomEntityInstance",
   "eventTypeFilter" : "UPDATED",
+  "elFilter" : "#{\"MoOrder\".equals(event.getCetCode())}",
   "scriptInstanceCode" : "io.liquichain.api.payment.webhook.OnMollieUpdateOrder",
   "scriptParams" : {
     "order" : "#{event}"
