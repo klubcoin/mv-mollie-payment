@@ -116,11 +116,11 @@ public class CheckoutPage extends Script {
                     + "\t\t\t\t\t}\n"
                     + "\t\t\t\t} else {\n"
                     + "\t\t\t\t\tsetTimeout(() => {\n"
-                    + "\t\t\t\t\t\tcheckPaymentStatus(" + normalizedId + ");\n"
+                    + "\t\t\t\t\t\tcheckPaymentStatus(\"" + normalizedId + "\");\n"
                     + "\t\t\t\t\t}, 15000);\n"
                     + "\t\t\t\t}\n"
                     + "\t\t\t};\n"
-                    + "\t\t\tcheckPaymentStatus(" + normalizedId + ");\n"
+                    + "\t\t\tcheckPaymentStatus(\"" + normalizedId + "\");\n"
                     + "\t\t})();\n"
                     + "\t</script>";
             } else {
