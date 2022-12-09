@@ -1,0 +1,20 @@
+{
+  "code" : "validateMolliePayment",
+  "description" : "Validate mollie payment",
+  "secured" : false,
+  "checkPathParams" : true,
+  "serviceCode" : "io.liquichain.api.payment.webhook.OnMollieUpdateOrder",
+  "synchronous" : true,
+  "method" : "GET",
+  "parameterMappings" : [ ],
+  "pathParameters" : [ "orderId" ],
+  "roles" : [ ],
+  "returnedVariableName" : "result",
+  "serializeResult" : true,
+  "contentType" : "application/json",
+  "basePath" : "validate-payment",
+  "path" : "/{orderId}",
+  "pool" : {
+    "usePool" : false
+  }
+}
