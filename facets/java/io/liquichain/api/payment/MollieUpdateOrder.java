@@ -25,7 +25,6 @@ public class MollieUpdateOrder extends Script {
     private final RepositoryService repositoryService = getCDIBean(RepositoryService.class);
     private final ParamBeanFactory paramBeanFactory = getCDIBean(ParamBeanFactory.class);
     private final ParamBean config = paramBeanFactory.getInstance();
-
     private final Repository defaultRepo = repositoryService.findDefaultRepository();
 
     private final String BASE_URL = config.getProperty("meveo.admin.baseUrl", "http://localhost:8080/");

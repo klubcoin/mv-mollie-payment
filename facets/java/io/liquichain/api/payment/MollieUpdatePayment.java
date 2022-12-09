@@ -64,6 +64,7 @@ public class MollieUpdatePayment extends Script {
             result = createErrorResponse("404", "Not found", error);
             return;
         }
+
         String id = "tr_" + transaction.getUuid();
         String orderId = transaction.getOrderId();
 

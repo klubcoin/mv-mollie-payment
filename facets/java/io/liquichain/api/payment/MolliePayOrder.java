@@ -37,6 +37,7 @@ import org.web3j.protocol.exceptions.ClientConnectionException;
 
 public class MolliePayOrder extends Script {
     private static final Logger LOG = LoggerFactory.getLogger(MolliePayOrder.class);
+
     private static final String CONTRACT_NOT_ALLOWED_ERROR = "Contract deployment not allowed.";
     private static final String PAYMENT_NOT_FOUND = "Payment for orderId: %s, does not exist.";
     private static final String TRANSACTION_FAILED = "Transaction failed.";
