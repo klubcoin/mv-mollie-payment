@@ -97,9 +97,9 @@ public class CheckoutPage extends Script {
                         + "\t</script>\r\n";
                 message += "\t<script>\n"
                     + "\t\t(function () {\n"
+                    + "\t\t\tconst pathname = window.location.pathname;\n"
+                    + "\t\t\tconst context = pathname.substring(0, pathname.indexOf(\"/\", 1));\n"
                     + "\t\t\tconst getPaymentStatus = async (orderId) => {\n"
-                    + "\t\t\t\tconst pathname = window.location.pathname;\n"
-                    + "\t\t\t\tconst context = pathname.substring(0, pathname.indexOf(\"/\", 1));\n"
                     + "\t\t\t\tconst url = window.location.origin + context + \"/rest/pg/v1/paymentStatus/\" + orderId;\n"
                     + "\t\t\t\tconst response = await fetch(url);\n"
                     + "\t\t\t\tconst json = await response.json();\n"
