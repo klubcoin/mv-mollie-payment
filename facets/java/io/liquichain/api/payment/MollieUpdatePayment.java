@@ -79,9 +79,6 @@ public class MollieUpdatePayment extends Script {
         }
 
         String status = "created".equals(order.getStatus()) ? "open" : order.getStatus();
-        if ("canceled".equals(status) || "expired".equals(status)) {
-            callWebhook(order, transaction);
-        }
         result = "{\n" +
             "    \"resource\": \"payment\",\n" +
             "    \"id\": \"" + id + "\",\n" +

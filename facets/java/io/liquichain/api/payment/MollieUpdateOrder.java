@@ -57,20 +57,6 @@ public class MollieUpdateOrder extends Script {
         String status = order.getStatus();
 
         if ("expired".equals(status)) {
-            try{
-                Transaction payment = crossStorageApi.find(defaultRepo, Transaction.class)
-                                                     .by("orderId", id)
-                                                     .getResult();
-                if(payment != null){
-                    LOG.info("Payment expired, calling webhook.");
-                    callWebhook(order, payment);
-                }
-            } catch (Exception e){
-                LOG.error(e.getMessage(), e);
-                result = createErrorResponse("500", "Internal Server Error", e.getMessage());
-                return;
-            }
-
             result = createErrorResponse(
                 "400", "Expired", "QR Code Purchase Verification already expired. Please try again."
             );
@@ -158,10 +144,6 @@ public class MollieUpdateOrder extends Script {
                                                  .getResult();
             if (payment != null) {
                 String paymentId = "tr_" + payment.getUuid();
-                if ("canceled".equals(status)) {
-                    LOG.info("Order status cancelled, calling webhook.");
-                    callWebhook(order, payment);
-                }
                 String paymentStatus = "created".equals(status) ? "open" : status;
 
                 result += "\"_embedded\": {\"payments\": [{\n" +

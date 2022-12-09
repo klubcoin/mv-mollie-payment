@@ -254,8 +254,6 @@ public class MolliePayOrder extends Script {
                     return;
                 }
 
-                callWebhook(order, transaction);
-
                 result = createResponse("{\"status\": \"paid\"}");
             } else {
                 LOG.error("Amount sent: " + value + " != Amount required: " + amounToBePaid);
