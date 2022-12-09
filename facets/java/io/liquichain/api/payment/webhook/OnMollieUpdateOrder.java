@@ -46,7 +46,7 @@ public class OnMollieUpdateOrder extends Script {
                 Transaction payment = crossStorageApi.find(defaultRepo, Transaction.class)
                                                      .by("orderId", normalizedId)
                                                      .getResult();
-                if (payment != null) {
+                if (payment == null) {
                     throw new RuntimeException("Payment does not exist for order: " + normalizedId);
                 }
                 callWebhook(order, payment);
