@@ -112,7 +112,7 @@ public class CheckoutPage extends Script {
                     + "\t\t\t\t\tconst validateResponse = await fetch(validateUrl);\n"
                     + "\t\t\t\t\tconst validateResult = await validateResponse.json();\n"
                     + "\t\t\t\t\tif (\"success\" === validateResult.status) {\n"
-                    + "\t\t\t\t\t\twindow.location.href = \"\" + order.getRedirectUrl() + \"\";\n"
+                    + "\t\t\t\t\t\twindow.location.href = \"" + order.getRedirectUrl() + "\";\n"
                     + "\t\t\t\t\t}\n"
                     + "\t\t\t\t} else {\n"
                     + "\t\t\t\t\tsetTimeout(() => {\n"
