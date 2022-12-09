@@ -41,11 +41,13 @@ public class OnMollieUpdateOrder extends Script {
             }
             String status = order.getStatus();
             if (VALID_WEBHOOK_STATUS.contains(status)) {
+                String normalizedId = "ord_" + order.getUuid();
+                LOG.info("Searching for payment for order: " + normalizedId);
                 Transaction payment = crossStorageApi.find(defaultRepo, Transaction.class)
-                                                     .by("orderId", "ord_" + order.getUuid())
+                                                     .by("orderId", normalizedId)
                                                      .getResult();
                 if (payment != null) {
-                    throw new RuntimeException("Payment does not exist for order: " + order.getUuid());
+                    throw new RuntimeException("Payment does not exist for order: " + normalizedId);
                 }
                 callWebhook(order, payment);
             }
