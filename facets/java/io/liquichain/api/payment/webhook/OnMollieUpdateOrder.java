@@ -1,6 +1,7 @@
 package io.liquichain.api.payment.webhook;
 
 import static io.liquichain.api.payment.PaymentService.*;
+import static org.apache.commons.lang3.StringUtils.*;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -45,11 +46,14 @@ public class OnMollieUpdateOrder extends Script {
             if (orderId == null) {
                 throw new RuntimeException("Order ID is null. Will not invoke webhook.");
             }
-            MoOrder order = crossStorageApi.find(defaultRepo, orderId, MoOrder.class);
+            String uuid = removeStart(orderId, "ord_");
+            String normalizedId = prependIfMissing(orderId, "ord_");
+
+            MoOrder order = crossStorageApi.find(defaultRepo, uuid, MoOrder.class);
             LOG.info("OnMollieUpdateOrder order: {}", toJsonString(order));
             String status = order.getStatus();
+
             if (VALID_WEBHOOK_STATUS.contains(status)) {
-                String normalizedId = "ord_" + order.getUuid();
                 LOG.info("Searching for payment for order: " + normalizedId);
                 Transaction payment = crossStorageApi.find(defaultRepo, Transaction.class)
                                                      .by("orderId", normalizedId)
