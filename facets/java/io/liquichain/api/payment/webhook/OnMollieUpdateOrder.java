@@ -3,10 +3,10 @@ package io.liquichain.api.payment.webhook;
 import static io.liquichain.api.payment.PaymentService.*;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.Gson;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.model.customEntities.MoOrder;
 import org.meveo.model.customEntities.Transaction;
@@ -23,11 +23,15 @@ public class OnMollieUpdateOrder extends Script {
     private final CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
     private final RepositoryService repositoryService = getCDIBean(RepositoryService.class);
     private final Repository defaultRepo = repositoryService.findDefaultRepository();
-    private final Gson gson = new Gson();
 
     private final List<String> VALID_WEBHOOK_STATUS = Arrays.asList("paid", "canceled", "expired", "failed");
 
     private String orderId;
+    private Map<String, String> result = new LinkedHashMap<>();
+
+    public Map<String, String> getResult() {
+        return result;
+    }
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
@@ -42,7 +46,7 @@ public class OnMollieUpdateOrder extends Script {
                 throw new RuntimeException("Order ID is null. Will not invoke webhook.");
             }
             MoOrder order = crossStorageApi.find(defaultRepo, orderId, MoOrder.class);
-            LOG.info("OnMollieUpdateOrder order: {}", gson.toJson(order));
+            LOG.info("OnMollieUpdateOrder order: {}", toJsonString(order));
             String status = order.getStatus();
             if (VALID_WEBHOOK_STATUS.contains(status)) {
                 String normalizedId = "ord_" + order.getUuid();
@@ -53,11 +57,15 @@ public class OnMollieUpdateOrder extends Script {
                 if (payment == null) {
                     throw new RuntimeException("Payment does not exist for order: " + normalizedId);
                 }
-                LOG.info("OnMollieUpdateOrder transaction: {}", gson.toJson(payment));
+                LOG.info("OnMollieUpdateOrder transaction: {}", toJsonString(payment));
                 callWebhook(order, payment);
+                result.put("status", "success");
+                result.put("result", status);
             }
         } catch (Exception e) {
             LOG.error("Encountered errors while trying to invoke webhook.", e);
+            result.put("status", "fail");
+            result.put("result", e.getMessage());
         }
     }
 

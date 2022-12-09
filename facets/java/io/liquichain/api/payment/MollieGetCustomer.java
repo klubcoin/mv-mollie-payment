@@ -1,5 +1,7 @@
 package io.liquichain.api.payment;
 
+import static io.liquichain.api.payment.PaymentService.*;
+
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -117,7 +119,7 @@ public class MollieGetCustomer extends Script {
         responseMap.put("createdAt", createdAt);
         responseMap.put("_links", links);
 
-        String response = new Gson().toJson(responseMap);
+        String response = toJsonString(responseMap);
         LOG.debug("response: {}", response);
         return response;
     }

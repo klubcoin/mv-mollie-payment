@@ -184,6 +184,9 @@ public class PaymentService extends Script {
             Invocation.Builder builder = target.request(MediaType.APPLICATION_FORM_URLENCODED);
             LOG.info("builder: {}", builder);
             response = builder.post(Entity.form(form));
+            if(response != null){
+                LOG.info("Webhook response: {}", toJsonString(response));;
+            }
         } catch (Exception e) {
             String error = String.format("Failed invoking webhook: %s", webhookUrl);
             LOG.error(error, e);
