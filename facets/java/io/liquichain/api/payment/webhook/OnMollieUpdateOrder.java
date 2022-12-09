@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.Gson;
 import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.model.customEntities.MoOrder;
 import org.meveo.model.customEntities.Transaction;
@@ -22,23 +23,26 @@ public class OnMollieUpdateOrder extends Script {
     private final CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
     private final RepositoryService repositoryService = getCDIBean(RepositoryService.class);
     private final Repository defaultRepo = repositoryService.findDefaultRepository();
+    private final Gson gson = new Gson();
 
     private final List<String> VALID_WEBHOOK_STATUS = Arrays.asList("paid", "canceled", "expired", "failed");
 
-    private MoOrder order;
+    private String orderId;
 
-    public void setOrder(MoOrder order) {
-        this.order = order;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     @Override
     public void execute(Map<String, Object> parameters) throws BusinessException {
         super.execute(parameters);
-        LOG.info("OnMollieUpdateOrder order: {}, parameters: {}", order, parameters);
+        LOG.info("OnMollieUpdateOrder order: {}, parameters: {}", orderId, parameters);
         try {
-            if (order == null) {
-                throw new RuntimeException("Order is null. Will not invoke webhook");
+            if (orderId == null) {
+                throw new RuntimeException("Order ID is null. Will not invoke webhook.");
             }
+            MoOrder order = crossStorageApi.find(defaultRepo, orderId, MoOrder.class);
+            LOG.info("OnMollieUpdateOrder order: {}", gson.toJson(order));
             String status = order.getStatus();
             if (VALID_WEBHOOK_STATUS.contains(status)) {
                 String normalizedId = "ord_" + order.getUuid();
@@ -49,6 +53,7 @@ public class OnMollieUpdateOrder extends Script {
                 if (payment == null) {
                     throw new RuntimeException("Payment does not exist for order: " + normalizedId);
                 }
+                LOG.info("OnMollieUpdateOrder transaction: {}", gson.toJson(payment));
                 callWebhook(order, payment);
             }
         } catch (Exception e) {

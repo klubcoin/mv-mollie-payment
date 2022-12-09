@@ -67,7 +67,7 @@ public class MollieGetPayment extends Script {
         try {
             uuid = paymentId.startsWith("tr_") ? paymentId = paymentId.substring(3) : paymentId;
             transaction = crossStorageApi.find(defaultRepo, paymentId, Transaction.class);
-            LOG.info("MollieGetpayment - transaction: {}", gson.toJson(transaction));
+            LOG.info("MollieGetPayment - transaction: {}", gson.toJson(transaction));
         } catch (EntityDoesNotExistsException e) {
             String error = "Failed to retrieve payment transaction: " + uuid;
             LOG.error(error, e);
@@ -88,7 +88,7 @@ public class MollieGetPayment extends Script {
                                        .by("orderNumber", orderId)
                                        .getResult();
             }
-            LOG.info("MollieGetpayment - order: {}", gson.toJson(order));
+            LOG.info("MollieGetPayment - order: {}", gson.toJson(order));
         } catch (Exception e) {
             String error = "Cannot retrieve order: " + orderId;
             LOG.error(error, e);
