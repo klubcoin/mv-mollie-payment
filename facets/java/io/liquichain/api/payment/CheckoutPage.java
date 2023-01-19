@@ -1,5 +1,7 @@
 package io.liquichain.api.payment;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.ParamBeanFactory;
 import org.meveo.service.script.Script;
@@ -19,6 +21,7 @@ import javax.inject.Inject;
 
 public class CheckoutPage extends Script {
     private static final Logger LOG = LoggerFactory.getLogger(CheckoutPage.class);
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     @Inject
     private CrossStorageApi crossStorageApi;
@@ -86,7 +89,9 @@ public class CheckoutPage extends Script {
                 orderUuid = order.getUuid();
             }
             String normalizedId = "ord_" + orderUuid;
-            String partnerId = order.getMetadata();
+            Map<String, String> metadata = convert(order.getMetadata());
+            String partnerId = metadata.get("partnerId");
+            String partnerIdQuery = partnerId != null ? "?pid=" + partnerId : "";
 
             if ("created".equals(order.getStatus())) {
                 message =
@@ -99,7 +104,7 @@ public class CheckoutPage extends Script {
                         + "\tqr = new QRious({\r\n"
                         + "\telement: document.getElementById('qr-code'),\r\n"
                         + "\tsize: 200,\r\n"
-                        + "\tvalue: \"https://link.klubcoin.net/payment/" + normalizedId + "?pid=" + partnerId + "\"});\r\n"
+                        + "\tvalue: \"https://link.klubcoin.net/payment/" + normalizedId + partnerIdQuery + "\"});\r\n"
                         + "\tqr.set({foreground: 'black',size: 200});\r\n"
                         + "\t})();\r\n"
                         + "\t</script>\r\n"
@@ -140,5 +145,16 @@ public class CheckoutPage extends Script {
         result += message
             + "\t</section></body>\r\n"
             + "\t</html>\r\n";
+    }
+
+    public static <T> T convert(String data) {
+        T value = null;
+        try {
+            value = mapper.readValue(data, new TypeReference<T>() {
+            });
+        } catch (Exception e) {
+            LOG.error("Failed to parse data: {}", data, e);
+        }
+        return value;
     }
 }
