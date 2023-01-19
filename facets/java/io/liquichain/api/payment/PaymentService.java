@@ -184,8 +184,9 @@ public class PaymentService extends Script {
             Invocation.Builder builder = target.request(MediaType.APPLICATION_FORM_URLENCODED);
             LOG.info("builder: {}", builder);
             response = builder.post(Entity.form(form));
-            if(response != null){
-                LOG.info("Webhook response: {}", response.getStatus());;
+            if (response != null) {
+                LOG.info("Webhook response: {}", response.getStatus());
+                ;
             }
         } catch (Exception e) {
             String error = String.format("Failed invoking webhook: %s", webhookUrl);
@@ -308,7 +309,7 @@ public class PaymentService extends Script {
         double totalAmount = getDouble(totalAmountMap, "value");
         String currency = getString(totalAmountMap, "currency");
         double vatAmount = getDouble(vatAmountMap, "value");
-        double discountAmount = getDouble(discountAmountMap, "value");
+        double discountAmount = discountAmountMap != null ? getDouble(discountAmountMap, "value") : 0.0;
         String category = getString(parameters, "category");
         String imageUrl = getString(parameters, "imageUrl");
         String productUrl = getString(parameters, "productUrl");
