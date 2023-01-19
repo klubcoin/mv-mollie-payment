@@ -88,7 +88,7 @@ public class CheckoutPage extends Script {
             String normalizedId = "ord_" + orderUuid;
 
             if ("created".equals(order.getStatus())) {
-                message = "\t<h3>To pay your order, please scan this QR-code<br/> using your " + APP_NAME + " mobile app</h3><br/>\r\n"
+                message = "\t<div>To pay your order, please scan this QR-code<br/> using your " + APP_NAME + " mobile app</div><br/>\r\n"
                     + "\t<canvas id=\"qr-code\"></canvas>\r\n"
                     + "\t<script src=\"https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js\"></script>\r\n"
                     + "\t<script>\r\n"
