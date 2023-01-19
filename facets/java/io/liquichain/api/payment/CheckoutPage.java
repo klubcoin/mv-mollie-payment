@@ -59,7 +59,7 @@ public class CheckoutPage extends Script {
             + "\t\t\tbody {background: #110e21;font-family: 'Poppins', sans-serif;font-weight: 500;color: #fff;}\r\n"
             + "\t\t\tsection {background: #0b0917;border-bottom: 2px solid #ec00f8;"
             + "box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);color: #fff;padding: 1em;position: absolute;top: 50%;"
-            + "left: 50%;margin-right: -50%;transform: translate(-50%, -50%);text-align: center;min-width:351px;}\r\n"
+            + "left: 50%;margin-right: -50%;transform: translate(-50%, -50%);text-align: center;}\r\n"
             + "\t\t\th1 {color: #00f3bd;font-weight: 600;}\r\n"
             + "</style>\r\n"
             + "\t\t<meta charset=\"utf-8\">\r\n"
