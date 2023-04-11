@@ -1,0 +1,13 @@
+{
+  "code" : "io.liquichain.api.payment.module.InitMollieModule",
+  "description" : "Initialize Mollie module",
+  "inputs" : [ ],
+  "outputs" : [ ],
+  "generateOutputs" : false,
+  "type" : "JAVA",
+  "transactionType" : "SAME",
+  "executionRoles" : [ ],
+  "sourcingRoles" : [ ],
+  "mavenDependencies" : [ ],
+  "importScriptInstances" : [ ]
+}
