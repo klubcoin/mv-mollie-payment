@@ -6,5 +6,19 @@
   "isInDraft" : true,
   "autoCommit" : true,
   "moduleDependencies" : [ ],
-  "moduleFiles" : [ ]
+  "moduleFiles" : [ ],
+  "script" : {
+    "code" : "io.liquichain.api.payment.module.InitMollieModule",
+    "description" : "Initialize Mollie module",
+    "inputs" : [ ],
+    "outputs" : [ ],
+    "generateOutputs" : false,
+    "type" : "JAVA",
+    "transactionType" : "SAME",
+    "script" : "package io.liquichain.api.payment.module;\\r\\n\\r\\nimport java.util.ArrayList;\\r\\nimport java.util.List;\\r\\nimport java.util.Map;\\r\\n\\r\\nimport org.meveo.admin.exception.BusinessException;\\r\\nimport org.meveo.model.crm.CustomFieldTemplate;\\r\\nimport org.meveo.model.crm.custom.CustomFieldStorageTypeEnum;\\r\\nimport org.meveo.model.crm.custom.CustomFieldTypeEnum;\\r\\nimport org.meveo.model.persistence.DBStorageType;\\r\\nimport org.meveo.service.crm.impl.CustomFieldTemplateService;\\r\\nimport org.meveo.service.script.module.ModuleScript;\\r\\n\\r\\nimport org.slf4j.Logger;\\r\\nimport org.slf4j.LoggerFactory;\\r\\n\\r\\npublic class InitMollieModule extends ModuleScript {\\r\\n    private static final Logger LOG = LoggerFactory.getLogger(InitMollieModule.class);\\r\\n    private static final String TRANSACTION_CET = \"CE_Transaction\";\\r\\n    private final CustomFieldTemplateService cftService = getCDIBean(CustomFieldTemplateService.class);\\r\\n\\r\\n    @Override\\r\\n    public void preInstallModule(Map<String, Object> methodContext) throws BusinessException {\\r\\n        super.execute(methodContext);\\r\\n\\r\\n        List<CustomFieldTemplate> cfts = new ArrayList<>();\\r\\n        cfts.add(buildStringField(\"currency\", \"Currency\", 10L));\\r\\n        cfts.add(buildStringField(\"description\", \"Description\", 255L));\\r\\n        cfts.add(buildStringField(\"redirectUrl\", \"Redirect URL\", 255L));\\r\\n        cfts.add(buildStringField(\"webhookUrl\", \"Webhoo URL\", 255L));\\r\\n        cfts.add(buildStringField(\"metadata\", \"Metadata\", 255L));\\r\\n        cfts.add(buildStringField(\"orderId\", \"Order ID\", 255L));\\r\\n        cfts.add(buildDateField(\"expirationDate\", \"Expiration date\"));\\r\\n\\r\\n        for (CustomFieldTemplate cft : cfts) {\\r\\n            try {\\r\\n                cftService.create(cft);\\r\\n            } catch (Exception e) {\\r\\n                LOG.error(\"Failed to save custom field: {}\", cft.getCode(), e);\\r\\n            }\\r\\n        }\\r\\n\\r\\n    }\\r\\n\\r\\n    private CustomFieldTemplate buildStringField(String code, String description, Long size) {\\r\\n        CustomFieldTemplate cft = new CustomFieldTemplate();\\r\\n        cft.setCode(code);\\r\\n        cft.setDescription(description);\\r\\n        cft.setFieldType(CustomFieldTypeEnum.STRING);\\r\\n        cft.setStorageType(CustomFieldStorageTypeEnum.SINGLE);\\r\\n        cft.setAppliesTo(TRANSACTION_CET);\\r\\n        cft.setMaxValue(size);\\r\\n        cft.setPersisted(true);\\r\\n        cft.setFilter(true);\\r\\n        cft.setAllowEdit(true);\\r\\n        cft.setStorages(new ArrayList<>() {{add(DBStorageType.SQL);}});\\r\\n        return cft;\\r\\n    }\\r\\n\\r\\n    private CustomFieldTemplate buildDateField(String code, String description) {\\r\\n        CustomFieldTemplate cft = new CustomFieldTemplate();\\r\\n        cft.setCode(code);\\r\\n        cft.setDescription(description);\\r\\n        cft.setFieldType(CustomFieldTypeEnum.STRING);\\r\\n        cft.setStorageType(CustomFieldStorageTypeEnum.SINGLE);\\r\\n        cft.setAppliesTo(TRANSACTION_CET);\\r\\n        cft.setPersisted(true);\\r\\n        cft.setFilter(true);\\r\\n        cft.setAllowEdit(true);\\r\\n        cft.setDisplayFormat(\"dd-M-yyyy HH:mm:ss\");\\r\\n        cft.setStorages(new ArrayList<>() {{add(DBStorageType.SQL);}});\\r\\n        return cft;\\r\\n    }\\r\\n\\r\\n}",
+    "executionRoles" : [ ],
+    "sourcingRoles" : [ ],
+    "mavenDependencies" : [ ],
+    "importScriptInstances" : [ ]
+  }
 }

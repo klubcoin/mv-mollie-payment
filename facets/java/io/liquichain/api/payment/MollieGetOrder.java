@@ -20,17 +20,12 @@ import org.meveo.service.storage.RepositoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-
 public class MollieGetOrder extends Script {
     private static final Logger LOG = LoggerFactory.getLogger(MollieGetOrder.class);
 
-    @Inject
-    private CrossStorageApi crossStorageApi;
-    @Inject
-    private RepositoryService repositoryService;
-    @Inject
-    private ParamBeanFactory paramBeanFactory;
+    private final CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
+    private final RepositoryService repositoryService = getCDIBean(RepositoryService.class);
+    private final ParamBeanFactory paramBeanFactory = getCDIBean(ParamBeanFactory.class);
 
     private Repository defaultRepo = null;
 

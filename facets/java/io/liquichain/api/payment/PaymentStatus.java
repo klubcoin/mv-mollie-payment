@@ -11,15 +11,11 @@ import org.meveo.service.storage.RepositoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
-
 public class PaymentStatus extends Script {
     private static final Logger LOG = LoggerFactory.getLogger(PaymentStatus.class);
 
-    @Inject
-    private CrossStorageApi crossStorageApi;
-    @Inject
-    private RepositoryService repositoryService;
+    private final CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
+    private final RepositoryService repositoryService = getCDIBean(RepositoryService.class);
 
     private Repository defaultRepo;
 

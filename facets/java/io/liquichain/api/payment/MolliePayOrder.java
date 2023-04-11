@@ -11,7 +11,6 @@ import java.math.BigInteger;
 import java.time.Instant;
 import java.util.*;
 
-import javax.inject.Inject;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.*;
 
@@ -47,12 +46,9 @@ public class MolliePayOrder extends Script {
 
     private Web3j web3j;
 
-    @Inject
-    private CrossStorageApi crossStorageApi;
-    @Inject
-    private RepositoryService repositoryService;
-    @Inject
-    private ParamBeanFactory paramBeanFactory;
+    private final CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
+    private final RepositoryService repositoryService = getCDIBean(RepositoryService.class);
+    private final ParamBeanFactory paramBeanFactory = getCDIBean(ParamBeanFactory.class);
 
     private Repository defaultRepo;
     private String orderId;
