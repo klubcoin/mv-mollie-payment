@@ -54,7 +54,7 @@ public class InitMollieModule extends ModuleScript {
         cft.setPersisted(true);
         cft.setFilter(true);
         cft.setAllowEdit(true);
-        cft.setStorages(new ArrayList<>() {{add(DBStorageType.SQL);}});
+        cft.setStorages(List.of(DBStorageType.SQL));
         return cft;
     }
 
@@ -69,7 +69,7 @@ public class InitMollieModule extends ModuleScript {
         cft.setFilter(true);
         cft.setAllowEdit(true);
         cft.setDisplayFormat("dd-M-yyyy HH:mm:ss");
-        cft.setStorages(new ArrayList<>() {{add(DBStorageType.SQL);}});
+        cft.setStorages(List.of(DBStorageType.SQL));
         return cft;
     }
 
