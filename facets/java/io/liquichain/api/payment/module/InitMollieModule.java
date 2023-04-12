@@ -56,7 +56,7 @@ class CftInstaller implements Serializable {
         CustomFieldTemplate cft = new CustomFieldTemplate();
         cft.setCode(code);
         cft.setDescription(description);
-        cft.setFieldType(CustomFieldTypeEnum.STRING);
+        cft.setFieldType(CustomFieldTypeEnum.DATE);
         cft.setStorageType(CustomFieldStorageTypeEnum.SINGLE);
         cft.setAppliesTo(TRANSACTION_CET);
         cft.setMaxValue(size);

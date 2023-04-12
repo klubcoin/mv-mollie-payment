@@ -6,5 +6,8 @@
   "isInDraft" : true,
   "autoCommit" : true,
   "moduleDependencies" : [ ],
-  "moduleFiles" : [ ]
+  "moduleFiles" : [ ],
+  "script" : {
+    "code": "io.liquichain.api.payment.module.InitMollieModule"
+  }
 }
