@@ -1,6 +1,6 @@
 {
-  "code" : "assetId",
-  "description" : "Asset ID",
+  "code" : "webhookUrl",
+  "description" : "Webhook URL",
   "fieldType" : "STRING",
   "accountLevel" : "CE_Transaction",
   "appliesTo" : "CE_Transaction",
