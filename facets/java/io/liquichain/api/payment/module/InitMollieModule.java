@@ -15,15 +15,23 @@ import org.meveo.service.script.module.ModuleScript;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class InitMollieModule extends ModuleScript implements Serializable {
+public class InitMollieModule extends ModuleScript {
     private static final Logger LOG = LoggerFactory.getLogger(InitMollieModule.class);
-    private static final String TRANSACTION_CET = "CE_Transaction";
     private final CustomFieldTemplateService cftService = getCDIBean(CustomFieldTemplateService.class);
 
     @Override
     public void preInstallModule(Map<String, Object> methodContext) throws BusinessException {
         super.execute(methodContext);
 
+        CftInstaller cftInstaller = new CftInstaller();
+        cftInstaller.installCFTs(cftService, LOG);
+    }
+}
+
+class CftInstaller implements Serializable {
+    private static final String TRANSACTION_CET = "CE_Transaction";
+
+    public void installCFTs(CustomFieldTemplateService cftService, Logger LOG) {
         List<CustomFieldTemplate> cfts = new ArrayList<>();
         cfts.add(buildStringField("currency", "Currency", 10L));
         cfts.add(buildStringField("description", "Description", 255L));
@@ -37,10 +45,9 @@ public class InitMollieModule extends ModuleScript implements Serializable {
             try {
                 cftService.create(cft);
             } catch (Exception e) {
-                LOG.error("Failed to save custom field: {}", cft.getCode(), e);
+                // do nothing, just continue
             }
         }
-
     }
 
     private CustomFieldTemplate buildStringField(String code, String description, Long size) {
@@ -70,4 +77,5 @@ public class InitMollieModule extends ModuleScript implements Serializable {
         cft.setDisplayFormat("dd-M-yyyy HH:mm:ss");
         return cft;
     }
+
 }
