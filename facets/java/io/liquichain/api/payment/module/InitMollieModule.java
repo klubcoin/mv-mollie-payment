@@ -36,7 +36,7 @@ class CftInstaller implements Serializable {
         cfts.add(buildStringField("currency", "Currency", 10L));
         cfts.add(buildStringField("description", "Description", 255L));
         cfts.add(buildStringField("redirectUrl", "Redirect URL", 255L));
-        cfts.add(buildStringField("webhookUrl", "Webhoo URL", 255L));
+        cfts.add(buildStringField("webhookUrl", "Webhook URL", 255L));
         cfts.add(buildStringField("metadata", "Metadata", 255L));
         cfts.add(buildStringField("orderId", "Order ID", 255L));
         cfts.add(buildDateField("expirationDate", "Expiration date"));
