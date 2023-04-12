@@ -43,7 +43,9 @@ class CftInstaller implements Serializable {
 
         for (CustomFieldTemplate cft : cfts) {
             try {
+                LOG.info("Adding custom field template: {} to {}", cft.getCode(), TRANSACTION_CET);
                 cftService.create(cft);
+                LOG.info("Successfully added custom field template: {} to {}", cft.getCode(), TRANSACTION_CET);
             } catch (Exception e) {
                 LOG.error("Failed to create custom field template: {}", cft.getCode(), e);
             }
