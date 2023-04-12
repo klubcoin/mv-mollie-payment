@@ -45,7 +45,7 @@ class CftInstaller implements Serializable {
             try {
                 cftService.create(cft);
             } catch (Exception e) {
-                // do nothing, just continue
+                LOG.error("Failed to create custom field template: {}", cft.getCode(), e);
             }
         }
     }
