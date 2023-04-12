@@ -1,5 +1,6 @@
 package io.liquichain.api.payment.module;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,7 @@ import org.meveo.service.script.module.ModuleScript;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class InitMollieModule extends ModuleScript {
+public class InitMollieModule extends ModuleScript implements Serializable {
     private static final Logger LOG = LoggerFactory.getLogger(InitMollieModule.class);
     private static final String TRANSACTION_CET = "CE_Transaction";
     private final CustomFieldTemplateService cftService = getCDIBean(CustomFieldTemplateService.class);
