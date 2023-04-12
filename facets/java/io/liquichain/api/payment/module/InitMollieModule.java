@@ -8,7 +8,6 @@ import org.meveo.admin.exception.BusinessException;
 import org.meveo.model.crm.CustomFieldTemplate;
 import org.meveo.model.crm.custom.CustomFieldStorageTypeEnum;
 import org.meveo.model.crm.custom.CustomFieldTypeEnum;
-import org.meveo.model.persistence.DBStorageType;
 import org.meveo.service.crm.impl.CustomFieldTemplateService;
 import org.meveo.service.script.module.ModuleScript;
 
@@ -54,9 +53,6 @@ public class InitMollieModule extends ModuleScript {
         cft.setPersisted(true);
         cft.setFilter(true);
         cft.setAllowEdit(true);
-        DBStorageType dbStorageType = DBStorageType.SQL;
-        dbStorageType.setSupportedFieldTypes(null);
-        cft.setStorages(List.of(dbStorageType));
         return cft;
     }
 
@@ -71,10 +67,6 @@ public class InitMollieModule extends ModuleScript {
         cft.setFilter(true);
         cft.setAllowEdit(true);
         cft.setDisplayFormat("dd-M-yyyy HH:mm:ss");
-        DBStorageType dbStorageType = DBStorageType.SQL;
-        dbStorageType.setSupportedFieldTypes(null);
-        cft.setStorages(List.of(dbStorageType));
         return cft;
     }
-
 }
