@@ -1,0 +1,12 @@
+{
+  "code" : "MoVendor",
+  "name" : "Vendor",
+  "description" : "Vendor details",
+  "customEntityCategoryCode" : "MO_ORDER",
+  "availableStorages" : [ "SQL" ],
+  "sqlStorageConfiguration" : {
+    "storeAsTable" : true
+  },
+  "samples" : [ ],
+  "audited" : false
+}
