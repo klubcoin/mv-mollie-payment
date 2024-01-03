@@ -1,0 +1,51 @@
+{
+    "storages": ["SQL"],
+    "default": "Vendor details",
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "id": "MoVendor",
+    "title": "Vendor",
+    "type": "object",
+    "properties": {
+        "method": {
+            "storages": ["SQL"],
+            "nullable": false,
+            "minLength": 1,
+            "description": "Method",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoVendor_method",
+            "title": "MoVendor.method",
+            "type": "string",
+            "maxLength": 100
+        },
+        "domain": {
+            "storages": ["SQL"],
+            "nullable": false,
+            "minLength": 1,
+            "description": "Domain",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoVendor_domain",
+            "title": "MoVendor.domain",
+            "type": "string",
+            "maxLength": 512
+        },
+        "walletAddress": {
+            "storages": ["SQL"],
+            "nullable": false,
+            "minLength": 1,
+            "description": "Wallet address",
+            "readOnly": false,
+            "versionable": false,
+            "id": "CE_MoVendor_walletAddress",
+            "title": "MoVendor.walletAddress",
+            "type": "string",
+            "maxLength": 50
+        }
+    },
+    "required": [
+        "domain",
+        "method",
+        "walletAddress"
+    ]
+}
