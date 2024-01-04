@@ -1,0 +1,35 @@
+{
+  "code" : "moUpdateVendor",
+  "description" : "Update mollie vendor entity",
+  "secured" : true,
+  "checkPathParams" : true,
+  "serviceCode" : "io.liquichain.api.payment.MollieUpdateVendor",
+  "synchronous" : true,
+  "method" : "PUT",
+  "parameterMappings" : [ {
+    "serviceParameter" : "domain",
+    "multivalued" : false,
+    "parameterName" : "domain",
+    "valueRequired" : false
+  }, {
+    "serviceParameter" : "walletAddress",
+    "multivalued" : false,
+    "parameterName" : "walletAddress",
+    "valueRequired" : false
+  }, {
+    "serviceParameter" : "method",
+    "multivalued" : false,
+    "parameterName" : "method",
+    "valueRequired" : false
+  } ],
+  "pathParameters" : [ "uuid" ],
+  "roles" : [ ],
+  "returnedVariableName" : "result",
+  "serializeResult" : true,
+  "contentType" : "application/json",
+  "basePath" : "pg",
+  "path" : "/v1/vendors/{uuid}",
+  "pool" : {
+    "usePool" : false
+  }
+}
