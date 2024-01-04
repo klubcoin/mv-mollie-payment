@@ -126,12 +126,14 @@ public class MollieGetOrder extends Script {
                             .findFirst()
                             .orElse(null);
         }
+
         if (vendor != null) {
             if (metadata == null) {
                 metadata = new HashMap<>();
             }
             metadata.put("vendor", vendor);
         }
+
         String id = "ord_" + order.getUuid();
         result = "{"
                 + "\"resource\": \"order\","

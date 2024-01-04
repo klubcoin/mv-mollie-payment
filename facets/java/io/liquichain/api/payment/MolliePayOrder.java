@@ -368,5 +368,4 @@ class HttpService extends Service {
     @Override
     public void close() throws IOException {
     }
-
 }
