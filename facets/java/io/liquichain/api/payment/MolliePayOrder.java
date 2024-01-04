@@ -49,6 +49,7 @@ public class MolliePayOrder extends Script {
     private final CrossStorageApi crossStorageApi = getCDIBean(CrossStorageApi.class);
     private final RepositoryService repositoryService = getCDIBean(RepositoryService.class);
     private final ParamBeanFactory paramBeanFactory = getCDIBean(ParamBeanFactory.class);
+    private final ConversionRateScript conversionRateScript = new ConversionRateScript();
 
     private Repository defaultRepo;
     private String orderId;
@@ -138,7 +139,7 @@ public class MolliePayOrder extends Script {
         String currency = order.getCurrency();
         double amount = order.getAmount();
         BigDecimal value = new BigDecimal(amount);
-        BigDecimal convertedValue = value.multiply(ConversionRateScript.CONVERSION_RATE.get(currency + "_TO_KLUB"));
+        BigDecimal convertedValue = value.multiply(conversionRateScript.CONVERSION_RATE.get(currency + "_TO_KLUB"));
         BigInteger computedAmount = convertedValue.multiply(BigDecimal.TEN.pow(18)).toBigInteger();
         LOG.info("computedAmount: {}", computedAmount);
         return computedAmount;
