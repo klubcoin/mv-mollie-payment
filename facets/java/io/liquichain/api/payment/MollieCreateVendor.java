@@ -65,4 +65,5 @@ public class MollieCreateVendor extends Script {
         }
 		LOG.info("MollieCreateVendor - END");
     }
+
 }

@@ -73,4 +73,5 @@ public class MollieUpdateVendor extends Script {
         }
         LOG.info("MollieUpdateVendor - END");
     }
+
 }
