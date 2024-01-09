@@ -1,53 +1,70 @@
-const moCreateVendor = async (parameters) =>  {
-	const baseUrl = window.location.origin;
-	const url = new URL(`${window.location.pathname.split('/')[1]}/rest/moCreateVendor/`, baseUrl);
-	return fetch(url.toString(), {
-		method: 'POST', 
-		headers : new Headers({
- 			'Content-Type': 'application/json'
-		}),
-		body: JSON.stringify({
-			domain : parameters.domain,
-			walletAddress : parameters.walletAddress,
-			method : parameters.method
-		})
-	});
+import EndpointInterface from "#{API_BASE_URL}/api/rest/endpoint/EndpointInterface.js";
+
+// the request schema, this should be updated
+// whenever changes to the endpoint parameters are made
+// this is important because this is used to validate and parse the request parameters
+const requestSchema = {
+  "title" : "moCreateVendorRequest",
+  "id" : "moCreateVendorRequest",
+  "default" : "Schema definition for moCreateVendor",
+  "$schema" : "http://json-schema.org/draft-07/schema",
+  "type" : "object",
+  "properties" : {
+    "method" : {
+      "title" : "method",
+      "type" : "string",
+      "minLength" : 1
+    },
+    "domain" : {
+      "title" : "domain",
+      "type" : "string",
+      "minLength" : 1
+    },
+    "walletAddress" : {
+      "title" : "walletAddress",
+      "type" : "string",
+      "minLength" : 1
+    }
+  }
 }
 
-const moCreateVendorForm = (container) => {
-	const html = `<form id='moCreateVendor-form'>
-		<div id='moCreateVendor-domain-form-field'>
-			<label for='domain'>domain</label>
-			<input type='text' id='moCreateVendor-domain-param' name='domain'/>
-		</div>
-		<div id='moCreateVendor-walletAddress-form-field'>
-			<label for='walletAddress'>walletAddress</label>
-			<input type='text' id='moCreateVendor-walletAddress-param' name='walletAddress'/>
-		</div>
-		<div id='moCreateVendor-method-form-field'>
-			<label for='method'>method</label>
-			<input type='text' id='moCreateVendor-method-param' name='method'/>
-		</div>
-		<button type='button'>Test</button>
-	</form>`;
-
-	container.insertAdjacentHTML('beforeend', html)
-
-	const domain = container.querySelector('#moCreateVendor-domain-param');
-	const walletAddress = container.querySelector('#moCreateVendor-walletAddress-param');
-	const method = container.querySelector('#moCreateVendor-method-param');
-
-	container.querySelector('#moCreateVendor-form button').onclick = () => {
-		const params = {
-			domain : domain.value !== "" ? domain.value : undefined,
-			walletAddress : walletAddress.value !== "" ? walletAddress.value : undefined,
-			method : method.value !== "" ? method.value : undefined
-		};
-
-		moCreateVendor(params).then(r => r.text().then(
-				t => alert(t)
-			));
-	};
+// the response schema, this should be updated
+// whenever changes to the endpoint parameters are made
+// this is important because this could be used to parse the result
+const responseSchema = {
+  "title" : "moCreateVendorResponse",
+  "id" : "moCreateVendorResponse",
+  "default" : "Schema definition for moCreateVendor",
+  "$schema" : "http://json-schema.org/draft-07/schema",
+  "type" : "object",
+  "properties" : {
+    "result" : {
+      "title" : "result",
+      "type" : "string",
+      "minLength" : 1
+    }
+  }
 }
 
-export { moCreateVendor, moCreateVendorForm };
+// should contain offline mock data, make sure it adheres to the response schema
+const mockResult = {};
+
+class moCreateVendor extends EndpointInterface {
+	constructor() {
+		// name and http method, these are inserted when code is generated
+		super("moCreateVendor", "POST");
+		this.requestSchema = requestSchema;
+		this.responseSchema = responseSchema;
+		this.mockResult = mockResult;
+	}
+
+	getRequestSchema() {
+		return this.requestSchema;
+	}
+
+	getResponseSchema() {
+		return this.responseSchema;
+	}
+}
+
+export default new moCreateVendor();
