@@ -137,9 +137,14 @@ public class MolliePayOrder extends Script {
 
     private BigInteger computeAmount(MoOrder order) {
         String currency = order.getCurrency();
+        LOG.info("currency: {}", currency);
         double amount = order.getAmount();
+        LOG.info("amount: {}", amount);
         BigDecimal value = new BigDecimal(amount);
-        BigDecimal convertedValue = value.multiply(conversionRateScript.CONVERSION_RATE.get(currency + "_TO_KLUB"));
+        BigDecimal conversionRate = conversionRateScript.getConversionRate(currency + "_TO_KLUB");
+        LOG.info("conversionRate: {}", conversionRate);
+        BigDecimal convertedValue = value.multiply(conversionRate);
+        LOG.info("convertedValue: {}", convertedValue);
         BigInteger computedAmount = convertedValue.multiply(BigDecimal.TEN.pow(18)).toBigInteger();
         LOG.info("computedAmount: {}", computedAmount);
         return computedAmount;
