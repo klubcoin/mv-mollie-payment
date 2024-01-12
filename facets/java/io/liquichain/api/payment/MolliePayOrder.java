@@ -9,24 +9,34 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 
-import javax.ws.rs.client.*;
-import javax.ws.rs.core.*;
-
+import org.meveo.admin.exception.BusinessException;
+import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.commons.utils.ParamBean;
 import org.meveo.commons.utils.ParamBeanFactory;
-import org.meveo.service.script.Script;
-import org.meveo.admin.exception.BusinessException;
-import org.meveo.model.storage.Repository;
-import org.meveo.service.storage.RepositoryService;
-import org.meveo.api.persistence.CrossStorageApi;
 import org.meveo.model.customEntities.MoOrder;
 import org.meveo.model.customEntities.Transaction;
+import org.meveo.model.storage.Repository;
+import org.meveo.service.script.Script;
+import org.meveo.service.storage.RepositoryService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.web3j.crypto.*;
+import org.web3j.crypto.RawTransaction;
+import org.web3j.crypto.Sign;
+import org.web3j.crypto.SignedRawTransaction;
+import org.web3j.crypto.TransactionDecoder;
 import org.web3j.protocol.Service;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
@@ -81,17 +91,17 @@ public class MolliePayOrder extends Script {
     }
 
     public Optional<TransactionReceipt> sendTransactionReceiptRequest(String transactionHash)
-        throws Exception {
+            throws Exception {
         EthGetTransactionReceipt transactionReceipt = web3j
-            .ethGetTransactionReceipt(transactionHash)
-            .sendAsync()
-            .get();
+                .ethGetTransactionReceipt(transactionHash)
+                .sendAsync()
+                .get();
         return transactionReceipt.getTransactionReceipt();
     }
 
     private Optional<TransactionReceipt> getTransactionReceipt(String transactionHash) throws Exception {
         Optional<TransactionReceipt> receiptOptional =
-            sendTransactionReceiptRequest(transactionHash);
+                sendTransactionReceiptRequest(transactionHash);
         for (int i = 0; i < ATTEMPTS; i++) {
             if (receiptOptional.isEmpty()) {
                 Thread.sleep(SLEEP_DURATION);
@@ -185,10 +195,10 @@ public class MolliePayOrder extends Script {
             String to = normalizeHash(rawTransaction.getTo());
             String transactionData = signedTransaction.getTransaction().getData();
             BigInteger value = transactionData.startsWith("a9059cbb")
-                ? new BigInteger(transactionData.substring(72), 16)
-                : signedTransaction.getTransaction().getValue();
+                    ? new BigInteger(transactionData.substring(72), 16)
+                    : signedTransaction.getTransaction().getValue();
 
-            String orderUuid = orderId.startsWith("ord_") ?  orderId.substring(4) : orderId;
+            String orderUuid = orderId.startsWith("ord_") ? orderId.substring(4) : orderId;
             MoOrder order;
             try {
                 order = crossStorageApi.find(defaultRepo, orderUuid, MoOrder.class);
@@ -198,77 +208,63 @@ public class MolliePayOrder extends Script {
                 return;
             }
 
-            BigInteger amounToBePaid;
+            LOG.info("amount to be paid: {}", value);
+
+            TransactionReceipt transactionReceipt;
+            String completedTransactionHash;
             try {
-                amounToBePaid = computeAmount(order);
+                transactionReceipt = processTransaction(data);
+                completedTransactionHash = transactionReceipt.getTransactionHash();
+            } catch (RuntimeException e) {
+                LOG.error(e.getMessage(), e);
+                result = createError(e.getMessage());
+                return;
+            }
+
+            LOG.info("completed transactionHash: {}", completedTransactionHash);
+
+            transaction.setHexHash(completedTransactionHash);
+            transaction.setFromHexHash(normalizeHash(transactionReceipt.getFrom()));
+            transaction.setToHexHash(normalizeHash(transactionReceipt.getTo()));
+            transaction.setNonce("" + rawTransaction.getNonce());
+            transaction.setGasPrice("" + rawTransaction.getGasPrice());
+            transaction.setGasLimit("" + rawTransaction.getGasLimit());
+            transaction.setValue("" + value);
+            transaction.setSignedHash(data);
+            transaction.setBlockNumber("" + transactionReceipt.getBlockNumber());
+            transaction.setBlockHash(normalizeHash(transactionReceipt.getBlockHash()));
+            transaction.setV(v);
+            transaction.setS(s);
+            transaction.setR(r);
+            transaction.setData("{\"type\":\"payonline\",\"description\":\"Pay online payment\"}");
+            transaction.setType("payonline");
+            try {
+                String uuid = crossStorageApi.createOrUpdate(defaultRepo, transaction);
+                LOG.info("Updated transaction on DB with uuid: {}", uuid);
+            } catch (Exception e) {
+                result = createError(e.getMessage());
+                return;
+            }
+
+            try {
+                order.setStatus("paid");
+                order.setPaidAt(Instant.now());
+                order.setAmountCaptured(order.getAmount());
+                crossStorageApi.createOrUpdate(defaultRepo, order);
             } catch (Exception e) {
                 LOG.error(e.getMessage(), e);
                 result = createError(e.getMessage());
                 return;
             }
 
-            LOG.info("amounToBePaid: {}, value: {}", amounToBePaid, value);
+            result = createResponse("{\"status\": \"paid\"}");
 
-            if (value.equals(amounToBePaid)) {
-                TransactionReceipt transactionReceipt;
-                String completedTransactionHash;
-                try {
-                    transactionReceipt = processTransaction(data);
-                    completedTransactionHash = transactionReceipt.getTransactionHash();
-                } catch (RuntimeException e) {
-                    LOG.error(e.getMessage(), e);
-                    result = createError(e.getMessage());
-                    return;
-                }
-
-                LOG.info("completed transactionHash: {}", completedTransactionHash);
-
-                transaction.setHexHash(completedTransactionHash);
-                transaction.setFromHexHash(normalizeHash(transactionReceipt.getFrom()));
-                transaction.setToHexHash(normalizeHash(transactionReceipt.getTo()));
-                transaction.setNonce("" + rawTransaction.getNonce());
-                transaction.setGasPrice("" + rawTransaction.getGasPrice());
-                transaction.setGasLimit("" + rawTransaction.getGasLimit());
-                transaction.setValue("" + value);
-                transaction.setSignedHash(data);
-                transaction.setBlockNumber("" + transactionReceipt.getBlockNumber());
-                transaction.setBlockHash(normalizeHash(transactionReceipt.getBlockHash()));
-                transaction.setV(v);
-                transaction.setS(s);
-                transaction.setR(r);
-                transaction.setData("{\"type\":\"payonline\",\"description\":\"Pay online payment\"}");
-                transaction.setType("payonline");
-                try {
-                    String uuid = crossStorageApi.createOrUpdate(defaultRepo, transaction);
-                    LOG.info("Updated transaction on DB with uuid: {}", uuid);
-                } catch (Exception e) {
-                    result = createError(e.getMessage());
-                    return;
-                }
-
-                try {
-                    order.setStatus("paid");
-                    order.setPaidAt(Instant.now());
-                    order.setAmountCaptured(order.getAmount());
-                    crossStorageApi.createOrUpdate(defaultRepo, order);
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    result = createError(e.getMessage());
-                    return;
-                }
-
-                result = createResponse("{\"status\": \"paid\"}");
-            } else {
-                LOG.error("Amount sent: " + value + " != Amount required: " + amounToBePaid);
-                result = createError("Please send " + amounToBePaid + " KLUB to complete payment.");
-            }
         } else {
             result = createError("Raw transaction was invalid.");
         }
         super.execute(parameters);
     }
 }
-
 
 class HttpService extends Service {
 
@@ -336,7 +332,7 @@ class HttpService extends Service {
 
         if (response.getStatus() != 200) {
             throw new IOException(
-                "Error " + response.getStatus() + ": " + response.readEntity(String.class));
+                    "Error " + response.getStatus() + ": " + response.readEntity(String.class));
         }
 
         if (includeRawResponse) {
