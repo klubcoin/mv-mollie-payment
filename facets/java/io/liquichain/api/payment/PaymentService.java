@@ -32,6 +32,7 @@ import javax.ws.rs.core.Response;
 public class PaymentService extends Script {
     private static final Logger LOG = LoggerFactory.getLogger(PaymentService.class);
     private static final ObjectMapper mapper = new ObjectMapper();
+    private static final Duration orderExpiration = Duration.ofMinutes(15);
 
     public static Long getLong(Map<String, Object> parameters, String name) {
         if (parameters == null) {
@@ -383,7 +384,7 @@ public class PaymentService extends Script {
         if (uuid == null) {
             order.setUuid(generateUUID(order));
             order.setCreationDate(now);
-            order.setExpiresAt(now.plus(Duration.ofDays(1)));
+            order.setExpiresAt(now.plus(orderExpiration));
         } else {
             status = normalize(getString(parameters, "status"), order.getStatus());
             if (now.isAfter(order.getExpiresAt())) {
